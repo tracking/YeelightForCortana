@@ -30,17 +30,17 @@ namespace YeelightForCortana
         /// 搜索设备
         /// </summary>
         /// <returns>Yeelight对象</returns>
-        public async static Task<List<object>> SearchDevice()
+        public async static Task<List<Yeelight>> SearchDevice()
         {
             // 创建Socket
             DatagramSocket udp = new DatagramSocket();
             // 绑定随机端口
-            await udp.BindServiceNameAsync("0");
+            await udp.BindServiceNameAsync("");
             // 获取输出流
             var outputStream = await udp.GetOutputStreamAsync(MULTICAST_HOST, MULTICAST_PORT);
 
             // Yeelight列表
-            List<object> yeelightList = new List<object>();
+            Dictionary<string, Yeelight> yeelightList = new Dictionary<string, Yeelight>();
 
             // 处理回应
             udp.MessageReceived += (sender, args) =>
@@ -53,7 +53,19 @@ namespace YeelightForCortana
                 try
                 {
                     // 构造Yeelight对象
-                    yeelightList.Add(new Yeelight(rawDevInfo));
+                    Yeelight device = new Yeelight(rawDevInfo);
+
+                    // 是否已存在
+                    if (yeelightList.ContainsKey(device.Id))
+                    {
+                        // 替换
+                        yeelightList[device.Id] = device;
+                    }
+                    else
+                    {
+                        // 新增
+                        yeelightList.Add(device.Id, device);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -62,21 +74,22 @@ namespace YeelightForCortana
             };
 
             // 创建数据写入对象
-            DataWriter writer = new DataWriter(outputStream);
-            // 写入缓冲区
-            writer.WriteString(SEARCH_DEVICE_MULTCAST_CONTENT);
-            // 发送数据
-            await writer.StoreAsync();
+            using (DataWriter writer = new DataWriter(outputStream))
+            {
+                // 写入缓冲区
+                writer.WriteString(SEARCH_DEVICE_MULTCAST_CONTENT);
+                // 发送数据
+                await writer.StoreAsync();
 
-            // 等待两秒时间
-            await Task.Delay(SEARCH_DEVICE_TIMEOUT);
+                // 等待两秒时间
+                await Task.Delay(SEARCH_DEVICE_TIMEOUT);
+            }
 
             // 清理资源
             await udp.CancelIOAsync();
             udp.Dispose();
-            writer.Dispose();
 
-            return yeelightList;
+            return yeelightList.Values.ToList<Yeelight>();
         }
 
         /// <summary>

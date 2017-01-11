@@ -36,8 +36,12 @@ namespace YeelightForCortana
         /// <param name="e"></param>
         private async void btnSearchDevice_Click(object sender, RoutedEventArgs e)
         {
-            List<object>  a = await YeelightUtils.SearchDevice();
+            List<Yeelight> yeelightList = await YeelightUtils.SearchDevice();
 
+            foreach (var item in yeelightList)
+            {
+                lvDeviceList.Items.Add(item.Id);
+            }
         }
     }
 }
