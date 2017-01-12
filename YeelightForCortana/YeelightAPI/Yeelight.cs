@@ -193,7 +193,7 @@ namespace YeelightAPI
         /// 开关灯
         /// </summary>
         /// <returns>是否成功</returns>
-        public IAsyncOperation<bool> Toggle()
+        public IAsyncOperation<bool> ToggleAsync()
         {
             return this.ToggleHelper().AsAsyncOperation();
         }
@@ -404,6 +404,63 @@ namespace YeelightAPI
 
             return isSuccess;
         }
+
+        #region 设备函数
+        //private async Dictionary<string, object> Device_get_prop()
+        //{
+        //    // 组建参数
+        //    JObject data = new JObject();
+        //    data["id"] = this.id;
+        //    data["method"] = "get_prop";
+        //    data["params"] = new JArray();
+        //    (data["params"] as JArray).Add("power");
+        //    (data["params"] as JArray).Add("bright");
+        //    (data["params"] as JArray).Add("color_mode");
+        //    (data["params"] as JArray).Add("color_temperature");
+        //    (data["params"] as JArray).Add("rgb");
+        //    (data["params"] as JArray).Add("hue");
+        //    (data["params"] as JArray).Add("sat");
+        //    (data["params"] as JArray).Add("name");
+
+        //    // 接收回应
+        //    JObject res = JObject.Parse(await this.SendDataAsync(data.ToString()));
+
+        //    // 结果
+        //    Dictionary<string, object> result = new Dictionary<string, object>();
+
+        //    // 电源状态
+        //    result.Add("power", res["result"][0].ToString() == "on" ? YeelightPower.ON : YeelightPower.OFF);
+        //    // 亮度
+        //    result.Add("bright", Convert.ToInt32(res["result"][1].ToString()));
+
+        //    // 颜色模式
+        //    string colorMode = res["result"][2].ToString();
+        //    switch (colorMode)
+        //    {
+        //        case "1":
+        //            result.Add("color_mode", YeelightColorMode.COLOR);
+        //            break;
+        //        case "2":
+        //            result.Add("color_mode", YeelightColorMode.TEMPERATURE);
+        //            break;
+        //        case "3":
+        //            result.Add("color_mode", YeelightColorMode.HSV);
+        //            break;
+        //    }
+
+        //    // 色温
+        //    result.Add("color_temperature", Convert.ToInt32(res["result"][3].ToString()));
+        //    // RGB
+        //    result.Add("rgb", Convert.ToInt32(res["result"][4].ToString()));
+        //    // 色调
+        //    result.Add("hue", Convert.ToInt32(res["result"][5].ToString()));
+        //    // 饱和度
+        //    result.Add("sat", Convert.ToInt32(res["result"][6].ToString()));
+        //    // 名字
+        //    result.Add("name", res["result"][7].ToString());
+
+        //}
+        #endregion
     }
     #endregion
 }

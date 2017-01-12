@@ -27,23 +27,39 @@ namespace CortanaService
 
             VoiceCommand voiceCommand = await voiceServiceConnection.GetVoiceCommandAsync();
 
+            IList<Yeelight> yeelightList = await YeelightUtils.SearchDeviceAsync();
+            var userMessage = new VoiceCommandUserMessage();
+            VoiceCommandResponse response;
+
             switch (voiceCommand.CommandName)
             {
                 case "openPower":
-                    IList<Yeelight> yeelightList = await YeelightUtils.SearchDeviceAsync();
-
                     foreach (var item in yeelightList)
                     {
-                        await item.Toggle();
+                        await item.ToggleAsync();
                     }
 
-                    var action = voiceCommand.Properties["action"][0];
-                    var location = voiceCommand.Properties["location"][0];
-                    var userMessage = new VoiceCommandUserMessage();
-                    userMessage.DisplayMessage = String.Format("已为你{1}{0}盏电灯", yeelightList.Count, action);
+                    //var action = voiceCommand.Properties["action"][0];
+                    //var location = voiceCommand.Properties["location"][0];
+                    //userMessage.DisplayMessage = String.Format("已为你{1}{0}盏电灯", yeelightList.Count, action);
+                    userMessage.DisplayMessage = String.Format("已为你打开{0}盏电灯", yeelightList.Count);
                     userMessage.SpokenMessage = userMessage.DisplayMessage;
 
-                    var response = VoiceCommandResponse.CreateResponse(userMessage);
+                    response = VoiceCommandResponse.CreateResponse(userMessage);
+
+                    await voiceServiceConnection.ReportSuccessAsync(response);
+
+                    break;
+                case "closePower":
+                    foreach (var item in yeelightList)
+                    {
+                        await item.ToggleAsync();
+                    }
+
+                    userMessage.DisplayMessage = String.Format("已为你关闭{0}盏电灯", yeelightList.Count);
+                    userMessage.SpokenMessage = userMessage.DisplayMessage;
+
+                    response = VoiceCommandResponse.CreateResponse(userMessage);
 
                     await voiceServiceConnection.ReportSuccessAsync(response);
 

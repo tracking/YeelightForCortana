@@ -67,7 +67,7 @@ namespace YeelightForCortana
             btnToggle.IsEnabled = false;
 
             Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
-            await yeelightItem.Toggle();
+            await yeelightItem.ToggleAsync();
 
             // 启用按钮
             btnToggle.IsEnabled = true;
