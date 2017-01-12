@@ -1,19 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Networking;
 using Windows.Networking.Sockets;
+using Windows.Storage.Streams;
 
-namespace YeelightForCortana
+namespace YeelightAPI
 {
     /// <summary>
     /// Yeelight颜色模式
     /// </summary>
-    enum YeelightModel
+    public enum YeelightModel
     {
         /// <summary>
         /// 白光
@@ -31,7 +34,7 @@ namespace YeelightForCortana
     /// <summary>
     /// Yeelight电源状态
     /// </summary>
-    enum YeelightPower
+    public enum YeelightPower
     {
         /// <summary>
         /// 开启
@@ -45,7 +48,7 @@ namespace YeelightForCortana
     /// <summary>
     /// 颜色模式
     /// </summary>
-    enum YeelightColorMode
+    public enum YeelightColorMode
     {
         /// <summary>
         /// 彩色
@@ -64,8 +67,9 @@ namespace YeelightForCortana
     /// <summary>
     /// Yeelight对象
     /// </summary>
-    class Yeelight
+    public sealed class Yeelight
     {
+        #region 正则
         // 源设备信息头正则
         private static readonly Regex RAW_DEVICE_INFO_HEADER_REGEX = new Regex(@"^HTTP\/1\.1 200 OK\r\n");
         // 地址信息正则
@@ -93,15 +97,17 @@ namespace YeelightForCortana
         // 名字正则
         private static readonly Regex NAME_REGEX = new Regex(@"name: (.+)\r\n");
 
-        // result正则
-        private static readonly Regex RESULT_REGEX = new Regex("\"result\":" + @"\[" + "\"(.+)\"" + @"\]");
+        //// result正则
+        //private static readonly Regex RESULT_REGEX = new Regex("\"result\":" + @"\[" + "\"(.+)\"" + @"\]");
+        #endregion
 
+        #region 私有属性
         // 私有属性
         private string id;
         private string ip;
         private string port;
         private YeelightModel model;
-        private List<string> support;
+        private Dictionary<string, bool> support;
         private YeelightPower power;
         private int bright;
         private YeelightColorMode color_mode;
@@ -111,7 +117,9 @@ namespace YeelightForCortana
         private int sat;
         private string name;
         private StreamSocket tcpClient;
+        #endregion
 
+        #region 暴露属性
         /// <summary>
         /// 设备ID
         /// </summary>
@@ -160,18 +168,15 @@ namespace YeelightForCortana
         /// 名字
         /// </summary>
         public string Name { get { return name; } }
+        #endregion
 
-        // 设备连接对象
-        //private TcpClient tcpClient;
-
+        #region 构造函数
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="rawDevInfo">源设备信息</param>
         public Yeelight(string rawDevInfo)
         {
-            Debug.WriteLine(rawDevInfo);
-
             // 验证合法性
             if (!VerifyRawDevInfo(rawDevInfo))
             {
@@ -180,11 +185,30 @@ namespace YeelightForCortana
 
             // 解析并初始化设备信息
             ParseRawDeviceInfo(rawDevInfo);
+        }
+        #endregion
 
-            // 创建TCPClient
-            this.tcpClient = new StreamSocket();
+        #region 公共函数
+        /// <summary>
+        /// 开关灯
+        /// </summary>
+        /// <returns>是否成功</returns>
+        public IAsyncOperation<bool> Toggle()
+        {
+            return this.ToggleHelper().AsAsyncOperation();
         }
 
+        /// <summary>
+        /// ToString
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return this.id;
+        }
+        #endregion
+
+        #region 私有函数
         /// <summary>
         /// 验证源设备信息合法性
         /// </summary>
@@ -229,7 +253,7 @@ namespace YeelightForCortana
                 // 解析支持函数
                 var matchSupport = SUPPORT_REGEX.Match(rawDevInfo);
                 string rawSupport = matchSupport.Groups[1].ToString();
-                this.support = rawSupport.Split(' ').ToList<string>();
+                this.support = rawSupport.Split(' ').ToDictionary(k => k, v => true);
 
                 // 解析电源状态
                 var matchPower = POWER_REGEX.Match(rawDevInfo);
@@ -281,33 +305,105 @@ namespace YeelightForCortana
                 throw;
             }
         }
-        private StreamSocket ConnectDevice()
+        /// <summary>
+        /// 连接到设备
+        /// </summary>
+        /// <returns></returns>
+        private async Task ConnectDeviceAsync()
         {
+            // 断开连接
+            this.DisconnectDevice();
 
-            // 连接
-            await tcpClient.ConnectAsync(new HostName(this.ip), this.port);
+            // 创建TCPClient
+            this.tcpClient = new StreamSocket();
+            var a = new StreamSocketListener();
+
+            // 连接设备
+            await this.tcpClient.ConnectAsync(new HostName(this.ip), this.port);
+        }
+        /// <summary>
+        /// 断开设备连接
+        /// </summary>
+        /// <returns></returns>
+        private void DisconnectDevice()
+        {
+            if (this.tcpClient != null)
+            {
+                this.tcpClient.Dispose();
+                this.tcpClient = null;
+            }
+        }
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        /// <param name="data">数据</param>
+        /// <returns>回应数据</returns>
+        private async Task<string> SendDataAsync(string data)
+        {
+            // 结果
+            string result = "";
+
+            // 连接设备
+            await this.ConnectDeviceAsync();
+
+            // 创建写入对象
+            using (DataWriter dw = new DataWriter(this.tcpClient.OutputStream))
+            {
+                // 写入缓冲区
+                dw.WriteString(data);
+                // 发送数据
+                await dw.StoreAsync();
+                // 分离流
+                dw.DetachStream();
+            }
+
+            // 创建读取对象
+            using (DataReader dr = new DataReader(this.tcpClient.InputStream))
+            {
+                // 设置为有数据可用就往下执行
+                dr.InputStreamOptions = InputStreamOptions.Partial;
+                // 一次读1024字节
+                await dr.LoadAsync(1024);
+                // 保存结果
+                result = dr.ReadString(dr.UnconsumedBufferLength);
+
+                // 分离流
+                dr.DetachStream();
+            }
+
+            // 断开连接
+            this.DisconnectDevice();
+
+            return result;
+        }
+        /// <summary>
+        /// 回应是否成功检测
+        /// </summary>
+        /// <returns>是否成功</returns>
+        private bool ResponseIsSuccessVerify(string resp)
+        {
+            // JSON转换
+            JObject json = JObject.Parse(resp);
+
+            return json["result"][0].ToString() == "ok" ? true : false;
         }
 
-        public void Toggle()
+
+        /// <summary>
+        /// 开关灯私有函数
+        /// </summary>
+        /// <returns>是否成功</returns>
+        private async Task<bool> ToggleHelper()
         {
-            // 命令
-            byte[] buf = Encoding.ASCII.GetBytes("{\"id\": " + this.id + ", \"method\": \"toggle\", \"params\":[]}\r\n");
-            // 发送
-            this.tcpClient.Client.Send(buf);
-            // 接收回应
-            byte[] recv = new byte[1000];
-            int len = this.tcpClient.Client.Receive(recv);
+            // 待发送数据
+            string data = String.Format("{{\"id\":\"{0}\",\"method\":\"{1}\",\"params\":[]}}\r\n", this.id, "toggle");
+            // 回应数据
+            string result = await this.SendDataAsync(data);
+            // 是否成功
+            bool isSuccess = this.ResponseIsSuccessVerify(result);
 
-            // 转换
-            string msg = Encoding.Default.GetString(recv.ToList().GetRange(0, len).ToArray());
-
-            Debug.WriteLine(msg);
-
-            // 处理
-            var resultGroups = RESULT_REGEX.Match(msg).Groups;
-            string result = resultGroups[1].ToString();
-
-            return result == "ok" ? true : false;
+            return isSuccess;
         }
     }
+    #endregion
 }

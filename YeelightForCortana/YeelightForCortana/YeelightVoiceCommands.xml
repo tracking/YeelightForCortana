@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="zh-cn" Name="AdventureWorksCommandSet_zh-cn">
+    <AppName> 替我 </AppName>
+    <Example> 打开电灯 </Example>
+
+    <Command Name="openPower">
+      <Example> 打开电灯 </Example>
+      <ListenFor> {action} {location} 电灯 </ListenFor>
+      <Feedback> 正在为你{action} {location} 电灯 </Feedback>
+      <VoiceCommandService Target="YeelightVoiceCommandService"/>
+    </Command>
+
+    <PhraseList Label="action">
+      <Item>打开</Item>
+      <Item>开启</Item>
+      <Item>关掉</Item>
+      <Item>关闭</Item>
+    </PhraseList>
+    
+    <PhraseList Label="location">
+      <Item>所有 [的]</Item>
+      <Item>左边 [的]</Item>
+      <Item>中间 [的]</Item>
+      <Item>右边 [的]</Item>
+    </PhraseList>
+
+  </CommandSet>
+</VoiceCommands>

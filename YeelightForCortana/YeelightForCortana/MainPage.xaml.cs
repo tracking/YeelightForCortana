@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using YeelightAPI;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -36,12 +37,40 @@ namespace YeelightForCortana
         /// <param name="e"></param>
         private async void btnSearchDevice_Click(object sender, RoutedEventArgs e)
         {
-            List<Yeelight> yeelightList = await YeelightUtils.SearchDevice();
+            // 禁用按钮
+            btnSearchDevice.IsEnabled = false;
+            // 清空列表
+            lvDeviceList.ItemsSource = null;
 
-            foreach (var item in yeelightList)
+            // 获取设备列表
+            lvDeviceList.ItemsSource = await YeelightUtils.SearchDeviceAsync();
+
+            // 启用按钮
+            btnSearchDevice.IsEnabled = true;
+        }
+
+        private void lvDeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // 显示按钮
+            btnToggle.Visibility = Visibility.Visible;
+        }
+
+        private async void btnToggle_Click(object sender, RoutedEventArgs e)
+        {
+            // 未选中
+            if (lvDeviceList.SelectedItem == null)
             {
-                lvDeviceList.Items.Add(item.Id);
+                return;
             }
+
+            // 禁用按钮
+            btnToggle.IsEnabled = false;
+
+            Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
+            await yeelightItem.Toggle();
+
+            // 启用按钮
+            btnToggle.IsEnabled = true;
         }
     }
 }

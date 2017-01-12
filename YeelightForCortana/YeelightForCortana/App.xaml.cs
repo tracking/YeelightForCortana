@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -37,7 +38,7 @@ namespace YeelightForCortana
         /// 将在启动应用程序以打开特定文件等情况下使用。
         /// </summary>
         /// <param name="e">有关启动请求和过程的详细信息。</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -77,6 +78,10 @@ namespace YeelightForCortana
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
             }
+
+            // 安装语音命令文件
+            StorageFile vcdStorageFile = await Package.Current.InstalledLocation.GetFileAsync(@"YeelightVoiceCommands.xml");
+            await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
         }
 
         /// <summary>

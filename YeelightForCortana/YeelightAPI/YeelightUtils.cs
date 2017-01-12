@@ -4,17 +4,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 
-namespace YeelightForCortana
+namespace YeelightAPI
 {
     /// <summary>
     /// Yeelight工具类
     /// </summary>
-    class YeelightUtils
+    public static class YeelightUtils
     {
         // 组播地址
         private static HostName MULTICAST_HOST = new HostName("239.255.255.250");
@@ -22,15 +23,54 @@ namespace YeelightForCortana
         private static string MULTICAST_PORT = "1982";
         // 搜索设备广播内容
         private static string SEARCH_DEVICE_MULTCAST_CONTENT = "M-SEARCH * HTTP/1.1\r\nHOST:239.255.255.250:1982\r\nMAN:\"ssdp:discover\"\r\nST:wifi_bulb\r\n";
-
         // 搜索超时
         private static int SEARCH_DEVICE_TIMEOUT = 2000;
 
         /// <summary>
+        /// 获取本机IP地址
+        /// </summary>
+        /// <returns>IP地址列表</returns>
+        public static IList<string> GetLocalIPs()
+        {
+            return YeelightUtils.GetLocalIPsHelper();
+        }
+        /// <summary>
         /// 搜索设备
         /// </summary>
         /// <returns>Yeelight对象</returns>
-        public async static Task<List<Yeelight>> SearchDevice()
+        public static IAsyncOperation<IList<Yeelight>> SearchDeviceAsync()
+        {
+            return YeelightUtils.SearchDeviceHelper().AsAsyncOperation();
+        }
+
+        /// <summary>
+        /// 获取本机IP地址私有函数
+        /// </summary>
+        /// <returns>IP地址列表</returns>
+        private static List<string> GetLocalIPsHelper()
+        {
+            // 用于存储结果集合
+            List<string> results = new List<string>();
+            // 获取HOSTNAMES
+            var hostNames = NetworkInformation.GetHostNames();
+
+            // 遍历
+            foreach (var item in hostNames)
+            {
+                // 只取IPv4地址
+                if (item.Type == Windows.Networking.HostNameType.Ipv4)
+                {
+                    results.Add(item.CanonicalName);
+                }
+            }
+
+            return results;
+        }
+        /// <summary>
+        /// 搜索设备私有函数
+        /// </summary>
+        /// <returns>Yeelight对象</returns>
+        private async static Task<IList<Yeelight>> SearchDeviceHelper()
         {
             // 创建Socket
             DatagramSocket udp = new DatagramSocket();
@@ -81,39 +121,17 @@ namespace YeelightForCortana
                 // 发送数据
                 await writer.StoreAsync();
 
-                // 等待两秒时间
+                // 分离流
+                writer.DetachStream();
+
+                // 等待
                 await Task.Delay(SEARCH_DEVICE_TIMEOUT);
             }
 
             // 清理资源
-            await udp.CancelIOAsync();
             udp.Dispose();
 
             return yeelightList.Values.ToList<Yeelight>();
-        }
-
-        /// <summary>
-        /// 获取本机IP地址
-        /// </summary>
-        /// <returns>IP地址列表</returns>
-        public static List<string> GetLocalIPs()
-        {
-            // 用于存储结果集合
-            List<string> results = new List<string>();
-            // 获取HOSTNAMES
-            var hostNames = NetworkInformation.GetHostNames();
-
-            // 遍历
-            foreach (var item in hostNames)
-            {
-                // 只取IPv4地址
-                if (item.Type == Windows.Networking.HostNameType.Ipv4)
-                {
-                    results.Add(item.CanonicalName);
-                }
-            }
-
-            return results;
         }
     }
 }

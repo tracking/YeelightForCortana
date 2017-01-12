@@ -8,8 +8,13 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Button x:Name="btnSearchDevice" Content="搜索设备" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="btnSearchDevice_Click"/>
-        <ListView x:Name="lvDeviceList" HorizontalAlignment="Left" Height="199" Margin="10,47,0,0" VerticalAlignment="Top" Width="340" Header="设备列表" BorderThickness="1" BorderBrush="Black"/>
+        <ListView x:Name="lvDeviceList" Margin="10,63,10,0" VerticalAlignment="Top" Header="设备列表" BorderThickness="1" BorderBrush="Black" SelectionChanged="lvDeviceList_SelectionChanged" Height="200" Grid.ColumnSpan="1" Grid.RowSpan="1" AutomationProperties.ItemType="Yeelight"/>
+        <Button x:Name="btnToggle" Content="开/关" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="1" Visibility="Collapsed" Click="btnToggle_Click"/>
 
     </Grid>
 </Page>
