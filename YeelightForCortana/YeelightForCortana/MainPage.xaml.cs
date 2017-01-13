@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ColorMine.ColorSpaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -71,6 +72,38 @@ namespace YeelightForCortana
 
             // 启用按钮
             btnToggle.IsEnabled = true;
+        }
+
+        private async void btnCortanaSetting_Click(object sender, RoutedEventArgs e)
+        {
+            // 安装语音命令文件
+            Windows.Storage.StorageFile vcdStorageFile = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(@"YeelightVoiceCommands.xml");
+            await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
+        }
+
+        private async void button_Click(object sender, RoutedEventArgs e)
+        {
+            Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
+            //await yeelightItem.DebugAction();
+        }
+
+        private async void button1_Click(object sender, RoutedEventArgs e)
+        {
+            int h = Convert.ToInt32(textBox_r.Text);
+            int s = Convert.ToInt32(textBox_g.Text);
+            //byte b = Convert.ToByte(textBox_b.Text);
+            //;
+            //var hsv = new Hsb { H = h, S = (double)s / 100, B = 1 };
+            //var rgb = hsv.To<Rgb>();
+
+            //grid1.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B));
+            //Hsb
+            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
+            //await yeelightItem.DebugAction(h, s);
+            //RgbToHueEffect
+            Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
+            await yeelightItem.DebugAction(textBox.Text);
+            
         }
     }
 }

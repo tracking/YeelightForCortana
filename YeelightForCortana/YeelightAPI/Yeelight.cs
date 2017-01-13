@@ -21,15 +21,15 @@ namespace YeelightAPI
         /// <summary>
         /// 白光
         /// </summary>
-        MONO,
+        mono,
         /// <summary>
         /// 彩光
         /// </summary>
-        COLOR,
+        color,
         /// <summary>
-        /// LED条
+        /// 流光
         /// </summary>
-        STRIPE
+        stripe
     }
     /// <summary>
     /// Yeelight电源状态
@@ -39,29 +39,117 @@ namespace YeelightAPI
         /// <summary>
         /// 开启
         /// </summary>
-        ON,
+        on,
         /// <summary>
         /// 关闭
         /// </summary>
-        OFF
+        off
     }
     /// <summary>
-    /// 颜色模式
+    /// Yeelight颜色模式
     /// </summary>
     public enum YeelightColorMode
     {
         /// <summary>
         /// 彩色
         /// </summary>
-        COLOR,
+        color,
         /// <summary>
         /// 色温
         /// </summary>
-        TEMPERATURE,
+        temperature,
         /// <summary>
         /// HSV
         /// </summary>
-        HSV
+        hsv
+    }
+    /// <summary>
+    /// Yeelight函数
+    /// </summary>
+    public enum YeelightMethod
+    {
+        /// <summary>
+        /// 获取属性值
+        /// </summary>
+        get_prop,
+        /// <summary>
+        /// 设置色温
+        /// </summary>
+        set_ct_abx,
+        /// <summary>
+        /// 设置RGB颜色
+        /// </summary>
+        set_rgb,
+        /// <summary>
+        /// 设置HSV颜色
+        /// </summary>
+        set_hsv,
+        /// <summary>
+        /// 设置亮度
+        /// </summary>
+        set_bright,
+        /// <summary>
+        /// 设置电源状态
+        /// </summary>
+        set_power,
+        /// <summary>
+        /// 开/关电源
+        /// </summary>
+        toggle,
+        /// <summary>
+        /// 保存当前状态
+        /// </summary>
+        set_default,
+        /// <summary>
+        /// 开始流光模式
+        /// </summary>
+        start_cf,
+        /// <summary>
+        /// 停止流光模式
+        /// </summary>
+        stop_cf,
+        /// <summary>
+        /// 设置场景
+        /// </summary>
+        set_scene,
+        /// <summary>
+        /// 添加定时任务
+        /// </summary>
+        cron_add,
+        /// <summary>
+        /// 获取定时任务
+        /// </summary>
+        cron_get,
+        /// <summary>
+        /// 删除定时任务
+        /// </summary>
+        cron_del,
+        /// <summary>
+        /// 调整？不明函数
+        /// </summary>
+        set_adjust,
+        /// <summary>
+        /// 设置音乐模式
+        /// </summary>
+        set_music,
+        /// <summary>
+        /// 设置名字
+        /// </summary>
+        set_name
+    }
+    /// <summary>
+    /// Yeelight效果转变方式
+    /// </summary>
+    public enum YeelightTransformEffect
+    {
+        /// <summary>
+        /// 突然
+        /// </summary>
+        sudden,
+        /// <summary>
+        /// 平滑
+        /// </summary>
+        smooth
     }
 
     /// <summary>
@@ -102,7 +190,6 @@ namespace YeelightAPI
         #endregion
 
         #region 私有属性
-        // 私有属性
         private string id;
         private string ip;
         private string port;
@@ -111,13 +198,19 @@ namespace YeelightAPI
         private YeelightPower power;
         private int bright;
         private YeelightColorMode color_mode;
-        private int color_temperature;
+        private int ct;
         private int rgb;
         private int hue;
         private int sat;
         private string name;
         private StreamSocket tcpClient;
         #endregion
+
+        public IAsyncOperation<bool> DebugAction(string name)
+        {
+            return this.Device_set_name_Async(name).AsAsyncOperation();
+        }
+
 
         #region 暴露属性
         /// <summary>
@@ -135,11 +228,11 @@ namespace YeelightAPI
         /// <summary>
         /// 设备类型（目前只有：mono白光、color彩光、stripeLED条）
         /// </summary>
-        internal YeelightModel Model { get { return model; } }
+        public YeelightModel Model { get { return model; } }
         /// <summary>
         /// 电源状态
         /// </summary>
-        internal YeelightPower Power { get { return power; } }
+        public YeelightPower Power { get { return power; } }
         /// <summary>
         /// 亮度 1-100
         /// </summary>
@@ -151,7 +244,7 @@ namespace YeelightAPI
         /// <summary>
         /// 色温（颜色模式为 "色温模式" 时才有效）
         /// </summary>
-        public int ColorTemperature { get { return color_temperature; } }
+        public int ColorTemperature { get { return ct; } }
         /// <summary>
         /// RGB
         /// </summary>
@@ -204,7 +297,7 @@ namespace YeelightAPI
         /// <returns></returns>
         public override string ToString()
         {
-            return this.id;
+            return string.IsNullOrEmpty(this.name) ? this.id : this.name;
         }
         #endregion
 
@@ -240,13 +333,13 @@ namespace YeelightAPI
                 switch (rawModel)
                 {
                     case "mono":
-                        this.model = YeelightModel.MONO;
+                        this.model = YeelightModel.mono;
                         break;
                     case "color":
-                        this.model = YeelightModel.COLOR;
+                        this.model = YeelightModel.color;
                         break;
                     case "stripe":
-                        this.model = YeelightModel.STRIPE;
+                        this.model = YeelightModel.stripe;
                         break;
                 }
 
@@ -258,7 +351,7 @@ namespace YeelightAPI
                 // 解析电源状态
                 var matchPower = POWER_REGEX.Match(rawDevInfo);
                 string rawPower = matchPower.Groups[1].ToString();
-                this.power = rawPower == "on" ? YeelightPower.ON : YeelightPower.OFF;
+                this.power = rawPower == "on" ? YeelightPower.on : YeelightPower.off;
 
                 // 解析亮度
                 var matchBright = BRIGHT_REGEX.Match(rawDevInfo);
@@ -270,19 +363,19 @@ namespace YeelightAPI
                 switch (rawColorMode)
                 {
                     case "1":
-                        this.color_mode = YeelightColorMode.COLOR;
+                        this.color_mode = YeelightColorMode.color;
                         break;
                     case "2":
-                        this.color_mode = YeelightColorMode.TEMPERATURE;
+                        this.color_mode = YeelightColorMode.temperature;
                         break;
                     case "3":
-                        this.color_mode = YeelightColorMode.HSV;
+                        this.color_mode = YeelightColorMode.hsv;
                         break;
                 }
 
                 // 解析色温
                 var matchColorTemperature = BRIGHT_REGEX.Match(rawDevInfo);
-                this.color_temperature = Convert.ToInt32(matchColorTemperature.Groups[1].ToString());
+                this.ct = Convert.ToInt32(matchColorTemperature.Groups[1].ToString());
 
                 // 解析RGB
                 var matchRGB = RGB_REGEX.Match(rawDevInfo);
@@ -298,7 +391,15 @@ namespace YeelightAPI
 
                 // 解析名字
                 var matchName = NAME_REGEX.Match(rawDevInfo);
-                this.name = matchName.Groups[1].ToString();
+
+                try
+                {
+                    this.name = Encoding.UTF8.GetString(Convert.FromBase64String(matchName.Groups[1].ToString()));
+                }
+                catch (Exception)
+                {
+                    this.name = null;
+                }
             }
             catch (Exception)
             {
@@ -349,6 +450,8 @@ namespace YeelightAPI
             // 创建写入对象
             using (DataWriter dw = new DataWriter(this.tcpClient.OutputStream))
             {
+                // 数据处理
+                data = data.Replace("\r\n", "") + "\r\n";
                 // 写入缓冲区
                 dw.WriteString(data);
                 // 发送数据
@@ -377,17 +480,31 @@ namespace YeelightAPI
             return result;
         }
         /// <summary>
-        /// 回应是否成功检测
+        /// 更新设备信息
         /// </summary>
-        /// <returns>是否成功</returns>
-        private bool ResponseIsSuccessVerify(string resp)
+        /// <returns></returns>
+        private async Task UpdateDeviceInfo()
         {
-            // JSON转换
-            JObject json = JObject.Parse(resp);
+            // 获取设备数据
+            Dictionary<string, object> propList = await this.Device_get_prop_Async();
 
-            return json["result"][0].ToString() == "ok" ? true : false;
+            if (propList["power"] != null)
+                this.power = (YeelightPower)propList["power"];
+            if (propList["bright"] != null)
+                this.bright = (int)propList["bright"];
+            if (propList["color_mode"] != null)
+                this.color_mode = (YeelightColorMode)propList["color_mode"];
+            if (propList["ct"] != null)
+                this.ct = (int)propList["ct"];
+            if (propList["rgb"] != null)
+                this.rgb = (int)propList["rgb"];
+            if (propList["hue"] != null)
+                this.hue = (int)propList["hue"];
+            if (propList["sat"] != null)
+                this.sat = (int)propList["sat"];
+            if (propList["name"] != null)
+                this.name = (string)propList["name"];
         }
-
 
         /// <summary>
         /// 开关灯私有函数
@@ -395,71 +512,420 @@ namespace YeelightAPI
         /// <returns>是否成功</returns>
         private async Task<bool> ToggleHelper()
         {
-            // 待发送数据
-            string data = String.Format("{{\"id\":\"{0}\",\"method\":\"{1}\",\"params\":[]}}\r\n", this.id, "toggle");
-            // 回应数据
-            string result = await this.SendDataAsync(data);
             // 是否成功
-            bool isSuccess = this.ResponseIsSuccessVerify(result);
+            bool isSuccess = await this.Device_toggle_Async();
+            // 更新设备信息
+            await this.UpdateDeviceInfo();
 
             return isSuccess;
         }
 
         #region 设备函数
-        //private async Dictionary<string, object> Device_get_prop()
-        //{
-        //    // 组建参数
-        //    JObject data = new JObject();
-        //    data["id"] = this.id;
-        //    data["method"] = "get_prop";
-        //    data["params"] = new JArray();
-        //    (data["params"] as JArray).Add("power");
-        //    (data["params"] as JArray).Add("bright");
-        //    (data["params"] as JArray).Add("color_mode");
-        //    (data["params"] as JArray).Add("color_temperature");
-        //    (data["params"] as JArray).Add("rgb");
-        //    (data["params"] as JArray).Add("hue");
-        //    (data["params"] as JArray).Add("sat");
-        //    (data["params"] as JArray).Add("name");
+        private async Task DebugFunc()
+        {
+            //var x = await Device_set_ct_abx(6500, YeelightTransformEffect.sudden, 5000);
+            var x = await Device_set_rgb_Async(255, 255, 255, YeelightTransformEffect.sudden, 2000);
+            Debug.WriteLine("DebugFunc: {0}", x);
+        }
+        /// <summary>
+        /// 设备是否支持该函数
+        /// </summary>
+        /// <param name="method">函数名</param>
+        private void DeviceIsSupportFunc(string method)
+        {
+            // 判断是否支持该函数
+            if (!this.support.ContainsKey(method))
+            {
+                throw new Exception("不支持该函数");
+            }
+        }
+        /// <summary>
+        /// 设备请求构建器
+        /// </summary>
+        /// <param name="method">函数名</param>
+        /// <param name="param">参数</param>
+        /// <returns>请求文本</returns>
+        private string DeviceRequestBuildHelper(string method, JArray param)
+        {
+            JObject data = new JObject();
+            data["id"] = this.id;
+            data["method"] = method;
+            data["params"] = param;
 
-        //    // 接收回应
-        //    JObject res = JObject.Parse(await this.SendDataAsync(data.ToString()));
+            return data.ToString();
+        }
+        /// <summary>
+        /// 设备回应是否成功
+        /// </summary>
+        /// <returns>是否成功</returns>
+        private bool DeviceResponseIsSuccess(string resp)
+        {
+            // JSON转换
+            JObject json = JObject.Parse(resp);
 
-        //    // 结果
-        //    Dictionary<string, object> result = new Dictionary<string, object>();
+            if (json["result"] == null || json["result"][0] == null)
+            {
+                return false;
+            }
 
-        //    // 电源状态
-        //    result.Add("power", res["result"][0].ToString() == "on" ? YeelightPower.ON : YeelightPower.OFF);
-        //    // 亮度
-        //    result.Add("bright", Convert.ToInt32(res["result"][1].ToString()));
+            return json["result"][0].ToString() == "ok" ? true : false;
+        }
 
-        //    // 颜色模式
-        //    string colorMode = res["result"][2].ToString();
-        //    switch (colorMode)
-        //    {
-        //        case "1":
-        //            result.Add("color_mode", YeelightColorMode.COLOR);
-        //            break;
-        //        case "2":
-        //            result.Add("color_mode", YeelightColorMode.TEMPERATURE);
-        //            break;
-        //        case "3":
-        //            result.Add("color_mode", YeelightColorMode.HSV);
-        //            break;
-        //    }
+        /// <summary>
+        /// 获取设备各属性值（不支持属性或未设置属性为空值）
+        /// </summary>
+        /// <returns>属性与值</returns>
+        private async Task<Dictionary<string, object>> Device_get_prop_Async()
+        {
+            // 函数名
+            string method = YeelightMethod.get_prop.ToString();
 
-        //    // 色温
-        //    result.Add("color_temperature", Convert.ToInt32(res["result"][3].ToString()));
-        //    // RGB
-        //    result.Add("rgb", Convert.ToInt32(res["result"][4].ToString()));
-        //    // 色调
-        //    result.Add("hue", Convert.ToInt32(res["result"][5].ToString()));
-        //    // 饱和度
-        //    result.Add("sat", Convert.ToInt32(res["result"][6].ToString()));
-        //    // 名字
-        //    result.Add("name", res["result"][7].ToString());
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
 
-        //}
+            // 组建参数
+            JArray param = new JArray();
+            param.Add("power");
+            param.Add("bright");
+            param.Add("color_mode");
+            param.Add("ct");
+            param.Add("rgb");
+            param.Add("hue");
+            param.Add("sat");
+            param.Add("name");
+
+            // 接收回应
+            JObject res = JObject.Parse(await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param)));
+
+            // 结果
+            Dictionary<string, object> result = new Dictionary<string, object>();
+
+            // 电源状态
+            if (!string.IsNullOrEmpty(res["result"][0].ToString()))
+                result.Add("power", res["result"][0].ToString() == "on" ? YeelightPower.on : YeelightPower.off);
+            else
+                result.Add("power", null);
+
+            // 亮度
+            if (!string.IsNullOrEmpty(res["result"][1].ToString()))
+                result.Add("bright", Convert.ToInt32(res["result"][1].ToString()));
+            else
+                result.Add("bright", null);
+
+            // 颜色模式
+            string colorMode = res["result"][2].ToString();
+            switch (colorMode)
+            {
+                case "1":
+                    result.Add("color_mode", YeelightColorMode.color);
+                    break;
+                case "2":
+                    result.Add("color_mode", YeelightColorMode.temperature);
+                    break;
+                case "3":
+                    result.Add("color_mode", YeelightColorMode.hsv);
+                    break;
+                default:
+                    result.Add("color_mode", null);
+                    break;
+            }
+
+            // 色温
+            if (!string.IsNullOrEmpty(res["result"][3].ToString()))
+                result.Add("ct", Convert.ToInt32(res["result"][3].ToString()));
+            else
+                result.Add("ct", null);
+
+            // RGB
+            if (!string.IsNullOrEmpty(res["result"][4].ToString()))
+                result.Add("rgb", Convert.ToInt32(res["result"][4].ToString()));
+            else
+                result.Add("rgb", null);
+
+            // 色调
+            if (!string.IsNullOrEmpty(res["result"][5].ToString()))
+                result.Add("hue", Convert.ToInt32(res["result"][5].ToString()));
+            else
+                result.Add("hue", null);
+
+            // 饱和度
+            if (!string.IsNullOrEmpty(res["result"][6].ToString()))
+                result.Add("sat", Convert.ToInt32(res["result"][6].ToString()));
+            else
+                result.Add("sat", null);
+
+            // 名字
+            if (!string.IsNullOrEmpty(res["result"][7].ToString()))
+            {
+                string name;
+
+                try
+                {
+                    name = res["result"][7].ToString();
+                    name = Encoding.UTF8.GetString(Convert.FromBase64String(name));
+                }
+                catch (Exception)
+                {
+                    name = null;
+                }
+
+                result.Add("name", name);
+            }
+            else
+                result.Add("name", null);
+
+            return result;
+        }
+        /// <summary>
+        /// 设置色温
+        /// </summary>
+        /// <param name="color_temperature">色温 1700 - 6500</param>
+        /// <param name="effect">渐变效果</param>
+        /// <param name="duration">渐变时长</param>
+        /// <returns>是否成功</returns>
+        private async Task<bool> Device_set_ct_abx_Async(int color_temperature, YeelightTransformEffect effect, int duration)
+        {
+            // 函数名
+            string method = YeelightMethod.set_ct_abx.ToString();
+
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
+
+            // 参数错误
+            if (color_temperature > 6500
+                || color_temperature < 1700
+                || (effect == YeelightTransformEffect.smooth && duration < 30))
+            {
+                throw new Exception("参数错误");
+            }
+
+            // 效果是突然时不需要渐变时间
+            if (effect == YeelightTransformEffect.sudden)
+                duration = 0;
+
+            // 组建参数
+            JArray param = new JArray();
+            param.Add(color_temperature);
+            param.Add(effect.ToString());
+            param.Add(duration);
+
+            // 接收回应
+            string resp = await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param));
+
+            return this.DeviceResponseIsSuccess(resp);
+        }
+        /// <summary>
+        /// 设置RGB RGB不能都为0
+        /// </summary>
+        /// <param name="r">红色 0 - 255</param>
+        /// <param name="g">绿色 0 - 255</param>
+        /// <param name="b">蓝色 0 - 255</param>
+        /// <param name="effect">渐变效果</param>
+        /// <param name="duration">渐变时长</param>
+        /// <returns>是否成功</returns>
+        private async Task<bool> Device_set_rgb_Async(int r, int g, int b, YeelightTransformEffect effect, int duration)
+        {
+            // 函数名
+            string method = YeelightMethod.set_rgb.ToString();
+
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
+
+            // 参数错误
+            if (r > 255
+                || r < 0
+                || g > 255
+                || g < 0
+                || b > 255
+                || b < 0
+                || (r == 0 && g == 0 && b == 0)
+                || (effect == YeelightTransformEffect.smooth && duration < 30))
+            {
+                throw new Exception("参数错误");
+            }
+
+            // 效果是突然时不需要渐变时间
+            if (effect == YeelightTransformEffect.sudden)
+                duration = 0;
+
+            // 组建参数
+            JArray param = new JArray();
+            param.Add((r * 65536) + (g * 256) + b);
+            param.Add(effect.ToString());
+            param.Add(duration);
+
+            // 接收回应
+            string resp = await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param));
+
+            return this.DeviceResponseIsSuccess(resp);
+        }
+        /// <summary>
+        /// 设置HSV
+        /// </summary>
+        /// <param name="h">色相 0 - 359</param>
+        /// <param name="s">饱和度 0 - 100</param>
+        /// <param name="effect">渐变效果</param>
+        /// <param name="duration">渐变时长</param>
+        /// <returns></returns>
+        private async Task<bool> Device_set_hsv_Async(int h, int s, YeelightTransformEffect effect, int duration)
+        {
+            // 函数名
+            string method = YeelightMethod.set_hsv.ToString();
+
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
+
+            // 参数错误
+            if (h > 359
+                || h < 0
+                || s > 100
+                || s < 0
+                || (effect == YeelightTransformEffect.smooth && duration < 30))
+            {
+                throw new Exception("参数错误");
+            }
+
+            // 效果是突然时不需要渐变时间
+            if (effect == YeelightTransformEffect.sudden)
+                duration = 0;
+
+            // 组建参数
+            JArray param = new JArray();
+            param.Add(h);
+            param.Add(s);
+            param.Add(effect.ToString());
+            param.Add(duration);
+
+            // 接收回应
+            string resp = await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param));
+
+            return this.DeviceResponseIsSuccess(resp);
+        }
+        /// <summary>
+        /// 设置亮度
+        /// </summary>
+        /// <param name="value">亮度 1 - 100</param>
+        /// <param name="effect">渐变效果</param>
+        /// <param name="duration">渐变时长</param>
+        /// <returns></returns>
+        private async Task<bool> Device_set_bright_Async(int value, YeelightTransformEffect effect, int duration)
+        {
+            // 函数名
+            string method = YeelightMethod.set_bright.ToString();
+
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
+
+            // 参数错误
+            if (value > 100
+                || value < 1
+                || (effect == YeelightTransformEffect.smooth && duration < 30))
+            {
+                throw new Exception("参数错误");
+            }
+
+            // 效果是突然时不需要渐变时间
+            if (effect == YeelightTransformEffect.sudden)
+                duration = 0;
+
+            // 组建参数
+            JArray param = new JArray();
+            param.Add(value);
+            param.Add(effect.ToString());
+            param.Add(duration);
+
+            // 接收回应
+            string resp = await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param));
+
+            return this.DeviceResponseIsSuccess(resp);
+        }
+        /// <summary>
+        /// 设置电源状态
+        /// </summary>
+        /// <param name="power">电源状态</param>
+        /// <param name="effect">渐变效果</param>
+        /// <param name="duration">渐变时长</param>
+        /// <returns></returns>
+        private async Task<bool> Device_set_power_Async(YeelightPower power, YeelightTransformEffect effect, int duration)
+        {
+            // 函数名
+            string method = YeelightMethod.set_power.ToString();
+
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
+
+            // 参数错误
+            if (effect == YeelightTransformEffect.smooth && duration < 30)
+            {
+                throw new Exception("参数错误");
+            }
+
+            // 效果是突然时不需要渐变时间
+            if (effect == YeelightTransformEffect.sudden)
+                duration = 0;
+
+            // 组建参数
+            JArray param = new JArray();
+            param.Add(power.ToString());
+            param.Add(effect.ToString());
+            param.Add(duration);
+
+            // 接收回应
+            string resp = await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param));
+
+            return this.DeviceResponseIsSuccess(resp);
+        }
+        /// <summary>
+        /// 开/关电源
+        /// </summary>
+        /// <returns></returns>
+        private async Task<bool> Device_toggle_Async()
+        {
+            // 函数名
+            string method = YeelightMethod.toggle.ToString();
+
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
+
+            // 组建参数
+            JArray param = new JArray();
+
+            // 接收回应
+            string resp = await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param));
+
+            return this.DeviceResponseIsSuccess(resp);
+        }
+        /// <summary>
+        /// 设置设备名称
+        /// </summary>
+        /// <param name="name">名称</param>
+        /// <returns></returns>
+        private async Task<bool> Device_set_name_Async(string name)
+        {
+            // 函数名
+            string method = YeelightMethod.set_name.ToString();
+
+            // 判断是否支持该函数 不支持直接抛异常
+            this.DeviceIsSupportFunc(method);
+
+            // 参数错误
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new Exception("参数错误");
+            }
+
+            // base64转换
+            name = Convert.ToBase64String(Encoding.UTF8.GetBytes(name));
+
+            // 组建参数
+            JArray param = new JArray();
+            param.Add(name);
+
+            // 接收回应
+            string resp = await this.SendDataAsync(this.DeviceRequestBuildHelper(method, param));
+
+            return this.DeviceResponseIsSuccess(resp);
+        }
         #endregion
     }
     #endregion

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{53686D34-E1EF-4750-8D06-98DCE583556D}</ProjectGuid>
+    <ProjectGuid>{911394A1-5CE8-48E4-92DF-C42393B779F9}</ProjectGuid>
     <OutputType>winmdobj</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CortanaService</RootNamespace>
-    <AssemblyName>CortanaService</AssemblyName>
+    <RootNamespace>Converters</RootNamespace>
+    <AssemblyName>Converters</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
@@ -108,8 +108,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="YeelightVoiceCommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="YeelightConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\YeelightAPI\YeelightAPI.csproj">

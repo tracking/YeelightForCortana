@@ -78,10 +78,6 @@ namespace YeelightForCortana
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
             }
-
-            // 安装语音命令文件
-            StorageFile vcdStorageFile = await Package.Current.InstalledLocation.GetFileAsync(@"YeelightVoiceCommands.xml");
-            await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
         }
 
         /// <summary>

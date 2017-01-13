@@ -1,6 +1,5 @@
 ﻿{
   "dependencies": {
-    "ColorMinePortable": "1.0.0-pre4",
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0"
   },
   "frameworks": {
