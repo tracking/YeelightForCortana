@@ -7,29 +7,25 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="360" VerticalAlignment="Top">
         <Grid.Resources>
             <local:YeelightConverter x:Key="YeelightConverter"/>
-        </Grid.Resources>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Button x:Name="btnSearchDevice" Content="搜索设备" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="btnSearchDevice_Click"/>
-        <ListView x:Name="lvDeviceList" Margin="10,63,10,0" VerticalAlignment="Top" Header="设备列表" BorderThickness="1" BorderBrush="Black" SelectionChanged="lvDeviceList_SelectionChanged" Height="200" Grid.ColumnSpan="1" Grid.RowSpan="1" AutomationProperties.ItemType="Yeelight"/>
-        <Button x:Name="btnToggle" Content="开/关" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="1" Visibility="Collapsed" Click="btnToggle_Click"/>
-        <Button x:Name="btnCortanaSetting" Content="调教小娜" HorizontalAlignment="Stretch" Margin="287,10,10,0" VerticalAlignment="Top" Click="btnCortanaSetting_Click"/>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="73,86,0,0" VerticalAlignment="Top" Grid.Column="1" Click="button_Click"/>
-        <Slider x:Name="slider_r" Grid.Column="1" HorizontalAlignment="Left" Margin="109,194,0,0" VerticalAlignment="Top" Width="162" Height="39" RenderTransformOrigin="0.5,0.5" LargeChange="1" Maximum="359" Value="{Binding Text, ElementName=textBox_r, Mode=TwoWay}"/>
-        <TextBox x:Name="textBox_r" Grid.Column="1" HorizontalAlignment="Left" Margin="33,197,0,0" TextWrapping="Wrap" Text="{Binding Value, ElementName=slider_r, Mode=TwoWay}" VerticalAlignment="Top" Width="71"/>
-        <Slider x:Name="slider_g" Grid.Column="1" HorizontalAlignment="Left" Margin="109,231,0,0" VerticalAlignment="Top" Width="162" Height="39" RenderTransformOrigin="0.5,0.5" LargeChange="1" Maximum="100" Value="{Binding Text, ElementName=textBox_g, Mode=TwoWay}"/>
-        <TextBox x:Name="textBox_g" Grid.Column="1" HorizontalAlignment="Left" Margin="33,234,0,0" TextWrapping="Wrap" Text="{Binding Value, ElementName=slider_g, Mode=TwoWay}" VerticalAlignment="Top" Width="71"/>
-        <Slider x:Name="slider_b" Grid.Column="1" HorizontalAlignment="Left" Margin="109,268,0,0" VerticalAlignment="Top" Width="162" Height="39" RenderTransformOrigin="0.5,0.5" LargeChange="1" Maximum="255" Value="{Binding Text, ElementName=textBox_b, Mode=TwoWay}"/>
-        <TextBox x:Name="textBox_b" Grid.Column="1" HorizontalAlignment="Left" Margin="33,271,0,0" TextWrapping="Wrap" Text="{Binding Value, ElementName=slider_b, Mode=TwoWay}" VerticalAlignment="Top" Width="71"/>
-        <Grid x:Name="grid1" Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="33,312,0,0" VerticalAlignment="Top" Width="100" BorderThickness="1" BorderBrush="Black"/>
-        <Button x:Name="button1" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="138,312,0,0" VerticalAlignment="Top" Click="button1_Click"/>
-        <TextBox x:Name="textBox" Grid.Column="1" HorizontalAlignment="Left" Margin="238,312,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textBlock" Grid.Column="1" HorizontalAlignment="Left" Margin="33,154,0,0" TextWrapping="Wrap" Text="{Binding SelectedItem, ConverterParameter=Power, Converter={StaticResource YeelightConverter}, ElementName=lvDeviceList}" VerticalAlignment="Top" Width="71" Height="38"/>
 
+            <DataTemplate x:Key="flipViewYeelightItem">
+                <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Header="{Binding}" Background="{Binding ConverterParameter=Color, Converter={StaticResource YeelightConverter}}">
+                    <Button Content="{Binding ConverterParameter=Power, Converter={StaticResource YeelightConverter}}" Click="Button_Click_1"/>
+                </GridView>
+            </DataTemplate>
+        </Grid.Resources>
+        <ProgressRing x:Name="prSearchDevice" HorizontalAlignment="Stretch" Margin="80,153,80,0" VerticalAlignment="Top" MaxWidth="20" MaxHeight="20" Width="20" Height="20"/>
+        <GridView x:Name="gridView" SelectionMode="None" VerticalContentAlignment="Top" Padding="0" HorizontalContentAlignment="Left" Margin="0,0,385,0">
+            <Grid HorizontalAlignment="Left" Height="238" VerticalAlignment="Top" Width="222" Background="#FFEC0909">
+                <ListView x:Name="lvDeviceList" Header="设备列表" BorderThickness="1" BorderBrush="Black" SelectionChanged="lvDeviceList_SelectionChanged" Grid.ColumnSpan="1" Grid.RowSpan="1" AutomationProperties.ItemType="Yeelight" Margin="0,43,0,0"/>
+                <Button x:Name="btnSearchDevice" Content="搜索设备" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnSearchDevice_Click" Width="80" Height="32"/>
+                <Button x:Name="btnCortanaSetting" Content="调教小娜" HorizontalAlignment="Right" Margin="0,0,1,0" VerticalAlignment="Top" Click="btnCortanaSetting_Click" Width="80" Height="32"/>
+            </Grid>
+        </GridView>
+        <FlipView x:Name="flipView" HorizontalAlignment="Left" Margin="310,0,0,0" VerticalAlignment="Top" Width="330" ItemTemplate="{Binding Mode=OneWay, Source={StaticResource flipViewYeelightItem}}" AutomationProperties.ItemType="Yeelight"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Page>

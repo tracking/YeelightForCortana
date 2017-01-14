@@ -1,6 +1,7 @@
 ﻿using ColorMine.ColorSpaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -38,40 +39,44 @@ namespace YeelightForCortana
         /// <param name="e"></param>
         private async void btnSearchDevice_Click(object sender, RoutedEventArgs e)
         {
-            // 禁用按钮
+            // 禁用按钮 显示进度
             btnSearchDevice.IsEnabled = false;
+            prSearchDevice.IsActive = true;
+
             // 清空列表
             lvDeviceList.ItemsSource = null;
 
             // 获取设备列表
             lvDeviceList.ItemsSource = await YeelightUtils.SearchDeviceAsync();
+            flipView.ItemsSource = lvDeviceList.ItemsSource;
 
-            // 启用按钮
+            // 启用按钮 隐藏进度
             btnSearchDevice.IsEnabled = true;
+            prSearchDevice.IsActive = false;
         }
 
         private void lvDeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // 显示按钮
-            btnToggle.Visibility = Visibility.Visible;
+            //// 显示按钮
+            //btnToggle.Visibility = Visibility.Visible;
         }
 
         private async void btnToggle_Click(object sender, RoutedEventArgs e)
         {
-            // 未选中
-            if (lvDeviceList.SelectedItem == null)
-            {
-                return;
-            }
+            //// 未选中
+            //if (lvDeviceList.SelectedItem == null)
+            //{
+            //    return;
+            //}
 
-            // 禁用按钮
-            btnToggle.IsEnabled = false;
+            //// 禁用按钮
+            //btnToggle.IsEnabled = false;
 
-            Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
-            await yeelightItem.ToggleAsync();
-
-            // 启用按钮
-            btnToggle.IsEnabled = true;
+            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
+            //await yeelightItem.ToggleAsync();
+            //lvDeviceList.SelectedItem = yeelightItem;
+            //// 启用按钮
+            //btnToggle.IsEnabled = true;
         }
 
         private async void btnCortanaSetting_Click(object sender, RoutedEventArgs e)
@@ -89,21 +94,28 @@ namespace YeelightForCortana
 
         private async void button1_Click(object sender, RoutedEventArgs e)
         {
-            int h = Convert.ToInt32(textBox_r.Text);
-            int s = Convert.ToInt32(textBox_g.Text);
+            //int h = Convert.ToInt32(textBox_r.Text);
+            //int s = Convert.ToInt32(textBox_g.Text);
             //byte b = Convert.ToByte(textBox_b.Text);
             //;
             //var hsv = new Hsb { H = h, S = (double)s / 100, B = 1 };
             //var rgb = hsv.To<Rgb>();
-
+            
             //grid1.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B));
             //Hsb
             //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
             //await yeelightItem.DebugAction(h, s);
             //RgbToHueEffect
-            Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
-            await yeelightItem.DebugAction(textBox.Text);
-            
+            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
+            //await yeelightItem.DebugAction(textBox.Text);
+
+        }
+
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Yeelight yeelightItem = (Yeelight)flipView.SelectedItem;
+            await yeelightItem.ToggleAsync();
+            //await yeelightItem.SetColorTemperatureAsync(6500);
         }
     }
 }

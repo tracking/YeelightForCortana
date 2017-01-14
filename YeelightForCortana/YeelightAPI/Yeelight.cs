@@ -200,17 +200,14 @@ namespace YeelightAPI
         private YeelightColorMode color_mode;
         private int ct;
         private int rgb;
+        private int r;
+        private int g;
+        private int b;
         private int hue;
         private int sat;
         private string name;
         private StreamSocket tcpClient;
         #endregion
-
-        public IAsyncOperation<bool> DebugAction(string name)
-        {
-            return this.Device_set_name_Async(name).AsAsyncOperation();
-        }
-
 
         #region 暴露属性
         /// <summary>
@@ -240,15 +237,27 @@ namespace YeelightAPI
         /// <summary>
         /// 颜色模式（1:可设置颜色 2:色温模式 3: HSV模式）
         /// </summary>
-        internal YeelightColorMode ColorMode { get { return color_mode; } }
+        public YeelightColorMode ColorMode { get { return color_mode; } }
         /// <summary>
         /// 色温（颜色模式为 "色温模式" 时才有效）
         /// </summary>
         public int ColorTemperature { get { return ct; } }
         /// <summary>
-        /// RGB
+        /// RGB 十进制
         /// </summary>
         public int RGB { get { return rgb; } }
+        /// <summary>
+        /// R
+        /// </summary>
+        public int R { get { return r; } }
+        /// <summary>
+        /// G
+        /// </summary>
+        public int G { get { return g; } }
+        /// <summary>
+        /// B
+        /// </summary>
+        public int B { get { return b; } }
         /// <summary>
         /// 色调
         /// </summary>
@@ -290,6 +299,53 @@ namespace YeelightAPI
         {
             return this.ToggleHelper().AsAsyncOperation();
         }
+        /// <summary>
+        /// 设置色温
+        /// </summary>
+        /// <param name="ct">色温 1700 - 6500</param>
+        /// <returns>是否成功</returns>
+        public IAsyncOperation<bool> SetColorTemperatureAsync(int ct)
+        {
+            return this.SetColorTemperatureHelper(ct).AsAsyncOperation();
+        }
+        /// <summary>
+        /// 设置HSV私有函数
+        /// </summary>
+        /// <param name="h">色相 0 - 359</param>
+        /// <param name="s">饱和度 0 - 100</param>
+        /// <param name="v">亮度 1 - 100</param>
+        /// <returns>是否成功</returns>
+        public IAsyncOperation<bool> SetHSV(int h, int s, int v)
+        {
+            return this.SetHSVHelper(h, s, v).AsAsyncOperation();
+        }
+        /// <summary>
+        /// 设置亮度
+        /// </summary>
+        /// <param name="bright">亮度 1 - 100</param>
+        /// <returns>是否成功</returns>
+        public IAsyncOperation<bool> SetBright(int bright)
+        {
+            return this.SetBrightHelper(bright).AsAsyncOperation();
+        }
+        /// <summary>
+        /// 设置电源状态
+        /// </summary>
+        /// <param name="power">电源状态</param>
+        /// <returns>是否成功</returns>
+        public IAsyncOperation<bool> SetPower(YeelightPower power)
+        {
+            return this.SetPowerHelper(power).AsAsyncOperation();
+        }
+        /// <summary>
+        /// 设置设备名称
+        /// </summary>
+        /// <param name="name">设备名称</param>
+        /// <returns>是否成功</returns>
+        public IAsyncOperation<bool> SetDeviceName(string name)
+        {
+            return this.SetDeviceNameHelper(name).AsAsyncOperation();
+        }
 
         /// <summary>
         /// ToString
@@ -302,6 +358,8 @@ namespace YeelightAPI
         #endregion
 
         #region 私有函数
+
+        #region 通信相关函数
         /// <summary>
         /// 验证源设备信息合法性
         /// </summary>
@@ -380,6 +438,13 @@ namespace YeelightAPI
                 // 解析RGB
                 var matchRGB = RGB_REGEX.Match(rawDevInfo);
                 this.rgb = Convert.ToInt32(matchRGB.Groups[1].ToString());
+                // RGB十六进制转换
+                var rgb16 = Convert.ToString(this.rgb, 16);
+                rgb16 = rgb16 == "0" ? "000000" : rgb16;
+                // 单独保存
+                this.r = Convert.ToInt32(rgb16.Substring(0, 2), 16);
+                this.g = Convert.ToInt32(rgb16.Substring(2, 2), 16);
+                this.b = Convert.ToInt32(rgb16.Substring(4, 2), 16);
 
                 // 解析色调
                 var matchHue = HUE_REGEX.Match(rawDevInfo);
@@ -479,6 +544,9 @@ namespace YeelightAPI
 
             return result;
         }
+        #endregion
+
+        #region 包装设备函数
         /// <summary>
         /// 更新设备信息
         /// </summary>
@@ -497,7 +565,12 @@ namespace YeelightAPI
             if (propList["ct"] != null)
                 this.ct = (int)propList["ct"];
             if (propList["rgb"] != null)
+            {
                 this.rgb = (int)propList["rgb"];
+                this.r = (int)propList["r"];
+                this.g = (int)propList["g"];
+                this.b = (int)propList["b"];
+            }
             if (propList["hue"] != null)
                 this.hue = (int)propList["hue"];
             if (propList["sat"] != null)
@@ -505,7 +578,6 @@ namespace YeelightAPI
             if (propList["name"] != null)
                 this.name = (string)propList["name"];
         }
-
         /// <summary>
         /// 开关灯私有函数
         /// </summary>
@@ -519,14 +591,99 @@ namespace YeelightAPI
 
             return isSuccess;
         }
+        /// <summary>
+        /// 设置色温私有函数
+        /// </summary>
+        /// <param name="ct">色温 1700 - 6500</param>
+        /// <returns>是否成功</returns>
+        private async Task<bool> SetColorTemperatureHelper(int ct)
+        {
+            // 格式处理
+            ct = ct > 6500 ? 6500 : ct;
+            ct = ct < 1700 ? 1700 : ct;
+
+            // 是否成功
+            bool isSuccess = await this.Device_set_ct_abx_Async(ct, YeelightTransformEffect.smooth, 300);
+            // 更新设备信息
+            await this.UpdateDeviceInfo();
+
+            return isSuccess;
+        }
+        /// <summary>
+        /// 设置HSV私有函数
+        /// </summary>
+        /// <param name="h">色相 0 - 359</param>
+        /// <param name="s">饱和度 0 - 100</param>
+        /// <param name="v">亮度 1 - 100</param>
+        /// <returns>是否成功</returns>
+        private async Task<bool> SetHSVHelper(int h, int s, int v)
+        {
+            // 格式处理
+            h = h > 359 ? 359 : h;
+            h = h < 0 ? 0 : h;
+            s = s > 100 ? 100 : s;
+            s = s < 0 ? 0 : s;
+            v = v > 100 ? 100 : v;
+            v = v < 1 ? 1 : v;
+
+            // 是否成功
+            bool isSuccess = await this.Device_set_hsv_Async(h, s, YeelightTransformEffect.smooth, 150);
+            isSuccess = isSuccess ? await this.Device_set_bright_Async(v, YeelightTransformEffect.smooth, 150) : isSuccess;
+
+            // 更新设备信息
+            await this.UpdateDeviceInfo();
+
+            return isSuccess;
+        }
+        /// <summary>
+        /// 设置亮度私有函数
+        /// </summary>
+        /// <param name="bright">亮度 1 - 100</param>
+        /// <returns>是否成功</returns>
+        private async Task<bool> SetBrightHelper(int bright)
+        {
+            // 格式处理
+            bright = bright > 100 ? 100 : bright;
+            bright = bright < 1 ? 1 : bright;
+
+            // 是否成功
+            bool isSuccess = await this.Device_set_bright_Async(bright, YeelightTransformEffect.smooth, 300);
+            // 更新设备信息
+            await this.UpdateDeviceInfo();
+
+            return isSuccess;
+        }
+        /// <summary>
+        /// 设置电源状态私有函数
+        /// </summary>
+        /// <param name="power">电源状态</param>
+        /// <returns>是否成功</returns>
+        private async Task<bool> SetPowerHelper(YeelightPower power)
+        {
+            // 是否成功
+            bool isSuccess = await this.Device_set_power_Async(power, YeelightTransformEffect.smooth, 300);
+            // 更新设备信息
+            await this.UpdateDeviceInfo();
+
+            return isSuccess;
+        }
+        /// <summary>
+        /// 设置设备名称私有函数
+        /// </summary>
+        /// <param name="name">设备名称</param>
+        /// <returns>是否成功</returns>
+        private async Task<bool> SetDeviceNameHelper(string name)
+        {
+            // 是否成功
+            bool isSuccess = await this.Device_set_name_Async(name);
+            // 更新设备信息
+            await this.UpdateDeviceInfo();
+
+            return isSuccess;
+        }
+        #endregion
 
         #region 设备函数
-        private async Task DebugFunc()
-        {
-            //var x = await Device_set_ct_abx(6500, YeelightTransformEffect.sudden, 5000);
-            var x = await Device_set_rgb_Async(255, 255, 255, YeelightTransformEffect.sudden, 2000);
-            Debug.WriteLine("DebugFunc: {0}", x);
-        }
         /// <summary>
         /// 设备是否支持该函数
         /// </summary>
@@ -638,9 +795,25 @@ namespace YeelightAPI
 
             // RGB
             if (!string.IsNullOrEmpty(res["result"][4].ToString()))
-                result.Add("rgb", Convert.ToInt32(res["result"][4].ToString()));
+            {
+                // 解析RGB
+                var rgb = Convert.ToInt32(res["result"][4].ToString());
+                // RGB十六进制转换
+                var rgb16 = Convert.ToString(rgb, 16);
+                rgb16 = rgb16 == "0" ? "000000" : rgb16;
+                // 单独保存
+                result.Add("rgb", rgb);
+                result.Add("r", Convert.ToInt32(rgb16.Substring(0, 2), 16));
+                result.Add("g", Convert.ToInt32(rgb16.Substring(2, 2), 16));
+                result.Add("b", Convert.ToInt32(rgb16.Substring(4, 2), 16));
+            }
             else
+            {
                 result.Add("rgb", null);
+                result.Add("r", null);
+                result.Add("g", null);
+                result.Add("b", null);
+            }
 
             // 色调
             if (!string.IsNullOrEmpty(res["result"][5].ToString()))
@@ -804,11 +977,11 @@ namespace YeelightAPI
         /// <summary>
         /// 设置亮度
         /// </summary>
-        /// <param name="value">亮度 1 - 100</param>
+        /// <param name="bright">亮度 1 - 100</param>
         /// <param name="effect">渐变效果</param>
         /// <param name="duration">渐变时长</param>
         /// <returns></returns>
-        private async Task<bool> Device_set_bright_Async(int value, YeelightTransformEffect effect, int duration)
+        private async Task<bool> Device_set_bright_Async(int bright, YeelightTransformEffect effect, int duration)
         {
             // 函数名
             string method = YeelightMethod.set_bright.ToString();
@@ -817,8 +990,8 @@ namespace YeelightAPI
             this.DeviceIsSupportFunc(method);
 
             // 参数错误
-            if (value > 100
-                || value < 1
+            if (bright > 100
+                || bright < 1
                 || (effect == YeelightTransformEffect.smooth && duration < 30))
             {
                 throw new Exception("参数错误");
@@ -830,7 +1003,7 @@ namespace YeelightAPI
 
             // 组建参数
             JArray param = new JArray();
-            param.Add(value);
+            param.Add(bright);
             param.Add(effect.ToString());
             param.Add(duration);
 
