@@ -10,10 +10,9 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="360" VerticalAlignment="Top">
         <Grid.Resources>
             <local:YeelightConverter x:Key="YeelightConverter"/>
-
             <DataTemplate x:Key="flipViewYeelightItem">
-                <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Header="{Binding}" Background="{Binding ConverterParameter=Color, Converter={StaticResource YeelightConverter}}">
-                    <Button Content="{Binding ConverterParameter=Power, Converter={StaticResource YeelightConverter}}" Click="Button_Click_1"/>
+                <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Header="{Binding Name}" Background="{Binding BackgroundColor}">
+                    <Button Content="{Binding Power}" Click="Button_Click_1"/>
                 </GridView>
             </DataTemplate>
         </Grid.Resources>
@@ -25,7 +24,7 @@
                 <Button x:Name="btnCortanaSetting" Content="调教小娜" HorizontalAlignment="Right" Margin="0,0,1,0" VerticalAlignment="Top" Click="btnCortanaSetting_Click" Width="80" Height="32"/>
             </Grid>
         </GridView>
-        <FlipView x:Name="flipView" HorizontalAlignment="Left" Margin="310,0,0,0" VerticalAlignment="Top" Width="330" ItemTemplate="{Binding Mode=OneWay, Source={StaticResource flipViewYeelightItem}}" AutomationProperties.ItemType="Yeelight"/>
+        <FlipView x:Name="flipView" HorizontalAlignment="Left" Margin="310,0,0,0" VerticalAlignment="Top" Width="330" ItemTemplate="{Binding Mode=OneTime, Source={StaticResource flipViewYeelightItem}}"/>
         <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Page>

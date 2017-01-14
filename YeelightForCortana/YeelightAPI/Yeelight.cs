@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -292,6 +291,14 @@ namespace YeelightAPI
 
         #region 公共函数
         /// <summary>
+        /// 更新设备信息
+        /// </summary>
+        /// <returns>更新的数据字段</returns>
+        public IAsyncOperation<IList<string>> UpdateDeviceInfo()
+        {
+            return this.UpdateDeviceInfoHelper().AsAsyncOperation();
+        }
+        /// <summary>
         /// 开关灯
         /// </summary>
         /// <returns>是否成功</returns>
@@ -548,35 +555,64 @@ namespace YeelightAPI
 
         #region 包装设备函数
         /// <summary>
-        /// 更新设备信息
+        /// 更新设备信息私有函数
         /// </summary>
-        /// <returns></returns>
-        private async Task UpdateDeviceInfo()
+        /// <returns>更新的数据字段</returns>
+        private async Task<IList<string>> UpdateDeviceInfoHelper()
         {
             // 获取设备数据
             Dictionary<string, object> propList = await this.Device_get_prop_Async();
+            // 更新的数据字段
+            List<string> updateParamList = new List<string>();
 
-            if (propList["power"] != null)
+            if (propList["power"] != null && this.power != (YeelightPower)propList["power"])
+            {
                 this.power = (YeelightPower)propList["power"];
-            if (propList["bright"] != null)
+                updateParamList.Add("power");
+            }
+            if (propList["bright"] != null && this.bright != (int)propList["bright"])
+            {
                 this.bright = (int)propList["bright"];
-            if (propList["color_mode"] != null)
+                updateParamList.Add("bright");
+            }
+            if (propList["color_mode"] != null && this.color_mode != (YeelightColorMode)propList["color_mode"])
+            {
                 this.color_mode = (YeelightColorMode)propList["color_mode"];
-            if (propList["ct"] != null)
+                updateParamList.Add("color_mode");
+            }
+            if (propList["ct"] != null && this.ct != (int)propList["ct"])
+            {
                 this.ct = (int)propList["ct"];
-            if (propList["rgb"] != null)
+                updateParamList.Add("ct");
+            }
+            if (propList["rgb"] != null && this.rgb != (int)propList["rgb"])
             {
                 this.rgb = (int)propList["rgb"];
                 this.r = (int)propList["r"];
                 this.g = (int)propList["g"];
                 this.b = (int)propList["b"];
+                updateParamList.Add("rgb");
+                updateParamList.Add("r");
+                updateParamList.Add("g");
+                updateParamList.Add("b");
             }
-            if (propList["hue"] != null)
+            if (propList["hue"] != null && this.hue != (int)propList["hue"])
+            {
                 this.hue = (int)propList["hue"];
-            if (propList["sat"] != null)
+                updateParamList.Add("hue");
+            }
+            if (propList["sat"] != null && this.sat != (int)propList["sat"])
+            {
                 this.sat = (int)propList["sat"];
-            if (propList["name"] != null)
+                updateParamList.Add("sat");
+            }
+            if (propList["name"] != null && this.name != (string)propList["name"])
+            {
                 this.name = (string)propList["name"];
+                updateParamList.Add("name");
+            }
+
+            return updateParamList;
         }
         /// <summary>
         /// 开关灯私有函数
@@ -584,12 +620,7 @@ namespace YeelightAPI
         /// <returns>是否成功</returns>
         private async Task<bool> ToggleHelper()
         {
-            // 是否成功
-            bool isSuccess = await this.Device_toggle_Async();
-            // 更新设备信息
-            await this.UpdateDeviceInfo();
-
-            return isSuccess;
+            return await this.Device_toggle_Async();
         }
         /// <summary>
         /// 设置色温私有函数
@@ -602,12 +633,7 @@ namespace YeelightAPI
             ct = ct > 6500 ? 6500 : ct;
             ct = ct < 1700 ? 1700 : ct;
 
-            // 是否成功
-            bool isSuccess = await this.Device_set_ct_abx_Async(ct, YeelightTransformEffect.smooth, 300);
-            // 更新设备信息
-            await this.UpdateDeviceInfo();
-
-            return isSuccess;
+            return await this.Device_set_ct_abx_Async(ct, YeelightTransformEffect.smooth, 300);
         }
         /// <summary>
         /// 设置HSV私有函数
@@ -630,9 +656,6 @@ namespace YeelightAPI
             bool isSuccess = await this.Device_set_hsv_Async(h, s, YeelightTransformEffect.smooth, 150);
             isSuccess = isSuccess ? await this.Device_set_bright_Async(v, YeelightTransformEffect.smooth, 150) : isSuccess;
 
-            // 更新设备信息
-            await this.UpdateDeviceInfo();
-
             return isSuccess;
         }
         /// <summary>
@@ -646,12 +669,7 @@ namespace YeelightAPI
             bright = bright > 100 ? 100 : bright;
             bright = bright < 1 ? 1 : bright;
 
-            // 是否成功
-            bool isSuccess = await this.Device_set_bright_Async(bright, YeelightTransformEffect.smooth, 300);
-            // 更新设备信息
-            await this.UpdateDeviceInfo();
-
-            return isSuccess;
+            return await this.Device_set_bright_Async(bright, YeelightTransformEffect.smooth, 300);
         }
         /// <summary>
         /// 设置电源状态私有函数
@@ -660,12 +678,7 @@ namespace YeelightAPI
         /// <returns>是否成功</returns>
         private async Task<bool> SetPowerHelper(YeelightPower power)
         {
-            // 是否成功
-            bool isSuccess = await this.Device_set_power_Async(power, YeelightTransformEffect.smooth, 300);
-            // 更新设备信息
-            await this.UpdateDeviceInfo();
-
-            return isSuccess;
+            return await this.Device_set_power_Async(power, YeelightTransformEffect.smooth, 300);
         }
         /// <summary>
         /// 设置设备名称私有函数
@@ -674,12 +687,7 @@ namespace YeelightAPI
         /// <returns>是否成功</returns>
         private async Task<bool> SetDeviceNameHelper(string name)
         {
-            // 是否成功
-            bool isSuccess = await this.Device_set_name_Async(name);
-            // 更新设备信息
-            await this.UpdateDeviceInfo();
-
-            return isSuccess;
+            return await this.Device_set_name_Async(name);
         }
         #endregion
 

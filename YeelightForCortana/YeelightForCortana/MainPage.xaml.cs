@@ -44,11 +44,13 @@ namespace YeelightForCortana
             prSearchDevice.IsActive = true;
 
             // 清空列表
-            lvDeviceList.ItemsSource = null;
+            flipView.ItemsSource = null;
 
             // 获取设备列表
-            lvDeviceList.ItemsSource = await YeelightUtils.SearchDeviceAsync();
-            flipView.ItemsSource = lvDeviceList.ItemsSource;
+            var itemSource = new ObservableCollection<YeelightFlipViewItem>();
+            foreach (var item in await YeelightUtils.SearchDeviceAsync())
+                itemSource.Add(new YeelightFlipViewItem(item));
+            flipView.ItemsSource = itemSource;
 
             // 启用按钮 隐藏进度
             btnSearchDevice.IsEnabled = true;
@@ -100,7 +102,7 @@ namespace YeelightForCortana
             //;
             //var hsv = new Hsb { H = h, S = (double)s / 100, B = 1 };
             //var rgb = hsv.To<Rgb>();
-            
+
             //grid1.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B));
             //Hsb
             //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
@@ -113,8 +115,9 @@ namespace YeelightForCortana
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Yeelight yeelightItem = (Yeelight)flipView.SelectedItem;
-            await yeelightItem.ToggleAsync();
+            YeelightFlipViewItem item = (YeelightFlipViewItem)flipView.SelectedItem;
+            await item.ToggleAsync();
+            //flipView.Items[flipView.SelectedIndex] = flipView.Items[flipView.SelectedIndex];
             //await yeelightItem.SetColorTemperatureAsync(6500);
         }
     }
