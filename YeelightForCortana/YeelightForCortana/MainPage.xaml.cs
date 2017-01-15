@@ -32,29 +32,54 @@ namespace YeelightForCortana
             this.InitializeComponent();
         }
 
-        /// <summary>
-        /// 搜索设备按钮按下
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void btnSearchDevice_Click(object sender, RoutedEventArgs e)
+        // 搜索设备按钮按下
+        private async void abSearchDevice_Click(object sender, RoutedEventArgs e)
         {
             // 禁用按钮 显示进度
-            btnSearchDevice.IsEnabled = false;
+            abSearchDevice.IsEnabled = false;
             prSearchDevice.IsActive = true;
 
             // 清空列表
-            flipView.ItemsSource = null;
+            fvDevice.ItemsSource = null;
 
             // 获取设备列表
             var itemSource = new ObservableCollection<YeelightFlipViewItem>();
             foreach (var item in await YeelightUtils.SearchDeviceAsync())
                 itemSource.Add(new YeelightFlipViewItem(item));
-            flipView.ItemsSource = itemSource;
+            fvDevice.ItemsSource = itemSource;
+            fvDevice.Focus(FocusState.Pointer);
 
             // 启用按钮 隐藏进度
-            btnSearchDevice.IsEnabled = true;
+            abSearchDevice.IsEnabled = true;
             prSearchDevice.IsActive = false;
+        }
+
+        // 修改设备名字按钮按下
+        private async void Button_SetDeviceName_Click(object sender, RoutedEventArgs e)
+        {
+            // 设置数据上下文
+            cdSetDeviceName.DataContext = fvDevice.SelectedItem;
+
+            // 显示
+            await cdSetDeviceName.ShowAsync();
+        }
+        // 修改设备对话框 主按钮按下
+        private async void cdSetDeviceName_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            // 长度
+            if (!string.IsNullOrEmpty(txtDeviceName.Text) && Encoding.UTF8.GetByteCount(txtDeviceName.Text) <= 20)
+            {
+                YeelightFlipViewItem item = (YeelightFlipViewItem)fvDevice.SelectedItem;
+                await item.SetDeviceName(txtDeviceName.Text);
+            }
+
+            cdSetDeviceName.Hide();
+        }
+        // 修改设备对话框 副按钮按下
+        private void cdSetDeviceName_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            // 隐藏
+            cdSetDeviceName.Hide();
         }
 
         private void lvDeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -90,7 +115,7 @@ namespace YeelightForCortana
 
         private async void button_Click(object sender, RoutedEventArgs e)
         {
-            Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
+            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
             //await yeelightItem.DebugAction();
         }
 
@@ -115,10 +140,15 @@ namespace YeelightForCortana
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            YeelightFlipViewItem item = (YeelightFlipViewItem)flipView.SelectedItem;
-            await item.ToggleAsync();
+            //YeelightFlipViewItem item = (YeelightFlipViewItem)flipView.SelectedItem;
+            //await item.ToggleAsync();
             //flipView.Items[flipView.SelectedIndex] = flipView.Items[flipView.SelectedIndex];
             //await yeelightItem.SetColorTemperatureAsync(6500);
+        }
+
+        private void appBarButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

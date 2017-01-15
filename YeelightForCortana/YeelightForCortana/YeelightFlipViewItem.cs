@@ -53,11 +53,11 @@ namespace YeelightForCortana
         /// <summary>
         /// 电源状态
         /// </summary>
-        public string Power
+        public bool Power
         {
             get
             {
-                return this.yeelightItem.Power.ToString();
+                return this.yeelightItem.Power == YeelightPower.on ? true : false;
             }
         }
         /// <summary>
@@ -95,7 +95,7 @@ namespace YeelightForCortana
                 }
 
                 var rgb = hsv.To<Rgb>();
-                return new SolidColorBrush(Windows.UI.Color.FromArgb(255, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B));
+                return new SolidColorBrush(Windows.UI.Color.FromArgb(150, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B));
             }
         }
 
@@ -106,6 +106,16 @@ namespace YeelightForCortana
         public async Task ToggleAsync()
         {
             await this.yeelightItem.ToggleAsync();
+            await this.UpdateDataAsync();
+        }
+        /// <summary>
+        /// 设置设备名字
+        /// </summary>
+        /// <param name="name">设备名字</param>
+        /// <returns></returns>
+        public async Task SetDeviceName(string name)
+        {
+            await this.yeelightItem.SetDeviceName(name);
             await this.UpdateDataAsync();
         }
 

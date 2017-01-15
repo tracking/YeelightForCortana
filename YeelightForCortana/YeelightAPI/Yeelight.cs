@@ -447,7 +447,9 @@ namespace YeelightAPI
                 this.rgb = Convert.ToInt32(matchRGB.Groups[1].ToString());
                 // RGB十六进制转换
                 var rgb16 = Convert.ToString(this.rgb, 16);
-                rgb16 = rgb16 == "0" ? "000000" : rgb16;
+                // 补零
+                for (int i = 0, length = rgb16.Length; i < 6 - length; i++)
+                    rgb16 = "0" + rgb16;
                 // 单独保存
                 this.r = Convert.ToInt32(rgb16.Substring(0, 2), 16);
                 this.g = Convert.ToInt32(rgb16.Substring(2, 2), 16);
@@ -808,7 +810,9 @@ namespace YeelightAPI
                 var rgb = Convert.ToInt32(res["result"][4].ToString());
                 // RGB十六进制转换
                 var rgb16 = Convert.ToString(rgb, 16);
-                rgb16 = rgb16 == "0" ? "000000" : rgb16;
+                // 补零
+                for (int i = 0, length = rgb16.Length; i < 6 - length; i++)
+                    rgb16 = "0" + rgb16;
                 // 单独保存
                 result.Add("rgb", rgb);
                 result.Add("r", Convert.ToInt32(rgb16.Substring(0, 2), 16));

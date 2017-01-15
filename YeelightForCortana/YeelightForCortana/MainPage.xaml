@@ -6,25 +6,31 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.BottomAppBar>
+        <CommandBar VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Top">
+            <CommandBar.Content>
+                <Grid/>
+            </CommandBar.Content>
+            <AppBarButton x:Name="abSearchDevice" Icon="Refresh" Label="刷新" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" Click="abSearchDevice_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="360" VerticalAlignment="Top">
+    <Grid Background="White">
         <Grid.Resources>
-            <local:YeelightConverter x:Key="YeelightConverter"/>
-            <DataTemplate x:Key="flipViewYeelightItem">
-                <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Header="{Binding Name}" Background="{Binding BackgroundColor}">
-                    <Button Content="{Binding Power}" Click="Button_Click_1"/>
+            <DataTemplate x:Key="YeelightFlipViewItemTemplate">
+                <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{Binding Name}" Background="{Binding BackgroundColor}" SelectionMode="None" Padding="15,15,0,0">
+                    <Button Content="修改设备名字"  Width="120" MinWidth="120" Height="40" Margin="0,10,15,10" Click="Button_SetDeviceName_Click"/>
+                    <ToggleSwitch IsOn="{Binding Power}" OffContent="关" OnContent="开" Width="120" MinWidth="120" Height="60" Header="开关" Margin="0,0,15,0" />
+                    <Slider Header="色相" Maximum="359" Width="120" Height="60" Margin="0,0,15,0" />
+                    <Slider Header="饱和度" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" />
+                    <Slider Header="亮度" Minimum="1" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" />
                 </GridView>
             </DataTemplate>
         </Grid.Resources>
-        <ProgressRing x:Name="prSearchDevice" HorizontalAlignment="Stretch" Margin="80,153,80,0" VerticalAlignment="Top" MaxWidth="20" MaxHeight="20" Width="20" Height="20"/>
-        <GridView x:Name="gridView" SelectionMode="None" VerticalContentAlignment="Top" Padding="0" HorizontalContentAlignment="Left" Margin="0,0,385,0">
-            <Grid HorizontalAlignment="Left" Height="238" VerticalAlignment="Top" Width="222" Background="#FFEC0909">
-                <ListView x:Name="lvDeviceList" Header="设备列表" BorderThickness="1" BorderBrush="Black" SelectionChanged="lvDeviceList_SelectionChanged" Grid.ColumnSpan="1" Grid.RowSpan="1" AutomationProperties.ItemType="Yeelight" Margin="0,43,0,0"/>
-                <Button x:Name="btnSearchDevice" Content="搜索设备" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnSearchDevice_Click" Width="80" Height="32"/>
-                <Button x:Name="btnCortanaSetting" Content="调教小娜" HorizontalAlignment="Right" Margin="0,0,1,0" VerticalAlignment="Top" Click="btnCortanaSetting_Click" Width="80" Height="32"/>
-            </Grid>
-        </GridView>
-        <FlipView x:Name="flipView" HorizontalAlignment="Left" Margin="310,0,0,0" VerticalAlignment="Top" Width="330" ItemTemplate="{Binding Mode=OneTime, Source={StaticResource flipViewYeelightItem}}"/>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top"/>
+        <FlipView x:Name="fvDevice" ItemTemplate="{Binding Mode=OneTime, Source={StaticResource YeelightFlipViewItemTemplate}}" d:IsLocked="True"/>
+        <ContentDialog x:Name="cdSetDeviceName" Title="修改设备名字" PrimaryButtonText="确定" SecondaryButtonText="取消" PrimaryButtonClick="cdSetDeviceName_PrimaryButtonClick" SecondaryButtonClick="cdSetDeviceName_SecondaryButtonClick">
+            <TextBox x:Name="txtDeviceName" Text="{Binding Name}" MaxLength="20"/>
+        </ContentDialog>
+        <ProgressRing x:Name="prSearchDevice" HorizontalAlignment="Center" Margin="300,160" VerticalAlignment="Center" MaxWidth="40" MaxHeight="40" Height="39" MinWidth="40" MinHeight="40" d:IsLocked="True"/>
     </Grid>
 </Page>
