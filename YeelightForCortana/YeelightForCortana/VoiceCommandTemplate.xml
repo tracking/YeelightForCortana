@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
+  <CommandSet xml:lang="zh-cn" Name="AdventureWorksCommandSet_zh-cn">
+    <AppName> 你好小娜 </AppName>
+    <Example> 你好小娜 </Example>
+  </CommandSet>
+</VoiceCommands>

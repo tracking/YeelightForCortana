@@ -39,6 +39,13 @@ namespace YeelightForCortana
             this.InitializeComponent();
         }
 
+
+        // 加载中
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            // 隐藏后退按钮
+            Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.Collapsed;
+        }
         // 搜索设备按钮按下
         private async void abSearchDevice_Click(object sender, RoutedEventArgs e)
         {
@@ -137,69 +144,11 @@ namespace YeelightForCortana
                      await item.SetBright();
              });
         }
-
-        private void lvDeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        // 小娜设置按钮按下
+        private void abCortanaConfig_Click(object sender, RoutedEventArgs e)
         {
-            //// 显示按钮
-            //btnToggle.Visibility = Visibility.Visible;
-        }
-
-        private async void btnToggle_Click(object sender, RoutedEventArgs e)
-        {
-            //// 未选中
-            //if (lvDeviceList.SelectedItem == null)
-            //{
-            //    return;
-            //}
-
-            //// 禁用按钮
-            //btnToggle.IsEnabled = false;
-
-            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
-            //await yeelightItem.ToggleAsync();
-            //lvDeviceList.SelectedItem = yeelightItem;
-            //// 启用按钮
-            //btnToggle.IsEnabled = true;
-        }
-
-        private async void btnCortanaSetting_Click(object sender, RoutedEventArgs e)
-        {
-            // 安装语音命令文件
-            Windows.Storage.StorageFile vcdStorageFile = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(@"YeelightVoiceCommands.xml");
-            await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
-        }
-
-        private async void button_Click(object sender, RoutedEventArgs e)
-        {
-            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
-            //await yeelightItem.DebugAction();
-        }
-
-        private async void button1_Click(object sender, RoutedEventArgs e)
-        {
-            //int h = Convert.ToInt32(textBox_r.Text);
-            //int s = Convert.ToInt32(textBox_g.Text);
-            //byte b = Convert.ToByte(textBox_b.Text);
-            //;
-            //var hsv = new Hsb { H = h, S = (double)s / 100, B = 1 };
-            //var rgb = hsv.To<Rgb>();
-
-            //grid1.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B));
-            //Hsb
-            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
-            //await yeelightItem.DebugAction(h, s);
-            //RgbToHueEffect
-            //Yeelight yeelightItem = (Yeelight)lvDeviceList.SelectedItem;
-            //await yeelightItem.DebugAction(textBox.Text);
-
-        }
-
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            //YeelightFlipViewItem item = (YeelightFlipViewItem)flipView.SelectedItem;
-            //await item.ToggleAsync();
-            //flipView.Items[flipView.SelectedIndex] = flipView.Items[flipView.SelectedIndex];
-            //await yeelightItem.SetColorTemperatureAsync(6500);
+            // 跳转到小娜设置页
+            Frame.Navigate(typeof(CortanaConfig));
         }
     }
 }
