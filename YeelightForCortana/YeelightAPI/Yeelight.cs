@@ -291,6 +291,44 @@ namespace YeelightAPI
 
         #region 公共函数
         /// <summary>
+        /// 设备是否支持该属性
+        /// </summary>
+        /// <param name="prop">属性名</param>
+        /// <returns>是否支持</returns>
+        public bool DeviceIsSupportProp(string prop)
+        {
+            switch (prop)
+            {
+                case "hue":
+                case "Hue":
+                case "HUE":
+                case "sat":
+                case "Sat":
+                case "SAT":
+                    return this.DeviceIsSupportFunc(YeelightMethod.set_hsv);
+                case "r":
+                case "g":
+                case "b":
+                case "R":
+                case "G":
+                case "B":
+                case "rgb":
+                case "Rgb":
+                case "RGB":
+                    return this.DeviceIsSupportFunc(YeelightMethod.set_rgb);
+                case "name":
+                case "Name":
+                    return this.DeviceIsSupportFunc(YeelightMethod.set_name);
+                case "ct":
+                case "color_temperature":
+                case "colorTemperature":
+                case "ColorTemperature":
+                    return this.DeviceIsSupportFunc(YeelightMethod.set_ct_abx);
+                default:
+                    return false;
+            }
+        }
+        /// <summary>
         /// 更新设备信息
         /// </summary>
         /// <returns>更新的数据字段</returns>
@@ -320,11 +358,10 @@ namespace YeelightAPI
         /// </summary>
         /// <param name="h">色相 0 - 359</param>
         /// <param name="s">饱和度 0 - 100</param>
-        /// <param name="v">亮度 1 - 100</param>
         /// <returns>是否成功</returns>
-        public IAsyncOperation<bool> SetHSV(int h, int s, int v)
+        public IAsyncOperation<bool> SetHSV(int h, int s)
         {
-            return this.SetHSVHelper(h, s, v).AsAsyncOperation();
+            return this.SetHSVHelper(h, s).AsAsyncOperation();
         }
         /// <summary>
         /// 设置亮度
@@ -642,23 +679,16 @@ namespace YeelightAPI
         /// </summary>
         /// <param name="h">色相 0 - 359</param>
         /// <param name="s">饱和度 0 - 100</param>
-        /// <param name="v">亮度 1 - 100</param>
         /// <returns>是否成功</returns>
-        private async Task<bool> SetHSVHelper(int h, int s, int v)
+        private async Task<bool> SetHSVHelper(int h, int s)
         {
             // 格式处理
             h = h > 359 ? 359 : h;
             h = h < 0 ? 0 : h;
             s = s > 100 ? 100 : s;
             s = s < 0 ? 0 : s;
-            v = v > 100 ? 100 : v;
-            v = v < 1 ? 1 : v;
 
-            // 是否成功
-            bool isSuccess = await this.Device_set_hsv_Async(h, s, YeelightTransformEffect.smooth, 150);
-            isSuccess = isSuccess ? await this.Device_set_bright_Async(v, YeelightTransformEffect.smooth, 150) : isSuccess;
-
-            return isSuccess;
+            return await this.Device_set_hsv_Async(h, s, YeelightTransformEffect.smooth, 300);
         }
         /// <summary>
         /// 设置亮度私有函数
@@ -698,13 +728,21 @@ namespace YeelightAPI
         /// 设备是否支持该函数
         /// </summary>
         /// <param name="method">函数名</param>
-        private void DeviceIsSupportFunc(string method)
+        /// <returns>是否支持</returns>
+        private bool DeviceIsSupportFunc(string method)
         {
             // 判断是否支持该函数
-            if (!this.support.ContainsKey(method))
-            {
-                throw new Exception("不支持该函数");
-            }
+            return this.support.ContainsKey(method);
+        }
+        /// <summary>
+        /// 设备是否支持该函数
+        /// </summary>
+        /// <param name="method">函数名</param>
+        /// <returns>是否支持</returns>
+        private bool DeviceIsSupportFunc(YeelightMethod method)
+        {
+            // 判断是否支持该函数
+            return this.support.ContainsKey(method.ToString());
         }
         /// <summary>
         /// 设备请求构建器
@@ -748,7 +786,7 @@ namespace YeelightAPI
             string method = YeelightMethod.get_prop.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 组建参数
             JArray param = new JArray();
@@ -874,7 +912,7 @@ namespace YeelightAPI
             string method = YeelightMethod.set_ct_abx.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 参数错误
             if (color_temperature > 6500
@@ -914,7 +952,7 @@ namespace YeelightAPI
             string method = YeelightMethod.set_rgb.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 参数错误
             if (r > 255
@@ -958,7 +996,7 @@ namespace YeelightAPI
             string method = YeelightMethod.set_hsv.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 参数错误
             if (h > 359
@@ -999,7 +1037,7 @@ namespace YeelightAPI
             string method = YeelightMethod.set_bright.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 参数错误
             if (bright > 100
@@ -1037,7 +1075,7 @@ namespace YeelightAPI
             string method = YeelightMethod.set_power.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 参数错误
             if (effect == YeelightTransformEffect.smooth && duration < 30)
@@ -1070,7 +1108,7 @@ namespace YeelightAPI
             string method = YeelightMethod.toggle.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 组建参数
             JArray param = new JArray();
@@ -1091,7 +1129,7 @@ namespace YeelightAPI
             string method = YeelightMethod.set_name.ToString();
 
             // 判断是否支持该函数 不支持直接抛异常
-            this.DeviceIsSupportFunc(method);
+            if (!this.DeviceIsSupportFunc(method)) throw new Exception("不支持该函数");
 
             // 参数错误
             if (string.IsNullOrEmpty(name))

@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -27,6 +29,11 @@ namespace YeelightForCortana
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // 是否正在刷新
+        private bool deviceIsRefreshing = false;
+        // HSV更新时钟
+        private Timer updateHsvTimer;
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -35,6 +42,9 @@ namespace YeelightForCortana
         // 搜索设备按钮按下
         private async void abSearchDevice_Click(object sender, RoutedEventArgs e)
         {
+            // 设置为正在刷新
+            this.deviceIsRefreshing = true;
+
             // 禁用按钮 显示进度
             abSearchDevice.IsEnabled = false;
             prSearchDevice.IsActive = true;
@@ -52,6 +62,10 @@ namespace YeelightForCortana
             // 启用按钮 隐藏进度
             abSearchDevice.IsEnabled = true;
             prSearchDevice.IsActive = false;
+
+            // 刷新完成
+            await Task.Delay(200);
+            this.deviceIsRefreshing = false;
         }
 
         // 修改设备名字按钮按下
@@ -80,6 +94,48 @@ namespace YeelightForCortana
         {
             // 隐藏
             cdSetDeviceName.Hide();
+        }
+        // 电源开关值变更
+        private async void tsPower_Toggled(object sender, RoutedEventArgs e)
+        {
+            // 刷新中不处理
+            if (this.deviceIsRefreshing)
+                return;
+
+            YeelightFlipViewItem item = (YeelightFlipViewItem)fvDevice.SelectedItem;
+            var _this = (ToggleSwitch)sender;
+
+            _this.IsEnabled = false;
+            await item.ToggleAsync();
+            _this.IsEnabled = true;
+        }
+        // 色相、饱和度、亮度滑动条值变更
+        private void SliderHSV_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            // 刷新中不处理
+            if (this.deviceIsRefreshing)
+                return;
+
+            // 如果为空则初始化
+            if (this.updateHsvTimer == null)
+                this.updateHsvTimer = new Timer(UpdateHsvTimer_CallBack, null, 200, Timeout.Infinite);
+
+            // 重新倒计时
+            this.updateHsvTimer.Change(200, Timeout.Infinite);
+        }
+        // HSV更新时钟回调
+        private async void UpdateHsvTimer_CallBack(object state)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+             {
+                 YeelightFlipViewItem item = (YeelightFlipViewItem)fvDevice.SelectedItem;
+
+                 // 支持HSV则设置HSV 不支持只设置亮度（HSV中包含亮度）
+                 if (item.HueSliderIsEnabled)
+                     await item.SetHSV();
+                 else
+                     await item.SetBright();
+             });
         }
 
         private void lvDeviceList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -144,11 +200,6 @@ namespace YeelightForCortana
             //await item.ToggleAsync();
             //flipView.Items[flipView.SelectedIndex] = flipView.Items[flipView.SelectedIndex];
             //await yeelightItem.SetColorTemperatureAsync(6500);
-        }
-
-        private void appBarButton_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
