@@ -161,8 +161,14 @@ namespace YeelightForCortana
         /// <returns></returns>
         public async Task ToggleAsync()
         {
-            await this.yeelightItem.ToggleAsync();
-            await this.UpdateDataAsync();
+            try
+            {
+                await this.yeelightItem.ToggleAsync();
+                await this.UpdateDataAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
         /// <summary>
         /// 设置HSV颜色
@@ -170,9 +176,15 @@ namespace YeelightForCortana
         /// <returns></returns>
         public async Task SetHSV()
         {
-            await this.yeelightItem.SetHSV(Convert.ToInt32(this.hsv.H), Convert.ToInt32(this.hsv.S * 100));
-            await this.yeelightItem.SetBright(Convert.ToInt32(this.hsv.V * 100));
-            await this.UpdateDataAsync();
+            try
+            {
+                await this.yeelightItem.SetHSV(Convert.ToInt32(this.hsv.H), Convert.ToInt32(this.hsv.S * 100));
+                await this.yeelightItem.SetBright(Convert.ToInt32(this.hsv.V * 100));
+                await this.UpdateDataAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
         /// <summary>
         /// 设置亮度
@@ -180,8 +192,14 @@ namespace YeelightForCortana
         /// <returns></returns>
         public async Task SetBright()
         {
-            await this.yeelightItem.SetBright(Convert.ToInt32(this.hsv.V * 100));
-            await this.UpdateDataAsync();
+            try
+            {
+                await this.yeelightItem.SetBright(Convert.ToInt32(this.hsv.V * 100));
+                await this.UpdateDataAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
         /// <summary>
         /// 设置设备名字
@@ -190,8 +208,14 @@ namespace YeelightForCortana
         /// <returns></returns>
         public async Task SetDeviceName(string name)
         {
-            await this.yeelightItem.SetDeviceName(name);
-            await this.UpdateDataAsync();
+            try
+            {
+                await this.yeelightItem.SetDeviceName(name);
+                await this.UpdateDataAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>

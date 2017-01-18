@@ -108,6 +108,21 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddCommandContentDialog.xaml.cs">
+      <DependentUpon>AddCommandContentDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CortanaConfig.xaml.cs">
+      <DependentUpon>CortanaConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LightActionPage\LightActionBrightPage.xaml.cs">
+      <DependentUpon>LightActionBrightPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LightActionType.cs" />
+    <Compile Include="LightAction.cs" />
+    <Compile Include="LightActionPage\ILightActionPage.cs" />
+    <Compile Include="LightActionPage\LightActionPowerPage.xaml.cs">
+      <DependentUpon>LightActionPowerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="YeelightVoiceCommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -117,6 +132,25 @@
       <Name>YeelightAPI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="AddCommandContentDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CortanaConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LightActionPage\LightActionBrightPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LightActionPage\LightActionPowerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

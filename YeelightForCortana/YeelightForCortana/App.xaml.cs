@@ -46,6 +46,11 @@ namespace YeelightForCortana
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+
+            // 设置窗口启动大小
+            Windows.UI.ViewManagement.ApplicationView.PreferredLaunchViewSize = new Size(200, 400);
+            Windows.UI.ViewManagement.ApplicationView.PreferredLaunchWindowingMode = Windows.UI.ViewManagement.ApplicationViewWindowingMode.PreferredLaunchViewSize;
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // 不要在窗口已包含内容时重复应用程序初始化，
@@ -73,7 +78,7 @@ namespace YeelightForCortana
                     // 当导航堆栈尚未还原时，导航到第一页，
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(CortanaService.CortanaConfig), e.Arguments);
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();

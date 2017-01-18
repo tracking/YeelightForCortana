@@ -1,11 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.VoiceCommands;
+using Windows.Storage;
 using YeelightAPI;
 
 namespace CortanaService
@@ -27,62 +30,76 @@ namespace CortanaService
 
             VoiceCommand voiceCommand = await voiceServiceConnection.GetVoiceCommandAsync();
 
-            IList<Yeelight> yeelightList = await YeelightUtils.SearchDeviceAsync();
+            IList<Yeelight> yeelightList = await YeelightUtils.SearchDeviceAsync(2000);
             var userMessage = new VoiceCommandUserMessage();
             VoiceCommandResponse response;
 
-            switch (voiceCommand.CommandName)
+            int index = Convert.ToInt32(voiceCommand.CommandName);
+
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var configFile = await localFolder.CreateFileAsync(@"setting.json", CreationCollisionOption.OpenIfExists);
+            JArray commands;
+
+            using (var stream = new StreamReader(await configFile.OpenStreamForReadAsync()))
             {
-                case "openPower":
-                    foreach (var item in yeelightList)
-                    {
-                        await item.ToggleAsync();
-                    }
-
-                    //var action = voiceCommand.Properties["action"][0];
-                    //var location = voiceCommand.Properties["location"][0];
-                    //userMessage.DisplayMessage = String.Format("已为你{1}{0}盏电灯", yeelightList.Count, action);
-                    userMessage.DisplayMessage = String.Format("已为你打开{0}盏电灯", yeelightList.Count);
-                    userMessage.SpokenMessage = userMessage.DisplayMessage;
-
-                    response = VoiceCommandResponse.CreateResponse(userMessage);
-
-                    await voiceServiceConnection.ReportSuccessAsync(response);
-
-                    break;
-                case "closePower":
-                    foreach (var item in yeelightList)
-                    {
-                        await item.ToggleAsync();
-                    }
-
-                    userMessage.DisplayMessage = String.Format("已为你关闭{0}盏电灯", yeelightList.Count);
-                    userMessage.SpokenMessage = userMessage.DisplayMessage;
-
-                    response = VoiceCommandResponse.CreateResponse(userMessage);
-
-                    await voiceServiceConnection.ReportSuccessAsync(response);
-
-                    break;
-                default:
-                    LaunchAppInForeground();
-                    break;
-
+                string data = await stream.ReadToEndAsync();
+                commands = (JArray)JObject.Parse(data)["commands"];
             }
-        }
 
-        private async void LaunchAppInForeground()
-        {
-            var userMessage = new VoiceCommandUserMessage();
-            userMessage.SpokenMessage = "Launching Adventure Works";
 
-            var response = VoiceCommandResponse.CreateResponse(userMessage);
+            JObject command = (JObject)commands[index];
+            JArray deviceIds = (JArray)command["deviceIds"];
+            LightAction action = (LightAction)Enum.Parse(typeof(LightAction), command["action"]["action"].ToString());
+            List<Yeelight> deviceList = new List<Yeelight>();
 
-            // When launching the app in the foreground, pass an app 
-            // specific launch parameter to indicate what page to show.
-            response.AppLaunchArgument = "showAllTrips=true";
+            foreach (string item in deviceIds)
+            {
+                var light = yeelightList.First(k => item == k.Id);
 
-            await voiceServiceConnection.RequestAppLaunchAsync(response);
+                if (light == null)
+                    return;
+
+                deviceList.Add(light);
+            }
+
+            foreach (var item in deviceList)
+            {
+                int bright;
+
+                switch (action)
+                {
+                    case LightAction.PowerOn:
+                        await item.SetPower(YeelightPower.on);
+                        break;
+                    case LightAction.PowerOff:
+                        await item.SetPower(YeelightPower.off);
+                        break;
+                    case LightAction.BrightUp:
+                        bright = Convert.ToInt32(command["action"]["value"].ToString());
+                        bright = bright + item.Bright;
+                        bright = bright > 100 ? 100 : bright;
+                        bright = bright < 1 ? 1 : bright;
+                        await item.SetBright(bright);
+                        break;
+                    case LightAction.BrightDown:
+                        bright = Convert.ToInt32(command["action"]["value"].ToString());
+                        bright = item.Bright - bright;
+                        bright = bright > 100 ? 100 : bright;
+                        bright = bright < 1 ? 1 : bright;
+                        await item.SetBright(bright);
+                        break;
+                }
+            }
+
+            //userMessage.DisplayMessage = String.Format("已为你打开{0}盏电灯", yeelightList.Count);
+            //userMessage.SpokenMessage = userMessage.DisplayMessage;
+
+            response = VoiceCommandResponse.CreateResponse(userMessage);
+
+            await voiceServiceConnection.ReportSuccessAsync(response);
+            response = VoiceCommandResponse.CreateResponse(userMessage);
+
+            await voiceServiceConnection.ReportSuccessAsync(response);
         }
     }
 }

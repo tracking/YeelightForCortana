@@ -23,8 +23,8 @@ namespace YeelightAPI
         private static string MULTICAST_PORT = "1982";
         // 搜索设备广播内容
         private static string SEARCH_DEVICE_MULTCAST_CONTENT = "M-SEARCH * HTTP/1.1\r\nHOST:239.255.255.250:1982\r\nMAN:\"ssdp:discover\"\r\nST:wifi_bulb\r\n";
-        // 搜索超时
-        private static int SEARCH_DEVICE_TIMEOUT = 2000;
+        // 默认搜索超时
+        private static int SEARCH_DEVICE_DEFAULT_TIMEOUT = 2000;
 
         /// <summary>
         /// 获取本机IP地址
@@ -40,7 +40,16 @@ namespace YeelightAPI
         /// <returns>Yeelight对象</returns>
         public static IAsyncOperation<IList<Yeelight>> SearchDeviceAsync()
         {
-            return YeelightUtils.SearchDeviceHelper().AsAsyncOperation();
+            return YeelightUtils.SearchDeviceHelper(SEARCH_DEVICE_DEFAULT_TIMEOUT).AsAsyncOperation();
+        }
+        /// <summary>
+        /// 搜索设备
+        /// </summary>
+        /// <param name="timeout">超时时间 毫秒</param>
+        /// <returns>Yeelight对象</returns>
+        public static IAsyncOperation<IList<Yeelight>> SearchDeviceAsync(int timeout)
+        {
+            return YeelightUtils.SearchDeviceHelper(timeout).AsAsyncOperation();
         }
 
         /// <summary>
@@ -69,8 +78,9 @@ namespace YeelightAPI
         /// <summary>
         /// 搜索设备私有函数
         /// </summary>
+        /// <param name="timeout">超时时间 毫秒</param>
         /// <returns>Yeelight对象</returns>
-        private async static Task<IList<Yeelight>> SearchDeviceHelper()
+        private async static Task<IList<Yeelight>> SearchDeviceHelper(int timeout)
         {
             // 创建Socket
             DatagramSocket udp = new DatagramSocket();
@@ -125,7 +135,7 @@ namespace YeelightAPI
                 writer.DetachStream();
 
                 // 等待
-                await Task.Delay(SEARCH_DEVICE_TIMEOUT);
+                await Task.Delay(timeout);
             }
 
             // 清理资源

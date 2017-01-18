@@ -52,8 +52,9 @@ namespace YeelightForCortana
             // 设置为正在刷新
             this.deviceIsRefreshing = true;
 
-            // 禁用按钮 显示进度
+            // 禁用按钮、列表 显示进度
             abSearchDevice.IsEnabled = false;
+            fvDevice.IsEnabled = false;
             prSearchDevice.IsActive = true;
 
             // 清空列表
@@ -66,12 +67,15 @@ namespace YeelightForCortana
             fvDevice.ItemsSource = itemSource;
             fvDevice.Focus(FocusState.Pointer);
 
-            // 启用按钮 隐藏进度
+            // 等待处理完
+            await Task.Delay(1000);
+
+            // 启用按钮、列表 隐藏进度
             abSearchDevice.IsEnabled = true;
+            fvDevice.IsEnabled = true;
             prSearchDevice.IsActive = false;
 
             // 刷新完成
-            await Task.Delay(200);
             this.deviceIsRefreshing = false;
         }
 
@@ -148,7 +152,9 @@ namespace YeelightForCortana
         private void abCortanaConfig_Click(object sender, RoutedEventArgs e)
         {
             // 跳转到小娜设置页
-            Frame.Navigate(typeof(CortanaConfig));
+            Frame.Navigate(typeof(CortanaService.CortanaConfig));
+
+
         }
     }
 }
