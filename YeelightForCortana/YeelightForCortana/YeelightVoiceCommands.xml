@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.2">
-  <CommandSet xml:lang="zh-cn" Name="AdventureWorksCommandSet_zh-cn">
+  <CommandSet xml:lang="zh-cn" Name="YeelightVoiceCommandSet_zh-cn">
     <AppName> 你好小娜 </AppName>
     <Example> 打开电灯 </Example>
 

@@ -123,6 +123,7 @@
     <Compile Include="LightActionPage\LightActionPowerPage.xaml.cs">
       <DependentUpon>LightActionPowerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingHelper.cs" />
     <Compile Include="YeelightVoiceCommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
