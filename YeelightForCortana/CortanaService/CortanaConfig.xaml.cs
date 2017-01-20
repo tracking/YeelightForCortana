@@ -31,27 +31,7 @@ namespace CortanaService
         {
             this.InitializeComponent();
         }
-
-        private async void button_Click(object sender, RoutedEventArgs e)
-        {
-            //// 安装语音命令文件
-            //Windows.Storage.StorageFile vcdStorageFile = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync(@"YeelightVoiceCommands.xml");
-            //await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdStorageFile);
-
-            //var folder = ApplicationData.Current.LocalFolder;
-            //var file = await folder.CreateFileAsync("Voice.xml", CreationCollisionOption.ReplaceExisting);
-            //var reader = await file.OpenStreamForWriteAsync();
-
-            //using (var stream = await file.OpenStreamForWriteAsync())
-            //{
-            //    using (var writer = new StreamWriter(stream))
-            //    {
-            //        //writer.WriteAsync();
-            //    }
-            //}
-            await SettingHelper.CortanaSetting();
-        }
-
+        
         // 加载中
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -95,7 +75,7 @@ namespace CortanaService
 
         private async void button_Click_1(object sender, RoutedEventArgs e)
         {
-            await xmlgen();
+            await SettingHelper.CortanaSetting();
         }
     }
 }

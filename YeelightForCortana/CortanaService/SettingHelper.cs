@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Windows.Foundation;
 using Windows.Storage;
 
 namespace CortanaService
@@ -13,17 +14,18 @@ namespace CortanaService
     /// <summary>
     /// 设置类
     /// </summary>
-    public static class SettingHelper
+    internal static class SettingHelper
     {
         // 设置文件名称
         private static readonly string CONFIG_FILE_NAME = "setting.json";
 
+        #region 私有函数
         /// <summary>
         /// 添加命令并保存
         /// </summary>
         /// <param name="command">命令的JSON对象</param>
         /// <returns></returns>
-        public static async Task AddCommand(JObject command)
+        internal static async Task AddCommand(JObject command)
         {
             // 本地文件夹
             var localFolder = ApplicationData.Current.LocalFolder;
@@ -43,7 +45,7 @@ namespace CortanaService
         /// </summary>
         /// <param name="config">设置的JSON对象</param>
         /// <returns></returns>
-        public static async Task SaveSetting(JObject config)
+        internal static async Task SaveSetting(JObject config)
         {
             // 本地文件夹
             var localFolder = ApplicationData.Current.LocalFolder;
@@ -61,7 +63,7 @@ namespace CortanaService
         /// 读取设置
         /// </summary>
         /// <returns>设置的JSON对象</returns>
-        public static async Task<JObject> LoadSetting()
+        internal static async Task<JObject> LoadSetting()
         {
             // 本地文件夹
             var localFolder = ApplicationData.Current.LocalFolder;
@@ -97,7 +99,7 @@ namespace CortanaService
         /// </summary>
         /// <param name="settingFile">文件对象</param>
         /// <returns>设置的JSON对象</returns>
-        public static async Task<JObject> LoadSetting(StorageFile settingFile)
+        internal static async Task<JObject> LoadSetting(StorageFile settingFile)
         {
             JObject config;
 
@@ -127,7 +129,7 @@ namespace CortanaService
         /// 小娜配置
         /// </summary>
         /// <returns></returns>
-        public static async Task CortanaSetting()
+        internal static async Task CortanaSetting()
         {
             // 读取设置
             var config = await LoadSetting();
@@ -205,5 +207,6 @@ namespace CortanaService
             // 安装语音命令文件
             await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdFile);
         }
+        #endregion
     }
 }

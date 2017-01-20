@@ -21,7 +21,7 @@
             <DataTemplate x:Key="YeelightFlipViewItemTemplate">
                 <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{Binding Name}" Background="{Binding BackgroundColor}" SelectionMode="None" Padding="15,15,0,0">
                     <Button Content="修改设备名字"  Width="120" MinWidth="120" Height="40" Margin="0,10,15,10" Click="Button_SetDeviceName_Click"/>
-                    <ToggleSwitch IsOn="{Binding Power}" OffContent="关" OnContent="开" Width="120" MinWidth="120" Height="60" Header="开关" Margin="0,0,15,0" Toggled="tsPower_Toggled" />
+                    <ToggleSwitch IsOn="{Binding Power, Mode=OneWay}" OffContent="关" OnContent="开" Width="120" MinWidth="120" Height="60" Header="开关" Margin="0,0,15,0" Toggled="tsPower_Toggled" />
                     <Slider Header="色相" Maximum="359" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Hue, Mode=TwoWay}" IsEnabled="{Binding HueSliderIsEnabled}" ValueChanged="SliderHSV_ValueChanged"/>
                     <Slider Header="饱和度" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Sat, Mode=TwoWay}" IsEnabled="{Binding SatSliderIsEnabled}" ValueChanged="SliderHSV_ValueChanged"/>
                     <Slider Header="亮度" Minimum="0" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Bright, Mode=TwoWay}" ValueChanged="SliderHSV_ValueChanged" />
