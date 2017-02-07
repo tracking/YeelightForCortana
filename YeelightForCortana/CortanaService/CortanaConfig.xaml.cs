@@ -65,7 +65,7 @@ namespace CortanaService
 
             await SaveSetting(setting);
 
-            listBox.Items.Add(setting["listenFor"]);
+            listBox.Items.Add(setting["listenFor"][0]);
         }
 
         private async Task SaveSetting(JObject setting)

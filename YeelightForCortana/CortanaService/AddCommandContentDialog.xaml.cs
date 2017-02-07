@@ -60,7 +60,19 @@ namespace CortanaService
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             args.Cancel = true;
-            if (string.IsNullOrEmpty(tbListenFor.Text))
+
+            JArray listenForList = new JArray();
+
+            // 获取文本框 不包括按钮
+            for (int i = 0, count = spListenFor.Children.Count - 1; i < count; i++)
+            {
+                string text = ((TextBox)spListenFor.Children[i]).Text;
+
+                if (!string.IsNullOrEmpty(text))
+                    listenForList.Add(text);
+            }
+
+            if (listenForList.Count == 0)
                 return;
             if (string.IsNullOrEmpty(tbFeedback.Text))
                 return;
@@ -80,7 +92,7 @@ namespace CortanaService
                 deviceIds.Add(item.Id);
 
             setting["deviceIds"] = deviceIds;
-            setting["listenFor"] = tbListenFor.Text;
+            setting["listenFor"] = listenForList;
             setting["feedBack"] = tbFeedback.Text;
             setting["action"] = JObject.Parse(page.GetValue());
 
@@ -94,6 +106,9 @@ namespace CortanaService
 
         private async void ContentDialog_Loaded(object sender, RoutedEventArgs e)
         {
+            // 添加听文本框
+            btnAddListenFor_Click(null, null);
+
             // 设置动作下拉列表源
             ObservableCollection<ComboBoxItem> actionList = new ObservableCollection<ComboBoxItem>();
             actionList.Add(new ComboBoxItem() { Content = "电源控制", Tag = LightActionType.Power });
@@ -107,7 +122,6 @@ namespace CortanaService
             svBody.IsEnabled = true;
             // 隐藏Loading
             prLoading.IsActive = false;
-
         }
 
         // 动作选择变更
@@ -131,6 +145,27 @@ namespace CortanaService
             }
 
             frameLightAction.Navigate(pageType);
+        }
+
+        // 增加听文本框按钮按下
+        private void btnAddListenFor_Click(object sender, RoutedEventArgs e)
+        {
+            int index = spListenFor.Children.Count - 1;
+            var txt = new TextBox() { Text = "打开电灯" };
+            txt.TextChanged += txtListenFor_TextChanged;
+            spListenFor.Children.Insert(index, txt);
+        }
+
+        // 听文本框文本改变后
+        private void txtListenFor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var txt = (TextBox)sender;
+
+            // 没内容后删除该文本框
+            if (string.IsNullOrEmpty(txt.Text))
+            {
+                spListenFor.Children.Remove(txt);
+            }
         }
     }
 }

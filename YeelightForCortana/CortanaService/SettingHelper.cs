@@ -166,22 +166,26 @@ namespace CortanaService
             {
                 XElement Command = new XElement(xnVoiceCommands + "Command");
                 XElement CommandExample = new XElement(xnVoiceCommands + "Example");
-                XElement ListenFor = new XElement(xnVoiceCommands + "ListenFor");
                 XElement Feedback = new XElement(xnVoiceCommands + "Feedback");
                 XElement VoiceCommandService = new XElement(xnVoiceCommands + "VoiceCommandService");
 
                 // Command
                 Command.SetAttributeValue("Name", i);
                 Command.Add(CommandExample);
-                Command.Add(ListenFor);
-                Command.Add(Feedback);
-                Command.Add(VoiceCommandService);
 
                 // Example
-                CommandExample.SetValue(commands[i]["listenFor"]);
+                CommandExample.SetValue(commands[i]["listenFor"][0]);
 
                 // ListenFor
-                ListenFor.SetValue(commands[i]["listenFor"]);
+                foreach (string item in commands[i]["listenFor"])
+                {
+                    XElement ListenFor = new XElement(xnVoiceCommands + "ListenFor");
+                    ListenFor.SetValue(item);
+                    Command.Add(ListenFor);
+                }
+
+                Command.Add(Feedback);
+                Command.Add(VoiceCommandService);
 
                 // Feedback
                 Feedback.SetValue(commands[i]["feedBack"]);

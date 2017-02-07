@@ -10,7 +10,7 @@
     PrimaryButtonText="添加"
     SecondaryButtonText="取消"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick" Height="Auto" VerticalAlignment="Center" MaxHeight="Infinity" MaxWidth="Infinity" d:DesignHeight="1437.5" Background="White" Loaded="ContentDialog_Loaded">
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick" Height="Auto" VerticalAlignment="Center" MaxHeight="Infinity" MaxWidth="Infinity" d:DesignHeight="460" Background="White" Loaded="ContentDialog_Loaded">
 
     <Grid Padding="0,10,0,0">
         <ScrollViewer x:Name="svBody" Padding="20,0" IsEnabled="False">
@@ -30,7 +30,14 @@
                     </Style>
                 </StackPanel.Resources>
                 <TextBlock TextWrapping="Wrap" Text="你好小娜，"/>
-                <TextBox x:Name="tbListenFor" TextWrapping="Wrap" Text="" PlaceholderText="打开电灯"/>
+                <StackPanel x:Name="spListenFor" Margin="0" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Margin" Value="0,10,0,0"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button x:Name="btnAddListenFor" Content="+" HorizontalAlignment="Stretch" VerticalAlignment="Top" Click="btnAddListenFor_Click"/>
+                </StackPanel>
                 <TextBlock TextWrapping="Wrap" Text="小娜：" VerticalAlignment="Top"/>
                 <TextBox x:Name="tbFeedback" TextWrapping="Wrap" Text="" PlaceholderText="好的，正在为你打开电灯"/>
                 <TextBlock TextWrapping="Wrap" Text="操作电灯："/>
