@@ -1,0 +1,37 @@
+﻿<Page
+    x:Class="YeelightForCortana.MainPage_bak"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:YeelightForCortana"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Loaded="Page_Loaded" NavigationCacheMode="Enabled">
+    <Page.BottomAppBar>
+        <CommandBar VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Top">
+            <CommandBar.Content>
+                <Grid/>
+            </CommandBar.Content>
+            <AppBarButton x:Name="abSearchDevice" Icon="Refresh" Label="刷新" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" Click="abSearchDevice_Click"/>
+            <AppBarButton x:Name="abCortanaConfig" Label="小娜设置" Icon="Target" Width="60" Click="abCortanaConfig_Click"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="White" d:IsLocked="True">
+        <Grid.Resources>
+            <DataTemplate x:Key="YeelightFlipViewItemTemplate">
+                <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{Binding Name}" Background="{Binding BackgroundColor}" SelectionMode="None" Padding="15,15,0,0">
+                    <Button Content="修改设备名字"  Width="120" MinWidth="120" Height="40" Margin="0,10,15,10" Click="Button_SetDeviceName_Click"/>
+                    <ToggleSwitch IsOn="{Binding Power, Mode=OneWay}" OffContent="关" OnContent="开" Width="120" MinWidth="120" Height="60" Header="开关" Margin="0,0,15,0" Toggled="tsPower_Toggled" />
+                    <Slider Header="色相" Maximum="359" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Hue, Mode=TwoWay}" IsEnabled="{Binding HueSliderIsEnabled}" ValueChanged="SliderHSV_ValueChanged"/>
+                    <Slider Header="饱和度" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Sat, Mode=TwoWay}" IsEnabled="{Binding SatSliderIsEnabled}" ValueChanged="SliderHSV_ValueChanged"/>
+                    <Slider Header="亮度" Minimum="0" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Bright, Mode=TwoWay}" ValueChanged="SliderHSV_ValueChanged" />
+                </GridView>
+            </DataTemplate>
+        </Grid.Resources>
+        <FlipView x:Name="fvDevice" ItemTemplate="{Binding Mode=OneTime, Source={StaticResource YeelightFlipViewItemTemplate}}" d:IsLocked="True"/>
+        <ContentDialog x:Name="cdSetDeviceName" Title="修改设备名字" PrimaryButtonText="确定" SecondaryButtonText="取消" PrimaryButtonClick="cdSetDeviceName_PrimaryButtonClick" SecondaryButtonClick="cdSetDeviceName_SecondaryButtonClick" d:IsLocked="True">
+            <TextBox x:Name="txtDeviceName" Text="{Binding Name}" MaxLength="20" d:IsLocked="True"/>
+        </ContentDialog>
+        <ProgressRing x:Name="prSearchDevice" HorizontalAlignment="Center" Margin="300,160" VerticalAlignment="Center" MaxWidth="40" MaxHeight="40" Height="39" MinWidth="40" MinHeight="40" d:IsLocked="True"/>
+    </Grid>
+</Page>

@@ -5,33 +5,178 @@
     xmlns:local="using:YeelightForCortana"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Loaded="Page_Loaded" NavigationCacheMode="Enabled">
-    <Page.BottomAppBar>
-        <CommandBar VerticalAlignment="Bottom" HorizontalContentAlignment="Right" VerticalContentAlignment="Top">
-            <CommandBar.Content>
-                <Grid/>
-            </CommandBar.Content>
-            <AppBarButton x:Name="abSearchDevice" Icon="Refresh" Label="刷新" Width="40" HorizontalAlignment="Left" VerticalAlignment="Top" Click="abSearchDevice_Click"/>
-            <AppBarButton x:Name="abCortanaConfig" Label="小娜设置" Icon="Target" Width="60" Click="abCortanaConfig_Click"/>
-        </CommandBar>
-    </Page.BottomAppBar>
+    mc:Ignorable="d" RequestedTheme="Dark" Width="1000" Height="640">
+    <Page.Resources>
+        <Style x:Key="ScrollViewerStyle1" TargetType="ScrollViewer">
+            <Setter Property="HorizontalScrollMode" Value="Auto"/>
+            <Setter Property="VerticalScrollMode" Value="Auto"/>
+            <Setter Property="IsHorizontalRailEnabled" Value="True"/>
+            <Setter Property="IsVerticalRailEnabled" Value="True"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="ZoomMode" Value="Disabled"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollViewer">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="ScrollingIndicatorStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition From="MouseIndicator" To="NoIndicator">
+                                            <Storyboard>
+                                                <FadeOutThemeAnimation BeginTime="0:0:3" TargetName="ScrollBarSeparator"/>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:3">
+                                                        <DiscreteObjectKeyFrame.Value>
+                                                            <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                        </DiscreteObjectKeyFrame.Value>
+                                                    </DiscreteObjectKeyFrame>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:3">
+                                                        <DiscreteObjectKeyFrame.Value>
+                                                            <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                        </DiscreteObjectKeyFrame.Value>
+                                                    </DiscreteObjectKeyFrame>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualTransition>
+                                        <VisualTransition From="TouchIndicator" To="NoIndicator">
+                                            <Storyboard>
+                                                <FadeOutThemeAnimation TargetName="ScrollBarSeparator"/>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                                                        <DiscreteObjectKeyFrame.Value>
+                                                            <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                        </DiscreteObjectKeyFrame.Value>
+                                                    </DiscreteObjectKeyFrame>
+                                                </ObjectAnimationUsingKeyFrames>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                                                        <DiscreteObjectKeyFrame.Value>
+                                                            <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                        </DiscreteObjectKeyFrame.Value>
+                                                    </DiscreteObjectKeyFrame>
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualTransition>
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="NoIndicator">
+                                        <Storyboard>
+                                            <FadeOutThemeAnimation TargetName="ScrollBarSeparator"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="TouchIndicator">
+                                        <Storyboard>
+                                            <FadeOutThemeAnimation TargetName="ScrollBarSeparator"/>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>TouchIndicator</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>TouchIndicator</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="MouseIndicator">
+                                        <Storyboard>
+                                            <FadeInThemeAnimation TargetName="ScrollBarSeparator"/>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>MouseIndicator</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
+                                                <DiscreteObjectKeyFrame KeyTime="0">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>MouseIndicator</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid Background="{TemplateBinding Background}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ScrollContentPresenter x:Name="ScrollContentPresenter" Grid.ColumnSpan="2" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}" Grid.RowSpan="2"/>
+                                <Grid Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                                <ScrollBar x:Name="VerticalScrollBar" Grid.Column="1" HorizontalAlignment="Right" IsTabStop="False" Orientation="Vertical" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{TemplateBinding VerticalOffset}" ViewportSize="{TemplateBinding ViewportHeight}" Width="2" MinWidth="2"/>
+                                <ScrollBar x:Name="HorizontalScrollBar" IsTabStop="False" Maximum="{TemplateBinding ScrollableWidth}" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{TemplateBinding HorizontalOffset}" ViewportSize="{TemplateBinding ViewportWidth}"/>
+                                <Border x:Name="ScrollBarSeparator" Background="{ThemeResource ScrollViewerScrollBarSeparatorBackground}" Grid.Column="1" Grid.Row="1"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
 
-    <Grid Background="White" d:IsLocked="True">
-        <Grid.Resources>
-            <DataTemplate x:Key="YeelightFlipViewItemTemplate">
-                <GridView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="{Binding Name}" Background="{Binding BackgroundColor}" SelectionMode="None" Padding="15,15,0,0">
-                    <Button Content="修改设备名字"  Width="120" MinWidth="120" Height="40" Margin="0,10,15,10" Click="Button_SetDeviceName_Click"/>
-                    <ToggleSwitch IsOn="{Binding Power, Mode=OneWay}" OffContent="关" OnContent="开" Width="120" MinWidth="120" Height="60" Header="开关" Margin="0,0,15,0" Toggled="tsPower_Toggled" />
-                    <Slider Header="色相" Maximum="359" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Hue, Mode=TwoWay}" IsEnabled="{Binding HueSliderIsEnabled}" ValueChanged="SliderHSV_ValueChanged"/>
-                    <Slider Header="饱和度" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Sat, Mode=TwoWay}" IsEnabled="{Binding SatSliderIsEnabled}" ValueChanged="SliderHSV_ValueChanged"/>
-                    <Slider Header="亮度" Minimum="0" Maximum="100" Width="120" Height="60" Margin="0,0,15,0" Value="{Binding Bright, Mode=TwoWay}" ValueChanged="SliderHSV_ValueChanged" />
-                </GridView>
-            </DataTemplate>
-        </Grid.Resources>
-        <FlipView x:Name="fvDevice" ItemTemplate="{Binding Mode=OneTime, Source={StaticResource YeelightFlipViewItemTemplate}}" d:IsLocked="True"/>
-        <ContentDialog x:Name="cdSetDeviceName" Title="修改设备名字" PrimaryButtonText="确定" SecondaryButtonText="取消" PrimaryButtonClick="cdSetDeviceName_PrimaryButtonClick" SecondaryButtonClick="cdSetDeviceName_SecondaryButtonClick" d:IsLocked="True">
-            <TextBox x:Name="txtDeviceName" Text="{Binding Name}" MaxLength="20" d:IsLocked="True"/>
-        </ContentDialog>
-        <ProgressRing x:Name="prSearchDevice" HorizontalAlignment="Center" Margin="300,160" VerticalAlignment="Center" MaxWidth="40" MaxHeight="40" Height="39" MinWidth="40" MinHeight="40" d:IsLocked="True"/>
+    <Grid MinWidth="1000" MinHeight="640" RequestedTheme="Dark" Background="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1"/>
+            <RowDefinition Height="157*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="222"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="378*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="GridTopProgress" Height="1" Margin="0" Grid.ColumnSpan="3" VerticalAlignment="Top">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="#FFAAA31B" Offset="0"/>
+                    <GradientStop Color="#FFAAA31B" Offset="1"/>
+                    <GradientStop Color="#FFF9ED00" Offset="0.5"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+        </Grid>
+        <StackPanel x:Name="SP_LeftMenu" Margin="0" Grid.Row="1" Background="#FF191919">
+            <Grid x:Name="Grid_MenuButton" Height="48">
+                <AppBarButton x:Name="appBarButton" HorizontalAlignment="Left" Label="" Margin="0" VerticalAlignment="Top" Height="48" Width="48">
+                    <AppBarButton.Icon>
+                        <PathIcon/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </Grid>
+            <ScrollViewer Height="208" Style="{StaticResource ScrollViewerStyle1}">
+                <StackPanel VerticalAlignment="Top">
+                    <Button x:Name="button" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy1" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy2" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy3" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy4" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy5" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy6" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy7" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button x:Name="button_Copy8" Content="Button" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </StackPanel>
+            </ScrollViewer>
+        </StackPanel>
+
     </Grid>
 </Page>
