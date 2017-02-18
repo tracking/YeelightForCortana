@@ -1,0 +1,8 @@
+﻿<ViewModel:DeviceGroupList xmlns:ViewModel="using:YeelightForCortana.ViewModel">
+    <ViewModel:DeviceGroup Id="1" Name="全部"/>
+    <ViewModel:DeviceGroup Id="3" Name="客厅"/>
+    <ViewModel:DeviceGroup Id="4" Name="厕所"/>
+    <ViewModel:DeviceGroup Id="6" Name="走廊"/>
+    <ViewModel:DeviceGroup Id="9" Name="书房"/>
+    <ViewModel:DeviceGroup Id="10" Name="卧室"/>
+</ViewModel:DeviceGroupList>

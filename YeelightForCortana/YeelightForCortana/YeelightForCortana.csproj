@@ -102,9 +102,6 @@
       <DependentUpon>MainPage_bak.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModel\MainPageViewModel.cs" />
-    <Compile Include="ViewModel\CommandType.cs" />
-    <Compile Include="ViewModel\CommandTypeList.cs" />
     <Compile Include="ViewModel\DeviceGroupList.cs" />
     <Compile Include="ViewModel\DeviceGroup.cs" />
     <Compile Include="YeelightFlipViewItem.cs" />
@@ -137,7 +134,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <DesignData Include="SampleData\MainPageViewModelSampleData.xaml">
+    <DesignData Include="SampleData\DeviceGroupListSampleData.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </DesignData>
