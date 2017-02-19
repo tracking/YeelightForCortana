@@ -944,12 +944,27 @@
                     <ComboBox x:Name="CBB_CommandType" VerticalAlignment="Center" Width="120" d:LayoutOverrides="Height" HorizontalAlignment="Right" ItemTemplate="{StaticResource CommandTypeTemplate}" ItemsSource="{Binding CommandTypeList}" Style="{StaticResource CommonComboBoxStyle}" HorizontalContentAlignment="Right" Margin="0,0,5,0" ItemContainerStyle="{StaticResource CommonComboBoxItemStyle}" SelectedIndex="{Binding CommandTypeListSelectedIndex}"/>
                     <!--中区头部按钮-->
                 </Grid>
-                <Grid Grid.Row="2">
+                <Grid Grid.Row="2" d:IsLocked="True">
                     <ListBox x:Name="LB_VoiceCommandSetList" ItemContainerStyle="{StaticResource VoiceCommandSetListBoxItemStyle}" Background="#FF141414" ItemsSource="{Binding VoiceCommandSetList}"/>
                     <Grid x:Name="Grid_VoiceCommandSetListIsNull" Visibility="{Binding DoesNotExistVoiceCommand, Converter={StaticResource BooleanConvertToVisibility}}" Background="#FF141414" d:IsHidden="True">
                         <TextBlock TextWrapping="Wrap" Text="您尚未添加小娜口令" VerticalAlignment="Center" d:LayoutOverrides="Width" HorizontalAlignment="Center" Foreground="#FFCBCBCB"/>
                     </Grid>
                 </Grid>
+                <SplitView d:LayoutOverrides="Width" Grid.RowSpan="3" OpenPaneLength="250">
+                    <SplitView.Pane>
+                        <Grid Background="Black">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="48"/>
+                                <RowDefinition Height="2"/>
+                                <RowDefinition Height="663*"/>
+                            </Grid.RowDefinitions>
+                            <TextBox x:Name="TXT_AddDeviceGroupName" TextWrapping="Wrap" Text="未命名" d:LayoutOverrides="Height" BorderBrush="{x:Null}" PlaceholderText="" FontSize="18" Padding="20,8,0,0" UseLayoutRounding="False"/>
+                            <StackPanel Grid.Row="2">
+                                <CheckBox x:Name="CB_SelectAllDevice" Content="全选" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsThreeState="True" Height="34" HorizontalContentAlignment="Left" Margin="22,0,0,0" FontSize="13" Foreground="#CCFFFFFF" Padding="8,6,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </SplitView.Pane>
+                </SplitView>
             </Grid>
             <!--右区-->
             <Grid Grid.Row="1" Grid.Column="3"/>
