@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\BooleanConvertToVisibility.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -102,6 +103,10 @@
       <DependentUpon>MainPage_bak.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\VoiceCommandSetList.cs" />
+    <Compile Include="ViewModel\VoiceCommand.cs" />
+    <Compile Include="ViewModel\VoiceCommandSet.cs" />
+    <Compile Include="ViewModel\Device.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
     <Compile Include="ViewModel\CommandType.cs" />
     <Compile Include="ViewModel\CommandTypeList.cs" />

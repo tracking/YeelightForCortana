@@ -1,12 +1,13 @@
 ﻿<ViewModel:MainPageViewModel xmlns:ViewModel="using:YeelightForCortana.ViewModel">
-	<ViewModel:MainPageViewModel.CommandTypeList>
+    <ViewModel:MainPageViewModel.CommandTypeList>
         <ViewModel:CommandType Id="0" Name="全部"/>
         <ViewModel:CommandType Id="1" Name="开灯"/>
         <ViewModel:CommandType Id="2" Name="关灯"/>
         <ViewModel:CommandType Id="3" Name="切换颜色"/>
-        <ViewModel:CommandType Id="4" Name="调整亮度"/>
+        <ViewModel:CommandType Id="4" Name="增加亮度"/>
+        <ViewModel:CommandType Id="5" Name="减少亮度"/>
     </ViewModel:MainPageViewModel.CommandTypeList>
-	<ViewModel:MainPageViewModel.DeviceGroupList>
+    <ViewModel:MainPageViewModel.DeviceGroupList>
         <ViewModel:DeviceGroup Id="0" Name="全部"/>
         <ViewModel:DeviceGroup Id="1" Name="客厅"/>
         <ViewModel:DeviceGroup Id="2" Name="厕所"/>
@@ -14,4 +15,42 @@
         <ViewModel:DeviceGroup Id="4" Name="书房"/>
         <ViewModel:DeviceGroup Id="5" Name="卧室"/>
     </ViewModel:MainPageViewModel.DeviceGroupList>
+    <ViewModel:MainPageViewModel.VoiceCommandSetList>
+        <ViewModel:VoiceCommandSet FirstSay="帮开厨房灯" FirstAnswer="好的，正在帮你打开厨房灯" Id="1" ObjectName="厨房灯组">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="1" Name="开灯"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮开厨房灯" Id="1" Answer="好的，正在帮你打开厨房灯"/>
+                <ViewModel:VoiceCommand Say="帮我开下厨房灯" Id="2" Answer="好的，正在帮你打开厨房灯"/>
+                <ViewModel:VoiceCommand Say="帮我打开厨房电灯" Id="3" Answer="好的，正在帮你打开厨房灯"/>
+                <ViewModel:VoiceCommand Say="帮忙开厨房灯" Id="4" Answer="好的，正在帮你打开厨房灯"/>
+                <ViewModel:VoiceCommand Say="帮我开厨房灯" Id="5" Answer="好的，正在帮你打开厨房灯"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮开卧室灯" FirstAnswer="好的，正在帮你打开厨房灯" Id="2" ObjectName="卧室灯组">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="1" Name="开灯"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮开卧室灯" Id="1" Answer="好的，正在帮你打开卧室灯"/>
+                <ViewModel:VoiceCommand Say="帮我开下卧室灯" Id="2" Answer="好的，正在帮你打开卧室灯"/>
+                <ViewModel:VoiceCommand Say="帮我打开卧室电灯" Id="3" Answer="好的，正在帮你打开卧室灯"/>
+                <ViewModel:VoiceCommand Say="帮忙开卧室灯" Id="4" Answer="好的，正在帮你打开卧室灯"/>
+                <ViewModel:VoiceCommand Say="帮我开卧室灯" Id="5" Answer="好的，正在帮你打开卧室灯"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+    </ViewModel:MainPageViewModel.VoiceCommandSetList>
+
+    <ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>0</ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>
+    <ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>0</ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>
+    <ViewModel:MainPageViewModel.IsHasVoiceCommand>true</ViewModel:MainPageViewModel.IsHasVoiceCommand>
 </ViewModel:MainPageViewModel>
