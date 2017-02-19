@@ -12,7 +12,7 @@ namespace YeelightForCortana.ViewModel
         private Device device;
         private DeviceGroup deviceGroup;
 
-        public string Id { get; set; }
+        public int Id { get; set; }
         public CommandType CommandType { get; set; }
         public List<VoiceCommand> VoiceCommandList { get; set; }
         public string ObjectName

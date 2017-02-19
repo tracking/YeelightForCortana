@@ -9,7 +9,7 @@ namespace YeelightForCortana.ViewModel
 {
     public class VoiceCommand : INotifyPropertyChanged
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Say { get; set; }
         public string Answer { get; set; }
 

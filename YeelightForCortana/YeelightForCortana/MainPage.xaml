@@ -10,7 +10,9 @@
 
     <!--资源-->
     <Page.Resources>
+        <!--bool到visibility转换器-->
         <Converter:BooleanConvertToVisibility x:Key="BooleanConvertToVisibility"/>
+
         <!--设备分组列表项样式-->
         <Style x:Key="DeviceGroupListBoxItemStyle" TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
@@ -401,20 +403,33 @@
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal"/>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
+                                    <VisualState x:Name="Disabled"/>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FF262626"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteVoiceCommandSetButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="MeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstSayTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CortanaTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstAnswerTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CommandTypeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFCBCBCB"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -423,8 +438,24 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="MeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstSayTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CortanaTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstAnswerTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CommandTypeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#99000000"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -433,8 +464,24 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="MeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstSayTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CortanaTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstAnswerTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CommandTypeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#99000000"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -443,8 +490,24 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="MeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstSayTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CortanaTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstAnswerTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CommandTypeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#99000000"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -453,8 +516,24 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="MeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstSayTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CortanaTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstAnswerTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CommandTypeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#99000000"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -463,15 +542,47 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="MeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstSayTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CortanaTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="FirstAnswerTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#CC000000"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="CommandTypeTextBlock">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#99000000"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap"/>
+                            <Grid>
+                                <AppBarButton x:Name="DeleteVoiceCommandSetButton" Icon="Delete" Label="" VerticalAlignment="Top" HorizontalAlignment="Right" Width="30" Height="40" RenderTransformOrigin="0.5,0.5" Margin="0,-4,8,0" Visibility="Collapsed">
+                                    <AppBarButton.RenderTransform>
+                                        <CompositeTransform ScaleX="0.8" ScaleY="0.8"/>
+                                    </AppBarButton.RenderTransform>
+                                </AppBarButton>
+                                <TextBlock x:Name="ObjectNameTextBlock" Text="{Binding ObjectName}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,5,0,0" FontSize="18" Foreground="#FFCBCBCB" />
+                                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="20,34,0,0">
+                                    <TextBlock x:Name="MeTextBlock" TextWrapping="Wrap" Text="我：" FontSize="13" Foreground="#CCCBCBCB"/>
+                                    <TextBlock x:Name="FirstSayTextBlock" Text="{Binding FirstSay}" VerticalAlignment="Top" HorizontalAlignment="Left" d:LayoutOverrides="LeftPosition, RightPosition" MaxWidth="230" TextTrimming="CharacterEllipsis" FontSize="13.333" Foreground="#CCCBCBCB"/>
+                                </StackPanel>
+                                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="20,51,0,0">
+                                    <TextBlock x:Name="CortanaTextBlock" TextWrapping="Wrap" Text="小娜：" FontSize="13" Foreground="#CCCBCBCB"/>
+                                    <TextBlock x:Name="FirstAnswerTextBlock" Text="{Binding FirstAnswer}" VerticalAlignment="Top" HorizontalAlignment="Left" d:LayoutOverrides="LeftPosition, RightPosition" MaxWidth="220" TextTrimming="CharacterEllipsis" FontSize="13" Foreground="#CCCBCBCB"/>
+                                </StackPanel>
+                                <TextBlock x:Name="CommandTypeTextBlock" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding CommandType.Name}" VerticalAlignment="Bottom" Margin="0,0,15,26" FontSize="13" Foreground="#FF989898"/>
+                            </Grid>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -748,16 +859,6 @@
         <DataTemplate x:Key="CommandTypeTemplate">
             <TextBlock Text="{Binding Name}" />
         </DataTemplate>
-        <!--语言命令集列表数据模板-->
-        <DataTemplate x:Key="VoiceCommandSetListTemplate">
-            <Grid>
-                <TextBlock Text="{Binding ObjectName}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,8,0,0" FontSize="18.667" />
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="20,38,0,0">
-                    <TextBlock TextWrapping="Wrap" Text="我：" FontSize="13.333"/>
-                    <TextBlock Text="{Binding FirstSay}" VerticalAlignment="Top" HorizontalAlignment="Left" d:LayoutOverrides="LeftPosition, RightPosition" MaxWidth="230" TextTrimming="WordEllipsis"/>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
 
     </Page.Resources>
 
@@ -844,12 +945,14 @@
                     <!--中区头部按钮-->
                 </Grid>
                 <Grid Grid.Row="2">
-                    <ListBox x:Name="LB_VoiceCommandSetList" ItemContainerStyle="{StaticResource VoiceCommandSetListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandSetListTemplate}" Background="#FF141414" ItemsSource="{Binding VoiceCommandSetList}"/>
-                    <Grid x:Name="Grid_VoiceCommandSetListIsNull" Visibility="{Binding IsHasVoiceCommand, Converter={StaticResource BooleanConvertToVisibility}}" Background="#FF141414" d:IsHidden="True">
-                        <TextBlock TextWrapping="Wrap" Text="您尚未添加小娜口令" VerticalAlignment="Center" d:LayoutOverrides="Width" HorizontalAlignment="Center" d:IsLocked="True"/>
+                    <ListBox x:Name="LB_VoiceCommandSetList" ItemContainerStyle="{StaticResource VoiceCommandSetListBoxItemStyle}" Background="#FF141414" ItemsSource="{Binding VoiceCommandSetList}"/>
+                    <Grid x:Name="Grid_VoiceCommandSetListIsNull" Visibility="{Binding DoesNotExistVoiceCommand, Converter={StaticResource BooleanConvertToVisibility}}" Background="#FF141414" d:IsHidden="True">
+                        <TextBlock TextWrapping="Wrap" Text="您尚未添加小娜口令" VerticalAlignment="Center" d:LayoutOverrides="Width" HorizontalAlignment="Center" Foreground="#FFCBCBCB"/>
                     </Grid>
                 </Grid>
             </Grid>
+            <!--右区-->
+            <Grid Grid.Row="1" Grid.Column="3"/>
         </Grid>
     </Grid>
 </Page>

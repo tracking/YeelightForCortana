@@ -14,11 +14,11 @@ namespace YeelightForCortana.ViewModel
 
         public int DeviceGroupListSelectedIndex { get; set; }
         public int CommandTypeListSelectedIndex { get; set; }
-        public bool IsHasVoiceCommand
+        public bool DoesNotExistVoiceCommand
         {
             get
             {
-                return VoiceCommandSetList.Count > 0;
+                return !(VoiceCommandSetList.Count > 0);
             }
         }
 

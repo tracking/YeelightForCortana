@@ -48,9 +48,81 @@
                 <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
             </ViewModel:VoiceCommandSet.VoiceCommandList>
         </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" FirstAnswer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟" Id="3" ObjectName="床头灯">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="4" Name="增加亮度"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮我把床头灯的亮度调高点，现在有点黑我看不大清楚书上的字" Id="1" Answer="好的，请稍等，正在帮你把床头灯的亮度调高，小娜爱你哟"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
     </ViewModel:MainPageViewModel.VoiceCommandSetList>
 
     <ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>0</ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>
     <ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>0</ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>
-    <ViewModel:MainPageViewModel.IsHasVoiceCommand>true</ViewModel:MainPageViewModel.IsHasVoiceCommand>
+    <ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>true</ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>
 </ViewModel:MainPageViewModel>

@@ -40,12 +40,12 @@ namespace YeelightForCortana
                 // 左区分组列表
                 DeviceGroupList = new DeviceGroupList()
                 {
-                    new DeviceGroup() { Id = "0", Name="全部"},
-                    new DeviceGroup() { Id = "1", Name="客厅"},
-                    new DeviceGroup() { Id = "2", Name="厕所"},
-                    new DeviceGroup() { Id = "3", Name="走廊"},
-                    new DeviceGroup() { Id = "4", Name="书房"},
-                    new DeviceGroup() { Id = "5", Name="卧室"}
+                    new DeviceGroup() { Id = 0, Name="全部"},
+                    new DeviceGroup() { Id = 1, Name="客厅"},
+                    new DeviceGroup() { Id = 2, Name="厕所"},
+                    new DeviceGroup() { Id = 3, Name="走廊"},
+                    new DeviceGroup() { Id = 4, Name="书房"},
+                    new DeviceGroup() { Id = 5, Name="卧室"}
                 },
                 // 中区操作类型
                 CommandTypeList = new CommandTypeList()
@@ -54,7 +54,39 @@ namespace YeelightForCortana
                     new CommandType() {Id = 1, Name="开灯" },
                     new CommandType() {Id = 2, Name="关灯" },
                     new CommandType() {Id = 3, Name="切换颜色" },
-                    new CommandType() {Id = 4, Name="调整亮度" }
+                    new CommandType() {Id = 4, Name="增加亮度" },
+                    new CommandType() {Id = 5, Name="减少亮度" }
+                },
+                VoiceCommandSetList = new VoiceCommandSetList()
+                {
+                    new VoiceCommandSet(new Device() { Id = 0,  Name="厨房灯"})
+                    {
+                        Id = 1,
+                        CommandType = new CommandType() {Id = 1, Name="开灯" },
+                        VoiceCommandList = new List<VoiceCommand>()
+                        {
+                            new VoiceCommand() {Id=1,Say="帮开厨房灯",Answer = "好的，正在帮你打开厨房灯" },
+                            new VoiceCommand() {Id=1,Say="帮我打开厨房灯",Answer = "好的，正在帮你打开厨房灯" }
+                        }
+                    },
+                    new VoiceCommandSet(new DeviceGroup() { Id = 1,  Name="客厅"})
+                    {
+                        Id = 1,
+                        CommandType = new CommandType() {Id = 5, Name="减少亮度" },
+                        VoiceCommandList = new List<VoiceCommand>()
+                        {
+                            new VoiceCommand() {Id=1,Say="帮我把客厅的灯亮度调低一点，太亮了受不了",Answer = "好的，正在帮你调低客厅灯的亮度" }
+                        }
+                    },
+                    new VoiceCommandSet(new DeviceGroup() { Id = 2,  Name="卧室"})
+                    {
+                        Id = 1,
+                        CommandType = new CommandType() {Id = 3, Name="切换颜色" },
+                        VoiceCommandList = new List<VoiceCommand>()
+                        {
+                            new VoiceCommand() {Id=1,Say="神圣的光辉将净化污浊的大地，星路之门在此敞开",Answer = "妈的智障" }
+                        }
+                    }
                 }
             };
         }
