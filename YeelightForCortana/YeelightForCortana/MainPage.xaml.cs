@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -37,6 +38,16 @@ namespace YeelightForCortana
         {
             this.DataContext = new MainPageViewModel()
             {
+                // 设备列表
+                DeviceList = new DeviceList()
+                {
+                    new Device() { Id = 0, Name="全部"},
+                    new Device() { Id = 1, Name="客厅"},
+                    new Device() { Id = 2, Name="厕所"},
+                    new Device() { Id = 3, Name="走廊"},
+                    new Device() { Id = 4, Name="书房"},
+                    new Device() { Id = 5, Name="卧室"}
+                },
                 // 左区分组列表
                 DeviceGroupList = new DeviceGroupList()
                 {
@@ -47,6 +58,15 @@ namespace YeelightForCortana
                     new DeviceGroup() { Id = 4, Name="书房"},
                     new DeviceGroup() { Id = 5, Name="卧室"}
                 },
+                // 中区Split设备列表
+                DeviceCheckList = new DeviceCheckList(new DeviceList() {
+                    new Device() { Id = 0, Name="全部"},
+                    new Device() { Id = 1, Name="客厅"},
+                    new Device() { Id = 2, Name="厕所"},
+                    new Device() { Id = 3, Name="走廊"},
+                    new Device() { Id = 4, Name="书房"},
+                    new Device() { Id = 5, Name="卧室"}
+                }),
                 // 中区操作类型
                 CommandTypeList = new CommandTypeList()
                 {
@@ -90,7 +110,6 @@ namespace YeelightForCortana
                 }
             };
         }
-
         /// <summary>
         /// 页面样式初始化
         /// </summary>
@@ -105,6 +124,26 @@ namespace YeelightForCortana
             titleBar.BackgroundColor = titleBar.ButtonBackgroundColor = Colors.Black;
             titleBar.ForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
         }
+        /// <summary>
+        /// 设置设备全选框状态
+        /// </summary>
+        /// <returns></returns>
+        private void SetSelectAllDeviceCheckBoxState()
+        {
+            int checkedCount = 0;
+
+            // 计算选中数量
+            foreach (DeviceCheck item in LB_DeviceCheckList.Items)
+                if (item.IsChecked == true)
+                    checkedCount++;
+
+            if (checkedCount == 0)
+                CB_SelectAllDevice.IsChecked = false;
+            else if (checkedCount == LB_DeviceCheckList.Items.Count)
+                CB_SelectAllDevice.IsChecked = true;
+            else
+                CB_SelectAllDevice.IsChecked = null;
+        }
 
         // 设备组列表鼠标点击事件
         private void LB_DeviceGroupList_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -118,5 +157,35 @@ namespace YeelightForCortana
                 this.MF_DeviceGroupMenu.ShowAt(this.LB_DeviceGroupList, position.Position);
             }
         }
+        // 添加设备分组按钮按下
+        private void BTN_AddDeviceGroup_Click(object sender, RoutedEventArgs e)
+        {
+            // 打开
+            SV_DeviceGroupConfig.IsPaneOpen = true;
+        }
+        // 设备全选框按下
+        private void CB_SelectAllDevice_Click(object sender, RoutedEventArgs e)
+        {
+            // !!!进入此函数时CheckBox状态已改变!!!
+
+            // 默认全不选
+            bool isChecked = false;
+
+            // 如果已经是全选或半选状态则全选
+            if (CB_SelectAllDevice.IsChecked == null || CB_SelectAllDevice.IsChecked == true)
+                isChecked = true;
+
+            // 设置状态
+            CB_SelectAllDevice.IsChecked = isChecked;
+            foreach (DeviceCheck item in LB_DeviceCheckList.Items)
+                item.IsChecked = isChecked;
+        }
+        // 设备全选框列表的全选框按下
+        private void CB_DeviceListCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            // 设置设备全选框状态
+            SetSelectAllDeviceCheckBoxState();
+        }
+
     }
 }

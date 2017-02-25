@@ -7,6 +7,34 @@
         <ViewModel:CommandType Id="4" Name="增加亮度"/>
         <ViewModel:CommandType Id="5" Name="减少亮度"/>
     </ViewModel:MainPageViewModel.CommandTypeList>
+    <ViewModel:MainPageViewModel.DeviceList>
+        <ViewModel:Device Id="1" Name="床头灯"/>
+        <ViewModel:Device Id="2" Name="厨房灯"/>
+        <ViewModel:Device Id="3" Name="浴室灯"/>
+        <ViewModel:Device Id="4" Name="大厅灯"/>
+    </ViewModel:MainPageViewModel.DeviceList>
+    <ViewModel:MainPageViewModel.DeviceCheckList>
+        <ViewModel:DeviceCheck IsChecked="True">
+            <ViewModel:DeviceCheck.Device>
+                <ViewModel:Device Id="1" Name="床头灯"/>
+            </ViewModel:DeviceCheck.Device>
+        </ViewModel:DeviceCheck>
+        <ViewModel:DeviceCheck IsChecked="False">
+            <ViewModel:DeviceCheck.Device>
+                <ViewModel:Device Id="2" Name="厨房灯"/>
+            </ViewModel:DeviceCheck.Device>
+        </ViewModel:DeviceCheck>
+        <ViewModel:DeviceCheck IsChecked="False">
+            <ViewModel:DeviceCheck.Device>
+                <ViewModel:Device Id="3" Name="浴室灯"/>
+            </ViewModel:DeviceCheck.Device>
+        </ViewModel:DeviceCheck>
+        <ViewModel:DeviceCheck IsChecked="False">
+            <ViewModel:DeviceCheck.Device>
+                <ViewModel:Device Id="4" Name="大厅灯"/>
+            </ViewModel:DeviceCheck.Device>
+        </ViewModel:DeviceCheck>
+    </ViewModel:MainPageViewModel.DeviceCheckList>
     <ViewModel:MainPageViewModel.DeviceGroupList>
         <ViewModel:DeviceGroup Id="0" Name="全部"/>
         <ViewModel:DeviceGroup Id="1" Name="客厅"/>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace YeelightForCortana.ViewModel
 {
-    public class VoiceCommandSet : INotifyPropertyChanged
+    public class VoiceCommandSet : BaseModel
     {
         private Device device;
         private DeviceGroup deviceGroup;
@@ -40,9 +40,7 @@ namespace YeelightForCortana.ViewModel
                 return first != null ? first.Answer : "";
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        
         public VoiceCommandSet(Device device)
         {
             this.device = device;

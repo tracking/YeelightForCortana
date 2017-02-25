@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace YeelightForCortana.ViewModel
 {
-    public class CommandType : BaseModel
+    public class DeviceList : ObservableCollection<Device>
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

@@ -8,6 +8,8 @@ namespace YeelightForCortana.ViewModel
 {
     public class MainPageViewModel
     {
+        public DeviceList DeviceList { get; set; }
+        public DeviceCheckList DeviceCheckList { get; set; }
         public DeviceGroupList DeviceGroupList { get; set; }
         public CommandTypeList CommandTypeList { get; set; }
         public VoiceCommandSetList VoiceCommandSetList { get; set; }

@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace YeelightForCortana.ViewModel
 {
-    public class Device : INotifyPropertyChanged
+    public class Device : BaseModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

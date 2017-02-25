@@ -103,6 +103,10 @@
       <DependentUpon>MainPage_bak.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\BaseModel.cs" />
+    <Compile Include="ViewModel\DeviceCheck.cs" />
+    <Compile Include="ViewModel\DeviceCheckList.cs" />
+    <Compile Include="ViewModel\DeviceList.cs" />
     <Compile Include="ViewModel\VoiceCommandSetList.cs" />
     <Compile Include="ViewModel\VoiceCommand.cs" />
     <Compile Include="ViewModel\VoiceCommandSet.cs" />
