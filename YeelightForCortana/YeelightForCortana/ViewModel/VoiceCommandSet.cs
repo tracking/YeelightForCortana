@@ -40,7 +40,7 @@ namespace YeelightForCortana.ViewModel
                 return first != null ? first.Answer : "";
             }
         }
-        
+
         public VoiceCommandSet(Device device)
         {
             this.device = device;
@@ -48,6 +48,11 @@ namespace YeelightForCortana.ViewModel
         public VoiceCommandSet(DeviceGroup deviceGroup)
         {
             this.deviceGroup = deviceGroup;
+        }
+
+        public VoiceCommandSet()
+        {
+
         }
     }
 }

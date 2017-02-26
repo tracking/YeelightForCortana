@@ -11,5 +11,11 @@ namespace YeelightForCortana.ViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public DeviceList DeviceList { get; set; }
+
+        public DeviceGroup()
+        {
+
+        }
     }
 }

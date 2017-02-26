@@ -577,8 +577,8 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Grid Height="32" VerticalAlignment="Top">
-                                <Rectangle x:Name="NormalRectangle" Fill="{ThemeResource CheckBoxCheckBackgroundFillUnchecked}" Height="20" Stroke="{ThemeResource CheckBoxCheckBackgroundStrokeUnchecked}" StrokeThickness="{ThemeResource CheckBoxBorderThemeThickness}" UseLayoutRounding="False" Width="20"/>
-                                <FontIcon x:Name="CheckGlyph" Foreground="{ThemeResource CheckBoxCheckGlyphForegroundUnchecked}" FontSize="20" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE001;" Opacity="0"/>
+                                <Rectangle x:Name="NormalRectangle" Fill="{ThemeResource CheckBoxCheckBackgroundFillUnchecked}" Height="15" Stroke="{ThemeResource CheckBoxCheckBackgroundStrokeUnchecked}" StrokeThickness="{ThemeResource CheckBoxBorderThemeThickness}" UseLayoutRounding="False" Width="15"/>
+                                <FontIcon x:Name="CheckGlyph" Foreground="{ThemeResource CheckBoxCheckGlyphForegroundUnchecked}" FontSize="16" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE001;" Opacity="0"/>
                             </Grid>
                             <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Grid.Column="1" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Grid>
@@ -1469,7 +1469,16 @@
                 </SplitView>
             </Grid>
             <!--右区-->
-            <Grid Grid.Row="1" Grid.Column="3"/>
+            <Grid Grid.Row="1" Grid.Column="3">
+                <AppBarButton x:Name="ABB_DeleteVoiceCommandSet" HorizontalAlignment="Right" Icon="Delete" Height="48" Width="48" Margin="0,0,80,0"/>
+                <AppBarButton x:Name="ABB_SaveVoiceCommandSet" HorizontalAlignment="Right" Icon="Save" Width="48" Height="48" Margin="0,0,10,0"/>
+                <Pivot x:Name="PVT_VoiceCommandSetDetail">
+                    <PivotItem Header="基本设置"/>
+                    <PivotItem Header="语音指令">
+                        <Grid/>
+                    </PivotItem>
+                </Pivot>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

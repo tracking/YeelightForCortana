@@ -12,5 +12,10 @@ namespace YeelightForCortana.ViewModel
         public int Id { get; set; }
         public string Say { get; set; }
         public string Answer { get; set; }
+
+        public VoiceCommand()
+        {
+
+        }
     }
 }

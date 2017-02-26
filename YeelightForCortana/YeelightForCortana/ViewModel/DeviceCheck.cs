@@ -21,5 +21,10 @@ namespace YeelightForCortana.ViewModel
                 this.EmitPropertyChanged("IsChecked");
             }
         }
+
+        public DeviceCheck()
+        {
+
+        }
     }
 }
