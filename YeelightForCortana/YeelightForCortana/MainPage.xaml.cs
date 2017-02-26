@@ -121,8 +121,10 @@ namespace YeelightForCortana
 
             // 设置标题栏颜色
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.BackgroundColor = titleBar.ButtonBackgroundColor = Colors.Black;
-            titleBar.ForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
+            titleBar.InactiveBackgroundColor = titleBar.BackgroundColor = titleBar.ButtonBackgroundColor = Colors.Black;
+            titleBar.InactiveForegroundColor = titleBar.ForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
+
+            // 设置边框颜色
         }
         /// <summary>
         /// 设置设备全选框状态
