@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Converter="using:YeelightForCortana.Converter"
+    xmlns:Foundation="using:Windows.Foundation"
     x:Class="YeelightForCortana.MainPage"
     mc:Ignorable="d" RequestedTheme="Dark" Width="Auto" Height="Auto">
 
@@ -586,122 +587,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!--通用检查框数据模板-->
-        <DataTemplate x:Key="CommonCheckBoxDataTemplate" x:DataType="x:String">
-            <Grid>
-                <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{x:Bind}"/>
-            </Grid>
-        </DataTemplate>
-
-
-        <!--设备分组列表项样式-->
-        <Style x:Key="DeviceGroupListBoxItemStyle" TargetType="ListBoxItem">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="TabNavigation" Value="Local"/>
-            <Setter Property="Padding" Value="12,11,12,13"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="UseSystemFocusVisuals" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <Grid x:Name="LayoutRoot" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" MinHeight="68">
-                            <Grid.Resources>
-                                <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
-                                    <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
-                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                    <Setter Property="FontSize" Value="15"/>
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                    <Setter Property="LineStackingStrategy" Value="MaxHeight"/>
-                                    <Setter Property="TextLineBounds" Value="Full"/>
-                                    <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
-                                </Style>
-                                <Style x:Key="BodyContentPresenterStyle" BasedOn="{StaticResource BaseContentPresenterStyle}" TargetType="ContentPresenter">
-                                    <Setter Property="FontWeight" Value="Normal"/>
-                                    <Setter Property="FontSize" Value="15"/>
-                                </Style>
-                            </Grid.Resources>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal"/>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="PointerOver">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FF262626"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Selected">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="SelectedUnfocused">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="SelectedPointerOver">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="SelectedPressed">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                            <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <!--设备列表菜单滚动条样式-->
-        <Style x:Key="MenuScrollViewerStyle" TargetType="ScrollViewer">
+        <!--通用滚动视图样式-->
+        <Style x:Key="CommonScrollViewerStyle" TargetType="ScrollViewer">
             <Setter Property="HorizontalScrollMode" Value="Auto"/>
             <Setter Property="VerticalScrollMode" Value="Auto"/>
             <Setter Property="IsHorizontalRailEnabled" Value="True"/>
@@ -823,6 +710,120 @@
                                 <Border x:Name="ScrollBarSeparator" Background="{ThemeResource ScrollViewerScrollBarSeparatorBackground}" Grid.Column="1" Grid.Row="1"/>
                             </Grid>
                         </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--通用检查框数据模板-->
+        <DataTemplate x:Key="CommonCheckBoxDataTemplate" x:DataType="x:String">
+            <Grid>
+                <TextBlock TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Text="{x:Bind}"/>
+            </Grid>
+        </DataTemplate>
+
+
+        <!--设备分组列表项样式-->
+        <Style x:Key="DeviceGroupListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TabNavigation" Value="Local"/>
+            <Setter Property="Padding" Value="12,11,12,13"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid x:Name="LayoutRoot" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" MinHeight="68">
+                            <Grid.Resources>
+                                <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
+                                    <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="LineStackingStrategy" Value="MaxHeight"/>
+                                    <Setter Property="TextLineBounds" Value="Full"/>
+                                    <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+                                </Style>
+                                <Style x:Key="BodyContentPresenterStyle" BasedOn="{StaticResource BaseContentPresenterStyle}" TargetType="ContentPresenter">
+                                    <Setter Property="FontWeight" Value="Normal"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                </Style>
+                            </Grid.Resources>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FF262626"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedUnfocused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -955,7 +956,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--中区语言命令集列表项样式-->
+        <!--中区语音命令集列表项样式-->
         <Style x:Key="VoiceCommandSetListBoxItemStyle" TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0,0,0,2"/>
@@ -1352,6 +1353,161 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!--语音命令集详情面板项样式-->
+        <Style x:Key="VoiceCommandSetDetailPivotItemStyle" TargetType="PivotItem">
+            <Setter Property="Background" Value="{ThemeResource PivotItemBackground}"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PivotItem">
+                        <Grid Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Pivot">
+                                    <VisualState x:Name="Right"/>
+                                    <VisualState x:Name="Left"/>
+                                    <VisualState x:Name="Center"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--语音命令列表项样式-->
+        <Style x:Key="VoiceCommandListBoxItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TabNavigation" Value="Local"/>
+            <Setter Property="Padding" Value="12,11,12,13"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid x:Name="LayoutRoot" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <Grid.Resources>
+                                <Style x:Key="BaseContentPresenterStyle" TargetType="ContentPresenter">
+                                    <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="LineStackingStrategy" Value="MaxHeight"/>
+                                    <Setter Property="TextLineBounds" Value="Full"/>
+                                    <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings"/>
+                                </Style>
+                                <Style x:Key="BodyContentPresenterStyle" BasedOn="{StaticResource BaseContentPresenterStyle}" TargetType="ContentPresenter">
+                                    <Setter Property="FontWeight" Value="Normal"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                </Style>
+                            </Grid.Resources>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteVoiceCommandButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#19FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteVoiceCommandButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#19FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedUnfocused">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteVoiceCommandButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#19FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="SelectedPressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteVoiceCommandButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#19FFFFFF"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap"/>
+                            <Polygon x:Name="DeleteVoiceCommandButton" Stroke="#CCFFFFFF" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Visibility="Collapsed" StrokeThickness="2">
+                                <Polygon.Points>
+                                    <Foundation:Point>0,0</Foundation:Point>
+                                    <Foundation:Point>5,5</Foundation:Point>
+                                    <Foundation:Point>10,0</Foundation:Point>
+                                    <Foundation:Point>5,5</Foundation:Point>
+                                    <Foundation:Point>10,10</Foundation:Point>
+                                    <Foundation:Point>5,5</Foundation:Point>
+                                    <Foundation:Point>0,10</Foundation:Point>
+                                    <Foundation:Point>5,5</Foundation:Point>
+                                    <Foundation:Point>0,0</Foundation:Point>
+                                </Polygon.Points>
+                            </Polygon>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <!--设备分组列表数据模板-->
         <DataTemplate x:Key="DeviceGroupListTemplate">
@@ -1361,7 +1517,59 @@
         <DataTemplate x:Key="CommandTypeTemplate">
             <TextBlock Text="{Binding Name}" />
         </DataTemplate>
-        
+        <!--语音命令列表项模板-->
+        <DataTemplate x:Key="VoiceCommandListItemDataTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="20" Width="20"/>
+                    <ColumnDefinition MaxWidth="45" Width="45"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition MaxWidth="45" Width="45"/>
+                    <ColumnDefinition MaxWidth="20" Width="20"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="1"/>
+                </Grid.RowDefinitions>
+                <Grid x:Name="Say" VerticalAlignment="Top" Grid.Column="2" Background="#19FFFFFF" MinHeight="40" Padding="10,8" Grid.Row="1">
+                    <TextBlock TextWrapping="Wrap" Text="{Binding Say}" VerticalAlignment="Top" LineHeight="24" HorizontalAlignment="Left"/>
+                </Grid>
+                <Grid x:Name="Answer" VerticalAlignment="Top" Grid.Row="3" Grid.Column="2" Background="#19FFFFFF" MinHeight="40" Padding="10,8">
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Answer}" VerticalAlignment="Top" LineHeight="24"/>
+                </Grid>
+                <Grid x:Name="BottomLine" Grid.ColumnSpan="3" Grid.RowSpan="4" VerticalAlignment="Top" Grid.Row="5" Height="1" Background="#19FFFFFF" Grid.Column="1"/>
+                <Polygon x:Name="SayTriangle" Stroke="White" Fill="#19FFFFFF" Width="8" Height="8" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" StrokeThickness="0" Margin="0,16,0,0" Grid.Column="3" >
+                    <Polygon.Points>
+                        <Foundation:Point>0,0</Foundation:Point>
+                        <Foundation:Point>8,4</Foundation:Point>
+                        <Foundation:Point>0,8</Foundation:Point>
+                    </Polygon.Points>
+                </Polygon>
+                <Polygon x:Name="AnswerTriangle" Stroke="White" Fill="#19FFFFFF" Width="8" Height="8" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Margin="0,16,0,0" Grid.Column="1" >
+                    <Polygon.Points>
+                        <Foundation:Point>8,0</Foundation:Point>
+                        <Foundation:Point>0,4</Foundation:Point>
+                        <Foundation:Point>8,8</Foundation:Point>
+                    </Polygon.Points>
+                </Polygon>
+                <Grid x:Name="UserIcon" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Column="3" Grid.Row="1" Margin="0,6,0,0">
+
+                    <Ellipse Fill="#FF666666" HorizontalAlignment="Left" Height="28" Stroke="#FF666666" StrokeThickness="0" VerticalAlignment="Top" Width="28" Margin="0"/>
+
+                    <PathIcon Data="M16.5,14.9c1.5-0.9,2.5-2.5,2.5-4.3c0-2.7-2.2-5-5-5    c-2.7,0-5,2.2-5,5c0,1.8,1,3.4,2.5,4.3h-0.1c-3.1,0.9-5.5,3.4-5.8,6.7c0,0,0,0.7,0.5,0.7c0.7,0,0.7-0.7,0.7-0.7    c0.4-3.6,3.4-5.9,7.1-5.9c3.7,0,6.7,2.3,7.2,5.9c0,0,0,0.7,0.6,0.7c0.6,0,0.6-0.7,0.6-0.7C22,18.3,19.6,15.9,16.5,14.9L16.5,14.9z     M10.3,10.6c0-2.1,1.7-3.8,3.8-3.8s3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8C12,14.4,10.3,12.7,10.3,10.6L10.3,10.6z" Foreground="White"/>
+                </Grid>
+                <Grid x:Name="CortanaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Margin="0,6,0,0" Grid.Column="1">
+                    <PathIcon Data="M14,0C6.3,0,0,6.3,0,14c0,7.7,6.3,14,14,14s14-6.3,14-14C28,6.3,21.7,0,14,0z M14,23.8
+	c-5.4,0-9.8-4.4-9.8-9.8S8.6,4.2,14,4.2s9.8,4.4,9.8,9.8S19.4,23.8,14,23.8z" Foreground="#7F2EA4DD"/>
+                    <PathIcon Data="M14,8.2c3.2,0,5.8,2.6,5.8,5.8s-2.6,5.8-5.8,5.8S8.2,17.2,8.2,14S10.8,8.2,14,8.2 M14,4.2
+	c-5.4,0-9.8,4.4-9.8,9.8s4.4,9.8,9.8,9.8s9.8-4.4,9.8-9.8S19.4,4.2,14,4.2L14,4.2z" Foreground="#FF2EA4DD"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
 
     <!--主区-->
@@ -1405,7 +1613,7 @@
                     </AppBarButton>
                 </Grid>
                 <!--左区分组列表-->
-                <ScrollViewer Margin="0" Grid.Row="1" Background="#FF191919" VerticalScrollBarVisibility="Auto" Style="{StaticResource MenuScrollViewerStyle}">
+                <ScrollViewer Margin="0" Grid.Row="1" Background="#FF191919" VerticalScrollBarVisibility="Auto" Style="{StaticResource CommonScrollViewerStyle}">
                     <StackPanel VerticalAlignment="Top">
                         <ListBox x:Name="LB_DeviceGroupList" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Background="{x:Null}" ItemContainerStyle="{StaticResource DeviceGroupListBoxItemStyle}" ItemsSource="{Binding DeviceGroupList}" ItemTemplate="{StaticResource DeviceGroupListTemplate}" PointerPressed="LB_DeviceGroupList_PointerPressed" SelectedIndex="{Binding DeviceGroupListSelectedIndex}">
                             <FlyoutBase.AttachedFlyout>
@@ -1607,9 +1815,20 @@
                             </Setter>
                         </Style>
                     </Pivot.Resources>
+                    <Pivot.ItemContainerStyle>
+                        <StaticResource ResourceKey="VoiceCommandSetDetailPivotItemStyle"/>
+                    </Pivot.ItemContainerStyle>
                     <PivotItem Header="基本设置"/>
                     <PivotItem Header="语音指令">
-                        <Grid/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="100"/>
+                            </Grid.RowDefinitions>
+                            <ScrollViewer HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CommonScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+                                <ListBox x:Name="LB_VoiceCommandList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" VerticalAlignment="Top" Background="{x:Null}" ItemsSource="{Binding SelectedVoiceCommandSet.VoiceCommandList}" ItemContainerStyle="{StaticResource VoiceCommandListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandListItemDataTemplate}"/>
+                            </ScrollViewer>
+                        </Grid>
                     </PivotItem>
                 </Pivot>
             </Grid>

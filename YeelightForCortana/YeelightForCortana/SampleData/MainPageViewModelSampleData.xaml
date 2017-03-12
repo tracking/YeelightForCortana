@@ -149,7 +149,20 @@
             </ViewModel:VoiceCommandSet.VoiceCommandList>
         </ViewModel:VoiceCommandSet>
     </ViewModel:MainPageViewModel.VoiceCommandSetList>
-
+    <ViewModel:MainPageViewModel.SelectedVoiceCommandSet>
+        <ViewModel:VoiceCommandSet FirstSay="帮开厨房灯" FirstAnswer="好的，正在帮你打开厨房灯" Id="1" ObjectName="厨房灯组">
+            <ViewModel:VoiceCommandSet.CommandType>
+                <ViewModel:CommandType Id="1" Name="开灯"/>
+            </ViewModel:VoiceCommandSet.CommandType>
+            <ViewModel:VoiceCommandSet.VoiceCommandList>
+                <ViewModel:VoiceCommand Say="帮开厨房灯" Id="1" Answer="好的，正在帮你打开厨房灯"/>
+                <ViewModel:VoiceCommand Say="帮我开下厨房灯" Id="2" Answer="好的，正在帮你打开厨房灯"/>
+                <ViewModel:VoiceCommand Say="帮我打开厨房电灯测试下超长文本是什么鬼样子，好像还不够长，再多加点字试试看是什么样子" Id="3" Answer="好的，正在帮你打开厨房电灯测试下超长文本是什么鬼样子，好像还不够长，再多加点字试试看是什么样子"/>
+                <ViewModel:VoiceCommand Say="帮忙开厨房灯" Id="4" Answer="好的，正在帮你打开厨房灯"/>
+                <ViewModel:VoiceCommand Say="帮我开厨房灯" Id="5" Answer="好的，正在帮你打开厨房灯"/>
+            </ViewModel:VoiceCommandSet.VoiceCommandList>
+        </ViewModel:VoiceCommandSet>
+    </ViewModel:MainPageViewModel.SelectedVoiceCommandSet>
     <ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>0</ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>
     <ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>0</ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>
     <ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>true</ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>

@@ -107,6 +107,16 @@ namespace YeelightForCortana
                             new VoiceCommand() {Id=1,Say="神圣的光辉将净化污浊的大地，星路之门在此敞开",Answer = "妈的智障" }
                         }
                     }
+                },
+                SelectedVoiceCommandSet = new VoiceCommandSet(new Device() { Id = 0, Name = "厨房灯" })
+                {
+                    Id = 1,
+                    CommandType = new CommandType() { Id = 1, Name = "开灯" },
+                    VoiceCommandList = new List<VoiceCommand>()
+                        {
+                            new VoiceCommand() {Id=1,Say="帮开厨房灯",Answer = "好的，正在帮你打开厨房灯" },
+                            new VoiceCommand() {Id=1,Say="帮我打开厨房灯",Answer = "好的，正在帮你打开厨房灯" }
+                        }
                 }
             };
         }
