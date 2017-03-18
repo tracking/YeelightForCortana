@@ -166,4 +166,6 @@
     <ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>0</ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>
     <ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>0</ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>
     <ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>true</ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>
+    <ViewModel:MainPageViewModel.ShowVoiceCommandSetGrid>true</ViewModel:MainPageViewModel.ShowVoiceCommandSetGrid>
+    <ViewModel:MainPageViewModel.ShowNewDeviceGrid>true</ViewModel:MainPageViewModel.ShowNewDeviceGrid>
 </ViewModel:MainPageViewModel>

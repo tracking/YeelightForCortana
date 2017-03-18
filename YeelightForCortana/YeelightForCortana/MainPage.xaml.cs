@@ -117,7 +117,9 @@ namespace YeelightForCortana
                             new VoiceCommand() {Id=1,Say="帮开厨房灯",Answer = "好的，正在帮你打开厨房灯" },
                             new VoiceCommand() {Id=1,Say="帮我打开厨房灯",Answer = "好的，正在帮你打开厨房灯" }
                         }
-                }
+                },
+                ShowVoiceCommandSetGrid = false,
+                ShowNewDeviceGrid = true
             };
         }
         /// <summary>

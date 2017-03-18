@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace YeelightForCortana.ViewModel
 {
-    public class MainPageViewModel
+    public class MainPageViewModel : BaseModel
     {
+        private bool showNewDeviceGrid;
+
         public DeviceList DeviceList { get; set; }
         public DeviceCheckList DeviceCheckList { get; set; }
         public DeviceGroupList DeviceGroupList { get; set; }
@@ -17,6 +19,18 @@ namespace YeelightForCortana.ViewModel
 
         public int DeviceGroupListSelectedIndex { get; set; }
         public int CommandTypeListSelectedIndex { get; set; }
+
+        public bool ShowVoiceCommandSetGrid { get; set; }
+        public bool ShowNewDeviceGrid
+        {
+            get { return this.showNewDeviceGrid; }
+            set
+            {
+                this.showNewDeviceGrid = value;
+                this.EmitPropertyChanged("ShowNewDeviceGrid");
+            }
+        }
+
         public bool DoesNotExistVoiceCommand
         {
             get
