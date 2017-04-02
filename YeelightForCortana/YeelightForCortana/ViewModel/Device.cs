@@ -11,6 +11,8 @@ namespace YeelightForCortana.ViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool Power { get; set; }
+        public bool Online { get; set; }
 
         public Device()
         {

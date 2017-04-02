@@ -8,11 +8,24 @@
         <ViewModel:CommandType Id="5" Name="减少亮度"/>
     </ViewModel:MainPageViewModel.CommandTypeList>
     <ViewModel:MainPageViewModel.DeviceList>
-        <ViewModel:Device Id="1" Name="床头灯"/>
-        <ViewModel:Device Id="2" Name="厨房灯"/>
-        <ViewModel:Device Id="3" Name="浴室灯"/>
-        <ViewModel:Device Id="4" Name="大厅灯"/>
+        <ViewModel:Device Id="1" Name="床头灯" Power="True" Online="True"/>
+        <ViewModel:Device Id="2" Name="厨房灯" Power="True" Online="True"/>
+        <ViewModel:Device Id="3" Name="浴室灯" Power="True" Online="True"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
+        <ViewModel:Device Id="4" Name="大厅灯" Power="False" Online="False"/>
     </ViewModel:MainPageViewModel.DeviceList>
+    <ViewModel:MainPageViewModel.NewDeviceList>
+        <ViewModel:Device Id="1" Name="ADASDAASDASDASA" Power="True" Online="True"/>
+        <ViewModel:Device Id="2" Name="ADASDAASDASDASB" Power="False" Online="True"/>
+        <ViewModel:Device Id="3" Name="ADASDAASDASDASC" Power="False" Online="False"/>
+    </ViewModel:MainPageViewModel.NewDeviceList>
     <ViewModel:MainPageViewModel.DeviceCheckList>
         <ViewModel:DeviceCheck IsChecked="True">
             <ViewModel:DeviceCheck.Device>
@@ -167,5 +180,5 @@
     <ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>0</ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>
     <ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>true</ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>
     <ViewModel:MainPageViewModel.ShowVoiceCommandSetGrid>true</ViewModel:MainPageViewModel.ShowVoiceCommandSetGrid>
-    <ViewModel:MainPageViewModel.ShowNewDeviceGrid>true</ViewModel:MainPageViewModel.ShowNewDeviceGrid>
+    <ViewModel:MainPageViewModel.ShowDeviceGrid>true</ViewModel:MainPageViewModel.ShowDeviceGrid>
 </ViewModel:MainPageViewModel>

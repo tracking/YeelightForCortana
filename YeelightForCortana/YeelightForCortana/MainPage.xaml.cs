@@ -41,12 +41,24 @@ namespace YeelightForCortana
                 // 设备列表
                 DeviceList = new DeviceList()
                 {
-                    new Device() { Id = 0, Name="全部"},
-                    new Device() { Id = 1, Name="客厅"},
-                    new Device() { Id = 2, Name="厕所"},
-                    new Device() { Id = 3, Name="走廊"},
-                    new Device() { Id = 4, Name="书房"},
-                    new Device() { Id = 5, Name="卧室"}
+                    new Device() { Id = 1, Name="客厅", Power=true, Online=true},
+                    new Device() { Id = 2, Name="厕所", Power=true, Online=true},
+                    new Device() { Id = 3, Name="走廊", Power=true, Online=true},
+                    new Device() { Id = 4, Name="书房", Power=true, Online=true},
+                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
+                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
+                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
+                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
+                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
+                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
+                    new Device() { Id = 5, Name="卧室", Power=false, Online=false}
+                },
+                // 新设备列表
+                NewDeviceList = new DeviceList()
+                {
+                    new Device() { Id = 1, Name="客厅", Power=true, Online=true},
+                    new Device() { Id = 2, Name="厕所", Power=false, Online=true},
+                    new Device() { Id = 3, Name="走廊", Power=false, Online=false}
                 },
                 // 左区分组列表
                 DeviceGroupList = new DeviceGroupList()
@@ -119,7 +131,7 @@ namespace YeelightForCortana
                         }
                 },
                 ShowVoiceCommandSetGrid = false,
-                ShowNewDeviceGrid = true
+                ShowDeviceGrid = true
             };
         }
         /// <summary>
