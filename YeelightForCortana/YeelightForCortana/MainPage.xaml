@@ -9,7 +9,7 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:InteractivityCore="using:Microsoft.Xaml.Interactions.Core"
     x:Class="YeelightForCortana.MainPage"
-    mc:Ignorable="d" RequestedTheme="Dark" Width="Auto" Height="Auto">
+    mc:Ignorable="d" RequestedTheme="Dark" Width="Auto" Height="Auto" >
 
     <!--资源-->
     <Page.Resources>
@@ -20,6 +20,25 @@
         <SolidColorBrush x:Key="ToggleSwitchFillOnPressed" Color="#FFF9ED00"/>
         <SolidColorBrush x:Key="ToggleSwitchFillOnDisabled" Color="#FFF9ED00"/>
 
+        <!--顶部Loading动画-->
+        <Storyboard x:Name="TopProgressStoryboard" RepeatBehavior="Forever">
+            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="Grid_TopProgress">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.5"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ColorAnimation Duration="0" To="#FFF9ED00" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[2].(GradientStop.Color)" Storyboard.TargetName="Grid_TopProgress" d:IsOptimized="True"/>
+            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[2].(GradientStop.Offset)" Storyboard.TargetName="Grid_TopProgress">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0.5"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames EnableDependentAnimation="True" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[3].(GradientStop.Offset)" Storyboard.TargetName="Grid_TopProgress">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0.5"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        
         <!--bool到visibility转换器-->
         <Converter:BooleanConvertToVisibility x:Key="BooleanConvertToVisibility"/>
 
@@ -2270,10 +2289,11 @@
             <!--顶部滚动进度线-->
             <Grid x:Name="Grid_TopProgress" Height="1" Margin="0" Grid.ColumnSpan="4" VerticalAlignment="Top">
                 <Grid.Background>
-                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <LinearGradientBrush EndPoint="1,1" StartPoint="0,1">
                         <GradientStop Color="#FFAAA31B" Offset="0"/>
                         <GradientStop Color="#FFAAA31B" Offset="1"/>
-                        <GradientStop Color="#FFF9ED00" Offset="0.5"/>
+                        <GradientStop Color="#FFAAA31B" Offset="0.322"/>
+                        <GradientStop Color="#FFAAA31B" Offset="0.477"/>
                     </LinearGradientBrush>
                 </Grid.Background>
             </Grid>
@@ -2311,7 +2331,7 @@
                 <!--左区操作菜单-->
                 <Grid Grid.Row="3" Background="#FF191919">
                     <StackPanel d:LayoutOverrides="Width">
-                        <Button x:Name="BTN_SearchDevice" Content="查找设备" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{x:Null}" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}"/>
+                        <Button x:Name="BTN_SearchDevice" Content="查找设备" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{x:Null}" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_SearchDevice_Click"/>
                         <Button x:Name="BTN_DeviceManage" Content="设备管理" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}">
                             <Interactivity:Interaction.Behaviors>
                                 <InteractivityCore:DataTriggerBehavior Binding="{Binding ShowDeviceGrid}" Value="True">
@@ -2350,7 +2370,7 @@
                         <TextBlock TextWrapping="Wrap" Text="您尚未添加小娜口令" VerticalAlignment="Center" d:LayoutOverrides="Width" HorizontalAlignment="Center" Foreground="#FFCBCBCB"/>
                     </Grid>
                 </Grid>
-                <SplitView x:Name="SV_DeviceGroupConfig" d:LayoutOverrides="Width" Grid.RowSpan="3" OpenPaneLength="250" IsPaneOpen="True">
+                <SplitView x:Name="SV_DeviceGroupConfig" d:LayoutOverrides="Width" Grid.RowSpan="3" OpenPaneLength="250" IsPaneOpen="False" PaneClosing="SV_DeviceGroupConfig_PaneClosing">
                     <SplitView.Pane>
                         <Grid Background="Black">
                             <Grid.RowDefinitions>
@@ -2413,7 +2433,7 @@
                 </ScrollViewer>
             </Grid>
             <!--右区-->
-            <Grid x:Name="VoiceCommandGrid" Grid.Row="1" Grid.Column="3">
+            <Grid x:Name="VoiceCommandSetDetailGrid" Grid.Row="1" Grid.Column="3" Visibility="{Binding ShowVoiceCommandSetDetailGrid, Converter={StaticResource BooleanConvertToVisibility}}">
                 <Pivot x:Name="PVT_VoiceCommandSetDetail">
                     <Pivot.Resources>
                         <!--http://stackoverflow.com/questions/31797875/overriding-pivot-header-foreground-brushes-in-uwp-app-win-10-rtm-sdk-->

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using ConfigStorage;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -14,7 +16,9 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using YeelightAPI;
 using YeelightForCortana.ViewModel;
 
 namespace YeelightForCortana
@@ -24,116 +28,29 @@ namespace YeelightForCortana
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // 配置存储对象
+        private IConfigStorage configStorage;
+        // ViewModel
+        private MainPageViewModel viewModel;
+        // 设备搜索中
+        private bool deviceSearching;
+
         public MainPage()
         {
             this.InitializeComponent();
-            this.PageStyleInit();
-            this.PageSampleDataInit();
+            this.Init();
         }
 
-        /// <summary>
-        /// 页面示例数据初始化
-        /// </summary>
-        private void PageSampleDataInit()
+        private async void Init()
         {
-            this.DataContext = new MainPageViewModel()
-            {
-                // 设备列表
-                DeviceList = new DeviceList()
-                {
-                    new Device() { Id = 1, Name="客厅", Power=true, Online=true},
-                    new Device() { Id = 2, Name="厕所", Power=true, Online=true},
-                    new Device() { Id = 3, Name="走廊", Power=true, Online=true},
-                    new Device() { Id = 4, Name="书房", Power=true, Online=true},
-                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
-                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
-                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
-                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
-                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
-                    new Device() { Id = 5, Name="卧室", Power=false, Online=false},
-                    new Device() { Id = 5, Name="卧室", Power=false, Online=false}
-                },
-                // 新设备列表
-                NewDeviceList = new DeviceList()
-                {
-                    new Device() { Id = 1, Name="客厅", Power=true, Online=true},
-                    new Device() { Id = 2, Name="厕所", Power=false, Online=true},
-                    new Device() { Id = 3, Name="走廊", Power=false, Online=false}
-                },
-                // 左区分组列表
-                DeviceGroupList = new DeviceGroupList()
-                {
-                    new DeviceGroup() { Id = 0, Name="全部"},
-                    new DeviceGroup() { Id = 1, Name="客厅"},
-                    new DeviceGroup() { Id = 2, Name="厕所"},
-                    new DeviceGroup() { Id = 3, Name="走廊"},
-                    new DeviceGroup() { Id = 4, Name="书房"},
-                    new DeviceGroup() { Id = 5, Name="卧室"}
-                },
-                // 中区Split设备列表
-                DeviceCheckList = new DeviceCheckList(new DeviceList() {
-                    new Device() { Id = 0, Name="全部"},
-                    new Device() { Id = 1, Name="客厅"},
-                    new Device() { Id = 2, Name="厕所"},
-                    new Device() { Id = 3, Name="走廊"},
-                    new Device() { Id = 4, Name="书房"},
-                    new Device() { Id = 5, Name="卧室"}
-                }),
-                // 中区操作类型
-                CommandTypeList = new CommandTypeList()
-                {
-                    new CommandType() {Id = 0, Name="全部" },
-                    new CommandType() {Id = 1, Name="开灯" },
-                    new CommandType() {Id = 2, Name="关灯" },
-                    new CommandType() {Id = 3, Name="切换颜色" },
-                    new CommandType() {Id = 4, Name="增加亮度" },
-                    new CommandType() {Id = 5, Name="减少亮度" }
-                },
-                VoiceCommandSetList = new VoiceCommandSetList()
-                {
-                    new VoiceCommandSet(new Device() { Id = 0,  Name="厨房灯"})
-                    {
-                        Id = 1,
-                        CommandType = new CommandType() {Id = 1, Name="开灯" },
-                        VoiceCommandList = new List<VoiceCommand>()
-                        {
-                            new VoiceCommand() {Id=1,Say="帮开厨房灯",Answer = "好的，正在帮你打开厨房灯" },
-                            new VoiceCommand() {Id=1,Say="帮我打开厨房灯",Answer = "好的，正在帮你打开厨房灯" }
-                        }
-                    },
-                    new VoiceCommandSet(new DeviceGroup() { Id = 1,  Name="客厅"})
-                    {
-                        Id = 1,
-                        CommandType = new CommandType() {Id = 5, Name="减少亮度" },
-                        VoiceCommandList = new List<VoiceCommand>()
-                        {
-                            new VoiceCommand() {Id=1,Say="帮我把客厅的灯亮度调低一点，太亮了受不了",Answer = "好的，正在帮你调低客厅灯的亮度" }
-                        }
-                    },
-                    new VoiceCommandSet(new DeviceGroup() { Id = 2,  Name="卧室"})
-                    {
-                        Id = 1,
-                        CommandType = new CommandType() {Id = 3, Name="切换颜色" },
-                        VoiceCommandList = new List<VoiceCommand>()
-                        {
-                            new VoiceCommand() {Id=1,Say="神圣的光辉将净化污浊的大地，星路之门在此敞开",Answer = "妈的智障" }
-                        }
-                    }
-                },
-                SelectedVoiceCommandSet = new VoiceCommandSet(new Device() { Id = 0, Name = "厨房灯" })
-                {
-                    Id = 1,
-                    CommandType = new CommandType() { Id = 1, Name = "开灯" },
-                    VoiceCommandList = new List<VoiceCommand>()
-                        {
-                            new VoiceCommand() {Id=1,Say="帮开厨房灯",Answer = "好的，正在帮你打开厨房灯" },
-                            new VoiceCommand() {Id=1,Say="帮我打开厨房灯",Answer = "好的，正在帮你打开厨房灯" }
-                        }
-                },
-                ShowVoiceCommandSetGrid = false,
-                ShowDeviceGrid = true
-            };
+            // 样式初始化
+            this.PageStyleInit();
+            // 滚动条开始滚动
+            this.SetLoading(true);
+            // 数据初始化
+            await this.DataInit();
         }
+
         /// <summary>
         /// 页面样式初始化
         /// </summary>
@@ -149,6 +66,53 @@ namespace YeelightForCortana
             titleBar.InactiveForegroundColor = titleBar.ForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
 
             // 设置边框颜色
+        }
+        /// <summary>
+        /// 数据初始化
+        /// </summary>
+        /// <returns></returns>
+        private async Task DataInit()
+        {
+            // 实例化viewModel
+            viewModel = new MainPageViewModel();
+            // 绑定数据上下文
+            DataContext = viewModel;
+            // 显示默认面板
+            viewModel.ShowVoiceCommandSetGrid = true;
+            // 添加默认分组
+            viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = "0", Name = "全部" });
+
+            // 实例化配置存储对象
+            configStorage = new JsonConfigStorage();
+            // 加载配置
+            await configStorage.LoadAsync();
+
+            // 初始化设备
+            var devices = configStorage.GetDevices();
+
+            foreach (var item in devices)
+            {
+                viewModel.DeviceList.Add(new Device()
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                });
+            }
+
+            // 初始化分组
+            var groups = configStorage.GetGroups();
+
+            foreach (var item in groups)
+            {
+                viewModel.DeviceGroupList.Add(new DeviceGroup()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    DeviceList = item.Devices.ToList()
+                });
+            }
+
+            SetLoading(false);
         }
         /// <summary>
         /// 设置设备全选框状态
@@ -170,6 +134,23 @@ namespace YeelightForCortana
             else
                 CB_SelectAllDevice.IsChecked = null;
         }
+        /// <summary>
+        /// 设置加载中状态
+        /// </summary>
+        /// <param name="IsLoading">是否加载中</param>
+        private void SetLoading(bool IsLoading)
+        {
+            if (IsLoading)
+            {
+                TopProgressStoryboard.Begin();
+                TopProgressStoryboard.RepeatBehavior = RepeatBehavior.Forever;
+            }
+            else
+            {
+                TopProgressStoryboard.RepeatBehavior = new RepeatBehavior(1);
+            }
+        }
+
 
         // 设备组列表鼠标点击事件
         private void LB_DeviceGroupList_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -188,6 +169,20 @@ namespace YeelightForCortana
         {
             // 打开
             SV_DeviceGroupConfig.IsPaneOpen = true;
+        }
+        // 分组编辑面板关闭中
+        private void SV_DeviceGroupConfig_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
+        {
+            if (string.IsNullOrEmpty(TXT_AddDeviceGroupName.Text))
+            {
+                args.Cancel = true;
+            }
+
+            // 添加分组
+            var group = new ConfigStorage.Entiry.Group() { Id = Guid.NewGuid().ToString(), Name = TXT_AddDeviceGroupName.Text };
+            configStorage.AddGroup(group);
+            viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = group.Id, Name = group.Name });
+            configStorage.SaveAsync();
         }
         // 设备全选框按下
         private void CB_SelectAllDevice_Click(object sender, RoutedEventArgs e)
@@ -213,5 +208,41 @@ namespace YeelightForCortana
             SetSelectAllDeviceCheckBoxState();
         }
 
+        // 查找设备按钮按下
+        private async void BTN_SearchDevice_Click(object sender, RoutedEventArgs e)
+        {
+            // 显示设备管理面板
+            viewModel.ShowDeviceGrid = true;
+            // 显示新设备面板
+            viewModel.ShowNewDeviceGrid = true;
+
+            // 正在搜索中
+            if (deviceSearching)
+            {
+                return;
+            }
+
+            // 设置当前正在搜索中状态
+            deviceSearching = true;
+            // 清空
+            viewModel.NewDeviceList = new DeviceList();
+
+            // 查找设备
+            List<Yeelight> yeelights = (List<Yeelight>)await YeelightUtils.SearchDeviceAsync(5000);
+
+            foreach (var item in yeelights)
+            {
+                // 不存在
+                if (!configStorage.HasDevice(item.Id))
+                {
+                    var device = new ConfigStorage.Entiry.Device() { Id = item.Id, Name = item.Id, IP = item.Ip };
+                    configStorage.AddDevice(device);
+                    viewModel.NewDeviceList.Add(new Device() { Id = device.Id, Name = device.Name, Online = true });
+                }
+            }
+
+            // 设置搜索完成状态
+            deviceSearching = false;
+        }
     }
 }

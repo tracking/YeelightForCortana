@@ -9,13 +9,13 @@ namespace YeelightForCortana.ViewModel
 {
     public class DeviceGroup : BaseModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public DeviceList DeviceList { get; set; }
+        public List<string> DeviceList { get; set; }
 
         public DeviceGroup()
         {
-
+            this.DeviceList = new List<string>();
         }
     }
 }

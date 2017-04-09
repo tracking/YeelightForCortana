@@ -12,6 +12,8 @@ namespace YeelightForCortana.ViewModel
         private bool showVoiceCommandSetGrid;
         // 是否显示设备面板
         private bool showDeviceGrid;
+        // 是否显示新设备面板
+        private bool showNewDeviceGrid;
 
         // 设备列表
         public DeviceList DeviceList { get; set; }
@@ -39,18 +41,48 @@ namespace YeelightForCortana.ViewModel
             get { return this.showVoiceCommandSetGrid; }
             set
             {
+                if (value)
+                {
+                    // 隐藏其他面板
+                    this.ShowDeviceGrid = false;
+                }
+
                 this.showVoiceCommandSetGrid = value;
                 this.EmitPropertyChanged("ShowVoiceCommandSetGrid");
             }
         }
-        // 是否显示新设备面板
+        // 是否显示设备面板
         public bool ShowDeviceGrid
         {
             get { return this.showDeviceGrid; }
             set
             {
+                if (value)
+                {
+                    // 隐藏其他面板
+                    this.ShowVoiceCommandSetGrid = false;
+                }
+
                 this.showDeviceGrid = value;
                 this.EmitPropertyChanged("ShowDeviceGrid");
+            }
+        }
+        // 是否显示新设备面板
+        public bool ShowNewDeviceGrid
+        {
+            get { return this.showNewDeviceGrid; }
+            set
+            {
+                this.showNewDeviceGrid = value;
+                this.EmitPropertyChanged("ShowNewDeviceGrid");
+            }
+        }
+        // 是否显示语音命令集详情面板
+        public bool ShowVoiceCommandSetDetailGrid
+        {
+            get
+            {
+                return this.SelectedVoiceCommandSet != null;
             }
         }
 
@@ -59,12 +91,19 @@ namespace YeelightForCortana.ViewModel
         {
             get
             {
-                return !(VoiceCommandSetList.Count > 0);
+                return VoiceCommandSetList == null || VoiceCommandSetList.Count == 0;
             }
         }
 
         public MainPageViewModel()
         {
+            // 默认数据
+            this.DeviceList = new DeviceList();
+            this.NewDeviceList = new DeviceList();
+            this.DeviceGroupList = new DeviceGroupList();
+            this.CommandTypeList = new CommandTypeList();
+            this.VoiceCommandSetList = new VoiceCommandSetList();
+
             // 默认选择第一个
             this.DeviceGroupListSelectedIndex = 0;
             this.CommandTypeListSelectedIndex = 0;

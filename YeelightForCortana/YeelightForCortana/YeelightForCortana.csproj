@@ -157,6 +157,10 @@
     </DesignData>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigStorage\ConfigStorage.csproj">
+      <Project>{7728f151-32b8-46fc-ba20-3d9dc8fa9ad2}</Project>
+      <Name>ConfigStorage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CortanaService\CortanaService.csproj">
       <Project>{53686d34-e1ef-4750-8d06-98dce583556d}</Project>
       <Name>CortanaService</Name>

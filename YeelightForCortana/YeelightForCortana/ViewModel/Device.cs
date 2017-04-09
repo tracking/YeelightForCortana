@@ -9,7 +9,7 @@ namespace YeelightForCortana.ViewModel
 {
     public class Device : BaseModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public bool Power { get; set; }
         public bool Online { get; set; }
