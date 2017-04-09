@@ -18,8 +18,6 @@ namespace ConfigStorage
 
         // 配置实体
         private Config config;
-        // 操作次数
-        private int actionCount = 0;
 
         public JsonConfigStorage()
         {
@@ -277,7 +275,6 @@ namespace ConfigStorage
             {
                 old.Id = device.Id;
                 old.Name = device.Name;
-                old.IP = device.IP;
 
                 return true;
             }

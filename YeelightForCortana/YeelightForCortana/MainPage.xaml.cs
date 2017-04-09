@@ -92,11 +92,7 @@ namespace YeelightForCortana
 
             foreach (var item in devices)
             {
-                viewModel.DeviceList.Add(new Device()
-                {
-                    Id = item.Id,
-                    Name = item.Name
-                });
+                viewModel.DeviceList.Add(new Device(item.RawDeviceInfo) { Name = item.Name });
             }
 
             // 初始化分组
@@ -142,15 +138,29 @@ namespace YeelightForCortana
         {
             if (IsLoading)
             {
-                TopProgressStoryboard.Begin();
+                TopProgressStoryboard.Stop();
                 TopProgressStoryboard.RepeatBehavior = RepeatBehavior.Forever;
+                TopProgressStoryboard.Begin();
             }
             else
             {
                 TopProgressStoryboard.RepeatBehavior = new RepeatBehavior(1);
             }
         }
-
+        /// <summary>
+        /// 删除焦点
+        /// http://windowsapptutorials.com/tips/general-tips/how-to-make-textbox-lose-its-focus-in-windows-phone/
+        /// </summary>
+        /// <param name="sender"></param>
+        private void LoseFocus(object sender)
+        {
+            var control = sender as Control;
+            var isTabStop = control.IsTabStop;
+            control.IsTabStop = false;
+            control.IsEnabled = false;
+            control.IsEnabled = true;
+            control.IsTabStop = isTabStop;
+        }
 
         // 设备组列表鼠标点击事件
         private void LB_DeviceGroupList_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -222,27 +232,104 @@ namespace YeelightForCortana
                 return;
             }
 
+            // loading
+            SetLoading(true);
             // 设置当前正在搜索中状态
             deviceSearching = true;
             // 清空
-            viewModel.NewDeviceList = new DeviceList();
+            viewModel.NewDeviceList.Clear();
 
             // 查找设备
-            List<Yeelight> yeelights = (List<Yeelight>)await YeelightUtils.SearchDeviceAsync(5000);
+            List<Yeelight> yeelights = (List<Yeelight>)await YeelightUtils.SearchDeviceAsync(3000);
 
             foreach (var item in yeelights)
             {
                 // 不存在
                 if (!configStorage.HasDevice(item.Id))
                 {
-                    var device = new ConfigStorage.Entiry.Device() { Id = item.Id, Name = item.Id, IP = item.Ip };
-                    configStorage.AddDevice(device);
-                    viewModel.NewDeviceList.Add(new Device() { Id = device.Id, Name = device.Name, Online = true });
+                    viewModel.NewDeviceList.Add(new Device(item) { Name = item.Id, Online = true });
                 }
             }
 
             // 设置搜索完成状态
             deviceSearching = false;
+
+            // loading
+            SetLoading(false);
+        }
+        // 设备管理按钮按下
+        private void BTN_DeviceManage_Click(object sender, RoutedEventArgs e)
+        {
+            // 显示设备管理面板
+            viewModel.ShowDeviceGrid = true;
+        }
+        // 新设备列表项设备名输入框按键抬起
+        private void TXT_NewDeviceName_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // 只处理回车
+            if (e.Key != Windows.System.VirtualKey.Enter) return;
+
+            var txt = (TextBox)sender;
+            var device = (Device)txt.DataContext;
+
+            device.Name = txt.Text;
+
+            // 从新设备中删除, 加入设备列表并保存
+            viewModel.NewDeviceList.Remove(device);
+            viewModel.DeviceList.Add(device);
+            configStorage.AddDevice(new ConfigStorage.Entiry.Device() { Id = device.Id, Name = device.Name, RawDeviceInfo = device.RawDevice.RawDevInfo });
+
+            // 保存
+            configStorage.SaveAsync();
+        }
+        // 设备列表项设备名输入框按键抬起
+        private void TXT_DeviceName_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // 只处理回车
+            if (e.Key != Windows.System.VirtualKey.Enter) return;
+
+            var txt = (TextBox)sender;
+            var device = (Device)txt.DataContext;
+
+            // 未改变
+            if (device.Name == txt.Text)
+            {
+                // 取消焦点
+                txt.Focus(FocusState.Unfocused);
+                return;
+            }
+
+            device.Name = txt.Text;
+
+            // 更新设备
+            var deviceEntiry = configStorage.GetDevice(device.Id);
+            deviceEntiry.Name = device.Name;
+            configStorage.UpdateDevice(device.Id, deviceEntiry);
+
+            // 取消焦点
+            LoseFocus(txt);
+
+            // 保存
+            configStorage.SaveAsync();
+        }
+        // 设备列表项右键点击事件 弹出菜单
+        private void LB_DeviceListItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var senderElement = (FrameworkElement)sender;
+            var flyoutBase = (MenuFlyout)FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement, e.GetPosition(senderElement));
+        }
+        // 删除设备菜单按下
+        private void MFI_DeviceDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var device = (Device)((FrameworkElement)sender).DataContext;
+
+            // 删除
+            configStorage.DeleteDevice(device.Id);
+            viewModel.DeviceList.Remove(device);
+
+            // 保存
+            configStorage.SaveAsync();
         }
     }
 }

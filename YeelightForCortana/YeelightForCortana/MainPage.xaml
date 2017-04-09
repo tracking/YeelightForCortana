@@ -38,9 +38,14 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
-        
+
         <!--bool到visibility转换器-->
         <Converter:BooleanConvertToVisibility x:Key="BooleanConvertToVisibility"/>
+
+        <!--设备列表菜单-->
+        <MenuFlyout x:Key="MF_DeviceListMenu" Placement="Right">
+            <MenuFlyoutItem x:Name="MFI_DeviceDelete" Text="删除" Click="MFI_DeviceDelete_Click"/>
+        </MenuFlyout>
 
         <!--通用下拉列表样式-->
         <Style x:Key="CommonComboBoxStyle" TargetType="ComboBox">
@@ -2197,7 +2202,7 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Height="45"/>
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Height="45" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -2263,10 +2268,17 @@
                 </Grid>
             </Grid>
         </DataTemplate>
-        <!--设备列表数据模板-->
-        <DataTemplate x:Key="DeviceListBoxDataTemplate">
+        <!--新设备列表数据模板-->
+        <DataTemplate x:Key="NewDeviceListBoxItemDataTemplate">
             <Grid>
-                <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" IsEnabled="{Binding Online}" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" />
+                <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" KeyUp="TXT_NewDeviceName_KeyUp" />
+                <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding Online}"/>
+            </Grid>
+        </DataTemplate>
+        <!--设备列表数据模板-->
+        <DataTemplate x:Key="DeviceListBoxItemDataTemplate">
+            <Grid FlyoutBase.AttachedFlyout="{StaticResource MF_DeviceListMenu}" RightTapped="LB_DeviceListItem_RightTapped" Background="#FF141414">
+                <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" KeyUp="TXT_DeviceName_KeyUp" />
                 <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding Online}"/>
             </Grid>
         </DataTemplate>
@@ -2332,7 +2344,7 @@
                 <Grid Grid.Row="3" Background="#FF191919">
                     <StackPanel d:LayoutOverrides="Width">
                         <Button x:Name="BTN_SearchDevice" Content="查找设备" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{x:Null}" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_SearchDevice_Click"/>
-                        <Button x:Name="BTN_DeviceManage" Content="设备管理" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}">
+                        <Button x:Name="BTN_DeviceManage" Content="设备管理" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_DeviceManage_Click">
                             <Interactivity:Interaction.Behaviors>
                                 <InteractivityCore:DataTriggerBehavior Binding="{Binding ShowDeviceGrid}" Value="True">
                                     <InteractivityCore:ChangePropertyAction PropertyName="Style" Value="{StaticResource LeftAreaMenuButtonSelectedStyle}"/>
@@ -2396,13 +2408,13 @@
                 <Grid Background="#FF141414">
                     <TextBlock HorizontalAlignment="Left" Margin="20,14,0,0" TextWrapping="Wrap" Text="设备" VerticalAlignment="Top"/>
                 </Grid>
-                <ScrollViewer Grid.Row="2">
-                    <Grid ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
+                <ScrollViewer Grid.Row="2" Background="#FF141414">
+                    <Grid ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" Background="Black">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Grid x:Name="NewDevice" VerticalAlignment="Top">
+                        <Grid x:Name="NewDevice" VerticalAlignment="Top" Visibility="{Binding ShowNewDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24"/>
                                 <RowDefinition Height="2"/>
@@ -2413,7 +2425,7 @@
                                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" Text="新设备" Margin="20,4,0,0"/>
                             </Grid>
                             <Grid Background="#FF141414" Grid.Row="2">
-                                <ListBox x:Name="LB_NewDeviceList" ItemsSource="{Binding NewDeviceList}" ItemTemplate="{StaticResource DeviceListBoxDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
+                                <ListBox x:Name="LB_NewDeviceList" ItemsSource="{Binding NewDeviceList}" ItemTemplate="{StaticResource NewDeviceListBoxItemDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
                             </Grid>
                         </Grid>
                         <Grid x:Name="RememberDevice" VerticalAlignment="Top" Grid.Row="1">
@@ -2425,8 +2437,8 @@
                             <Grid Background="#FF262626">
                                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" Margin="20,4,0,0" Text="已有设备"/>
                             </Grid>
-                            <Grid Background="#FF141414" Grid.Row="2">
-                                <ListBox x:Name="LB_NewDeviceList1" ItemsSource="{Binding DeviceList}" ItemTemplate="{StaticResource DeviceListBoxDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
+                            <Grid Grid.Row="2" Background="#FF141414">
+                                <ListBox x:Name="LB_DeviceList" ItemsSource="{Binding DeviceList}" ItemTemplate="{StaticResource DeviceListBoxItemDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
                             </Grid>
                         </Grid>
                     </Grid>

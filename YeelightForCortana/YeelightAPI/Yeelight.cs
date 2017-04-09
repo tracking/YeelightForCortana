@@ -189,6 +189,7 @@ namespace YeelightAPI
         #endregion
 
         #region 私有属性
+        private string rawDevInfo;
         private string id;
         private string ip;
         private string port;
@@ -209,6 +210,10 @@ namespace YeelightAPI
         #endregion
 
         #region 暴露属性
+        /// <summary>
+        /// 源设备信息
+        /// </summary>
+        public string RawDevInfo { get { return rawDevInfo; } }
         /// <summary>
         /// 设备ID
         /// </summary>
@@ -420,6 +425,9 @@ namespace YeelightAPI
         {
             try
             {
+                // 保存
+                this.rawDevInfo = rawDevInfo;
+
                 // 解析地址信息
                 var matchLocation = LOCATION_REGEX.Match(rawDevInfo);
                 this.ip = matchLocation.Groups[1].ToString();

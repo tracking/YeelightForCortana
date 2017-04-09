@@ -14,8 +14,8 @@
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// 设备地址
+        /// 源设备信息
         /// </summary>
-        public string IP { get; set; }
+        public string RawDeviceInfo { get; set; }
     }
 }
