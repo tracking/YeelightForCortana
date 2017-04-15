@@ -216,7 +216,7 @@ namespace ConfigStorage
                         // 转换成JSON对象
                         config = JsonConvert.DeserializeObject<Config>(data);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // 初始化设置数据
                         config = new Config();

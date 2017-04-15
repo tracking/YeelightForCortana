@@ -34,6 +34,8 @@ namespace YeelightForCortana
         private MainPageViewModel viewModel;
         // 设备搜索中
         private bool deviceSearching;
+        // 设备状态刷新中
+        private bool deviceStatusRefreshing;
 
         public MainPage()
         {
@@ -95,6 +97,9 @@ namespace YeelightForCortana
                 viewModel.DeviceList.Add(new Device(item.RawDeviceInfo) { Name = item.Name });
             }
 
+            // 刷新设备状态（无需等待）
+            RefreshDevicesStatus();
+
             // 初始化分组
             var groups = configStorage.GetGroups();
 
@@ -130,6 +135,49 @@ namespace YeelightForCortana
             else
                 CB_SelectAllDevice.IsChecked = null;
         }
+        /// <summary>
+        /// 刷新设备状态
+        /// </summary>
+        private async Task RefreshDeviceStatus(Device device)
+        {
+            try
+            {
+                // 更新设备信息
+                await device.RawDevice.UpdateDeviceInfo();
+                // 无异常表示在线
+                device.Online = true;
+            }
+            catch (Exception)
+            {
+            }
+        }
+        /// <summary>
+        /// 刷新所有设备状态
+        /// </summary>
+        private async void RefreshDevicesStatus()
+        {
+            if (deviceStatusRefreshing)
+            {
+                return;
+            }
+
+            // 设置当前状态为刷新
+            deviceStatusRefreshing = true;
+
+            List<Task> taskList = new List<Task>();
+
+            for (int i = 0; i < viewModel.DeviceList.Count; i++)
+            {
+                // 启动task并加入列表
+                taskList.Add(RefreshDeviceStatus(viewModel.DeviceList[i]));
+            }
+
+            // 等待所有完成
+            await Task.WhenAll(taskList.ToArray());
+            // 改变状态
+            deviceStatusRefreshing = false;
+        }
+
         /// <summary>
         /// 设置加载中状态
         /// </summary>
@@ -221,6 +269,9 @@ namespace YeelightForCortana
         // 查找设备按钮按下
         private async void BTN_SearchDevice_Click(object sender, RoutedEventArgs e)
         {
+            // 刷新设备状态
+            RefreshDevicesStatus();
+
             // 显示设备管理面板
             viewModel.ShowDeviceGrid = true;
             // 显示新设备面板
@@ -330,6 +381,36 @@ namespace YeelightForCortana
 
             // 保存
             configStorage.SaveAsync();
+        }
+        // 设备电源开关触发
+        private async void TS_DevicePower_Toggled(object sender, RoutedEventArgs e)
+        {
+            var el = (ToggleSwitch)sender;
+            var device = (Device)el.DataContext;
+
+            // 设备正忙不进行处理
+            if (device.IsBusy)
+            {
+                el.IsOn = !el.IsOn;
+                return;
+            }
+            // 设置设备正忙
+            device.IsBusy = true;
+
+            // 进行开关操作
+            try
+            {
+                await device.RawDevice.SetPower(el.IsOn ? YeelightPower.on : YeelightPower.off);
+            }
+            catch (Exception)
+            {
+                el.IsOn = !el.IsOn;
+            }
+
+            // 设置电源状态
+            device.Power = el.IsOn;
+            // 恢复
+            device.IsBusy = false;
         }
     }
 }

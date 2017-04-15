@@ -2279,7 +2279,7 @@
         <DataTemplate x:Key="DeviceListBoxItemDataTemplate">
             <Grid FlyoutBase.AttachedFlyout="{StaticResource MF_DeviceListMenu}" RightTapped="LB_DeviceListItem_RightTapped" Background="#FF141414">
                 <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" KeyUp="TXT_DeviceName_KeyUp" />
-                <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding Online}"/>
+                <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding IsEnabled}" Toggled="TS_DevicePower_Toggled"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
