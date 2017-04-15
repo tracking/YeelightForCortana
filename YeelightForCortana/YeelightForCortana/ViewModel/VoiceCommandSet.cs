@@ -12,7 +12,7 @@ namespace YeelightForCortana.ViewModel
         private Device device;
         private DeviceGroup deviceGroup;
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public CommandType CommandType { get; set; }
         public List<VoiceCommand> VoiceCommandList { get; set; }
         public string ObjectName
@@ -41,18 +41,19 @@ namespace YeelightForCortana.ViewModel
             }
         }
 
+        public VoiceCommandSet()
+        {
+            this.VoiceCommandList = new List<VoiceCommand>();
+        }
         public VoiceCommandSet(Device device)
         {
             this.device = device;
+            this.VoiceCommandList = new List<VoiceCommand>();
         }
         public VoiceCommandSet(DeviceGroup deviceGroup)
         {
             this.deviceGroup = deviceGroup;
-        }
-
-        public VoiceCommandSet()
-        {
-
+            this.VoiceCommandList = new List<VoiceCommand>();
         }
     }
 }

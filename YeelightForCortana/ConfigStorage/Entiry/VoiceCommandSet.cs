@@ -17,6 +17,14 @@ namespace ConfigStorage.Entiry
         /// </summary>
         public string Id { get; set; }
         /// <summary>
+        /// 操作
+        /// </summary>
+        public string Action { get; set; }
+        /// <summary>
+        /// 对象是否为全部
+        /// </summary>
+        public bool IsAll { get; set; }
+        /// <summary>
         /// 设备编号
         /// </summary>
         public string DeviceId { get; set; }
@@ -24,10 +32,6 @@ namespace ConfigStorage.Entiry
         /// 分组编号
         /// </summary>
         public string GroupId { get; set; }
-        /// <summary>
-        /// 操作
-        /// </summary>
-        public string Action { get; set; }
         /// <summary>
         /// 语音命令列表
         /// </summary>

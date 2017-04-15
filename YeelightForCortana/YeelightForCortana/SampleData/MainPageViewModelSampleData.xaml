@@ -1,11 +1,11 @@
 ﻿<ViewModel:MainPageViewModel xmlns:ViewModel="using:YeelightForCortana.ViewModel">
     <ViewModel:MainPageViewModel.CommandTypeList>
-        <ViewModel:CommandType Id="0" Name="全部"/>
-        <ViewModel:CommandType Id="1" Name="开灯"/>
-        <ViewModel:CommandType Id="2" Name="关灯"/>
-        <ViewModel:CommandType Id="3" Name="切换颜色"/>
-        <ViewModel:CommandType Id="4" Name="增加亮度"/>
-        <ViewModel:CommandType Id="5" Name="减少亮度"/>
+        <ViewModel:CommandType Name="全部"/>
+        <ViewModel:CommandType Name="开灯"/>
+        <ViewModel:CommandType Name="关灯"/>
+        <ViewModel:CommandType Name="切换颜色"/>
+        <ViewModel:CommandType Name="增加亮度"/>
+        <ViewModel:CommandType Name="减少亮度"/>
     </ViewModel:MainPageViewModel.CommandTypeList>
     <ViewModel:MainPageViewModel.DeviceList>
         <ViewModel:Device Id="1" Name="床头灯" Power="True" Online="True"/>

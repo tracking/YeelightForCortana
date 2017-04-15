@@ -84,6 +84,13 @@ namespace YeelightForCortana
             viewModel.ShowVoiceCommandSetGrid = true;
             // 添加默认分组
             viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = "0", Name = "全部" });
+            // 添加默认操作类型
+            viewModel.CommandTypeList.Add(new CommandType());   // 全部
+            viewModel.CommandTypeList.Add(new CommandType(ActionType.PowerOn));
+            viewModel.CommandTypeList.Add(new CommandType(ActionType.PowerOff));
+            viewModel.CommandTypeList.Add(new CommandType(ActionType.BrightUp));
+            viewModel.CommandTypeList.Add(new CommandType(ActionType.BrightDown));
+            viewModel.CommandTypeList.Add(new CommandType(ActionType.SwitchColor));
 
             // 实例化配置存储对象
             configStorage = new JsonConfigStorage();
@@ -106,11 +113,21 @@ namespace YeelightForCortana
 
             foreach (var item in groups)
             {
+                // 组建设备列表
+                var deviceList = new List<Device>();
+                if (viewModel.DeviceList.Count > 0)
+                {
+                    foreach (var deviceId in item.Devices)
+                    {
+                        deviceList.AddRange(viewModel.DeviceList.Where(d => d.Id == deviceId));
+                    }
+                }
+                // 生成
                 viewModel.DeviceGroupList.Add(new DeviceGroup()
                 {
                     Id = item.Id,
                     Name = item.Name,
-                    DeviceList = item.Devices.ToList()
+                    DeviceList = deviceList
                 });
             }
 
@@ -135,6 +152,54 @@ namespace YeelightForCortana
                 CB_SelectAllDevice.IsChecked = true;
             else
                 CB_SelectAllDevice.IsChecked = null;
+        }
+        /// <summary>
+        /// 刷新选择对象下拉框
+        /// </summary>
+        private void RefreshSelectTargetCombobox()
+        {
+            // 清空菜单
+            var flyoutBase = (MenuFlyout)FlyoutBase.GetAttachedFlyout(CBB_SelectTarget);
+            flyoutBase.Items.Clear();
+
+            // 创建菜单对象
+            var singleDogDeviceList = new List<Device>(viewModel.DeviceList);
+            foreach (var group in viewModel.DeviceGroupList)
+            {
+                // 全部
+                if (group.Id == "0")
+                {
+                    var item = new MenuFlyoutItem() { Text = "全部", DataContext = null };
+                    item.Click += CBB_SelectTarget_MenuItem_Click;
+                    flyoutBase.Items.Add(item);
+                    continue;
+                }
+
+                // 创建父菜单
+                var menuSubItem = new MenuFlyoutSubItem() { Text = group.Name, DataContext = group };
+                menuSubItem.Tapped += CBB_SelectTarget_MenuSubItem_Tapped;
+
+                foreach (var device in group.DeviceList)
+                {
+                    // 从单身列表中移除
+                    singleDogDeviceList.Remove(device);
+                    // 菜单项
+                    var item = new MenuFlyoutItem() { Text = device.Name, DataContext = device };
+                    item.Click += CBB_SelectTarget_MenuItem_Click;
+                    // 加入父菜单
+                    menuSubItem.Items.Add(item);
+                }
+
+                // 添加菜单
+                flyoutBase.Items.Add(menuSubItem);
+            }
+            foreach (var device in singleDogDeviceList)
+            {
+                // 菜单项
+                var item = new MenuFlyoutItem() { Text = device.Name, DataContext = device };
+                item.Click += CBB_SelectTarget_MenuItem_Click;
+                flyoutBase.Items.Add(new MenuFlyoutItem() { Text = device.Name, DataContext = device });
+            }
         }
         /// <summary>
         /// 刷新设备状态
@@ -270,7 +335,7 @@ namespace YeelightForCortana
                 if (viewModel.DeviceCheckList.Count == 0)
                     break;
 
-                var deviceCheck = viewModel.DeviceCheckList.First(item => item.Device.Id == group.DeviceList[i]);
+                var deviceCheck = viewModel.DeviceCheckList.First(item => item.Device.Id == group.DeviceList[i].Id);
                 if (deviceCheck != null)
                 {
                     deviceCheck.IsChecked = true;
@@ -294,6 +359,10 @@ namespace YeelightForCortana
             // 准备设备列表
             viewModel.DeviceCheckList.Clear();
             viewModel.DeviceCheckList.AddRange(viewModel.DeviceList);
+            // 设置默认分组名
+            TXT_AddDeviceGroupName.Text = "未命名";
+            // 设置全选框状态
+            SetSelectAllDeviceCheckBoxState();
             // 打开
             SV_DeviceGroupConfig.IsPaneOpen = true;
         }
@@ -310,8 +379,14 @@ namespace YeelightForCortana
                 ? new List<DeviceCheck>()
                 : viewModel.DeviceCheckList.Where(item => item.IsChecked).ToList();
             var checkedDeviceList = new List<string>();
+            var deviceList = new List<Device>();
+
+            // 加入列表
             for (int i = 0; i < checkedDevices.Count; i++)
+            {
                 checkedDeviceList.Add(checkedDevices[i].Device.Id);
+                deviceList.Add(checkedDevices[i].Device);
+            }
 
             // 新增
             if (editDeviceGroup == null)
@@ -319,7 +394,7 @@ namespace YeelightForCortana
                 // 添加分组
                 var group = new ConfigStorage.Entiry.Group() { Id = Guid.NewGuid().ToString(), Name = TXT_AddDeviceGroupName.Text, Devices = checkedDeviceList };
                 configStorage.AddGroup(group);
-                viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = group.Id, Name = group.Name, DeviceList = checkedDeviceList });
+                viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = group.Id, Name = group.Name, DeviceList = deviceList });
             }
             // 修改
             else
@@ -328,7 +403,8 @@ namespace YeelightForCortana
                 var group = configStorage.GetGroup(editDeviceGroup.Id);
                 // 修改分组
                 editDeviceGroup.Name = group.Name = TXT_AddDeviceGroupName.Text;
-                editDeviceGroup.DeviceList = group.Devices = checkedDeviceList;
+                editDeviceGroup.DeviceList = deviceList;
+                group.Devices = checkedDeviceList;
             }
 
             // 清除
@@ -510,5 +586,58 @@ namespace YeelightForCortana
             // 恢复
             device.IsBusy = false;
         }
+        // 添加语音命令按钮按下
+        private void BTN_AddVoiceCommand_Click(object sender, RoutedEventArgs e)
+        {
+            // 刷新选择对象下拉框
+            RefreshSelectTargetCombobox();
+            // 创建新的语音命令集
+            viewModel.VoiceCommandSetDetail = new VoiceCommandSet() { Id = Guid.NewGuid().ToString() };
+        }
+        // 选择对象选择框点击
+        private void CBB_SelectTarget_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            // 显示菜单(假装是下拉框)
+            var senderElement = (FrameworkElement)sender;
+            var flyoutBase = (MenuFlyout)FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
+        }
+        // 选择对象菜单项按下
+        private void CBB_SelectTarget_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            // 隐藏菜单
+            FlyoutBase.GetAttachedFlyout(CBB_SelectTarget).Hide();
+            // 数据
+            var dataContext = ((MenuFlyoutItemBase)sender).DataContext;
+            // 设置显示dataContext文本
+            CBB_SelectTarget.DataContext = dataContext;
+            // 显示内容
+            string content = "";
+
+            // 全部
+            if (dataContext == null)
+                content = "全部";
+
+            // 是设备
+            if (dataContext != null && dataContext.GetType() == typeof(Device))
+                content = ((Device)dataContext).Name;
+            else if (dataContext != null && dataContext.GetType() == typeof(DeviceGroup))
+                content = ((DeviceGroup)dataContext).Name;
+
+            // 清空
+            CBB_SelectTarget.Items.Clear();
+            // 创建项
+            var cbbItem = new ComboBoxItem() { Content = content };
+            CBB_SelectTarget.Items.Add(cbbItem);
+            // 选中
+            CBB_SelectTarget.SelectedItem = cbbItem;
+        }
+        // 选择对象父菜单项按下
+        private void CBB_SelectTarget_MenuSubItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            // 触发
+            CBB_SelectTarget_MenuItem_Click(sender, null);
+        }
+
     }
 }

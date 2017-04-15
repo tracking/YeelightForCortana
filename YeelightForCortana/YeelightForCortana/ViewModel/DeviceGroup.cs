@@ -24,11 +24,11 @@ namespace YeelightForCortana.ViewModel
                 EmitPropertyChanged("Name");
             }
         }
-        public List<string> DeviceList { get; set; }
+        public List<Device> DeviceList { get; set; }
 
         public DeviceGroup()
         {
-            this.DeviceList = new List<string>();
+            this.DeviceList = new List<Device>();
         }
     }
 }

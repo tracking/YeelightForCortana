@@ -2369,7 +2369,7 @@
                     </Grid.RowDefinitions>
                     <!--中区头部操作栏-->
                     <Grid Background="#FF141414">
-                        <Button x:Name="BTN_AddVoiceCommand" VerticalAlignment="Stretch" d:LayoutOverrides="Height" Width="120" HorizontalAlignment="Left" UseLayoutRounding="True" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CenterAreaHeaderMenuButtonStyle}">
+                        <Button x:Name="BTN_AddVoiceCommand" VerticalAlignment="Stretch" d:LayoutOverrides="Height" Width="120" HorizontalAlignment="Left" UseLayoutRounding="True" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CenterAreaHeaderMenuButtonStyle}" Click="BTN_AddVoiceCommand_Click">
                             <Grid>
                                 <TextBlock Text="+" VerticalAlignment="Center" FontSize="26.667" HorizontalAlignment="Left" Margin="18,-6,0,0"/>
                                 <TextBlock Text="添加口令" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="42,0,0,0"/>
@@ -2590,8 +2590,18 @@
                     </Pivot.ItemContainerStyle>
                     <PivotItem Header="基本设置">
                         <Grid>
-                            <ComboBox x:Name="CBB_SelectTarget" HorizontalAlignment="Left" Margin="20,32,0,0" VerticalAlignment="Top" Width="200" Header="选择对象"/>
-                            <ComboBox x:Name="CBB_SelectAction" HorizontalAlignment="Left" Margin="20,124,0,0" VerticalAlignment="Top" Width="200" Header="选择操作"/>
+                            <ComboBox x:Name="CBB_SelectTarget" HorizontalAlignment="Left" Margin="20,32,0,0" VerticalAlignment="Top" Width="200" Header="选择对象" Tapped="CBB_SelectTarget_Tapped" >
+                                <FlyoutBase.AttachedFlyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyout.MenuFlyoutPresenterStyle>
+                                            <Style TargetType="MenuFlyoutPresenter">
+                                                <Setter Property="MinWidth" Value="200" />
+                                            </Style>
+                                        </MenuFlyout.MenuFlyoutPresenterStyle>
+                                    </MenuFlyout>
+                                </FlyoutBase.AttachedFlyout>
+                            </ComboBox>
+                            <ComboBox x:Name="CBB_SelectAction" HorizontalAlignment="Left" Margin="20,124,0,0" VerticalAlignment="Top" Width="200" Header="选择操作" ItemsSource="{Binding CommandTypeList}" ItemTemplate="{Binding Source={StaticResource CommandTypeTemplate}}"/>
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="语音指令">
@@ -2601,7 +2611,7 @@
                                 <RowDefinition Height="100"/>
                             </Grid.RowDefinitions>
                             <ScrollViewer HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CommonScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
-                                <ListBox x:Name="LB_VoiceCommandList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" VerticalAlignment="Top" Background="{x:Null}" ItemsSource="{Binding SelectedVoiceCommandSet.VoiceCommandList}" ItemContainerStyle="{StaticResource VoiceCommandListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandListItemDataTemplate}" Padding="2,0,0,0"/>
+                                <ListBox x:Name="LB_VoiceCommandList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" VerticalAlignment="Top" Background="{x:Null}" ItemsSource="{Binding VoiceCommandSetDetail.VoiceCommandList}" ItemContainerStyle="{StaticResource VoiceCommandListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandListItemDataTemplate}" Padding="2,0,0,0"/>
                             </ScrollViewer>
                             <Grid x:Name="Say" Grid.Row="1" Padding="2,0,0,0">
                                 <TextBox x:Name="TXT_Say" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入语音命令。 例：天黑了，帮我开一下床头灯" Style="{StaticResource VoiceCommandTextBoxStyle}"/>

@@ -14,6 +14,8 @@ namespace YeelightForCortana.ViewModel
         private bool showDeviceGrid;
         // 是否显示新设备面板
         private bool showNewDeviceGrid;
+        // 语音命令集详情
+        private VoiceCommandSet voiceCommandSetDetail;
 
         // 设备列表
         public DeviceList DeviceList { get; set; }
@@ -27,9 +29,20 @@ namespace YeelightForCortana.ViewModel
         public CommandTypeList CommandTypeList { get; set; }
         // 语音命令集列表
         public VoiceCommandSetList VoiceCommandSetList { get; set; }
-        // 语音命令集
-        public VoiceCommandSet SelectedVoiceCommandSet { get; set; }
-
+        // 语音命令集详情
+        public VoiceCommandSet VoiceCommandSetDetail
+        {
+            get
+            {
+                return voiceCommandSetDetail;
+            }
+            set
+            {
+                voiceCommandSetDetail = value;
+                EmitPropertyChanged("VoiceCommandSetDetail");
+                EmitPropertyChanged("ShowVoiceCommandSetDetailGrid");
+            }
+        }
         // 设备分组列表选中索引
         public int DeviceGroupListSelectedIndex { get; set; }
         // 命令类型列表选中索引
@@ -82,7 +95,7 @@ namespace YeelightForCortana.ViewModel
         {
             get
             {
-                return this.SelectedVoiceCommandSet != null;
+                return this.VoiceCommandSetDetail != null;
             }
         }
 
