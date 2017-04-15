@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -36,6 +37,8 @@ namespace YeelightForCortana
         private bool deviceSearching;
         // 设备状态刷新中
         private bool deviceStatusRefreshing;
+        // 当前编辑的分组
+        private DeviceGroup editDeviceGroup;
 
         public MainPage()
         {
@@ -66,8 +69,6 @@ namespace YeelightForCortana
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.InactiveBackgroundColor = titleBar.BackgroundColor = titleBar.ButtonBackgroundColor = Colors.Black;
             titleBar.InactiveForegroundColor = titleBar.ForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
-
-            // 设置边框颜色
         }
         /// <summary>
         /// 数据初始化
@@ -209,22 +210,90 @@ namespace YeelightForCortana
             control.IsEnabled = true;
             control.IsTabStop = isTabStop;
         }
-
-        // 设备组列表鼠标点击事件
-        private void LB_DeviceGroupList_PointerPressed(object sender, PointerRoutedEventArgs e)
+        /// <summary>
+        /// 显示确认对话框
+        /// </summary>
+        /// <param name="msg">显示内容</param>
+        /// <param name="title">标题</param>
+        /// <param name="okLabel">确定文本</param>
+        /// <param name="cancelLabel">取消文本</param>
+        /// <returns></returns>
+        private async Task<bool> ShowConfirmDialog(string msg, string title = "提示", string okLabel = "确定", string cancelLabel = "取消")
         {
-            var position = e.GetCurrentPoint(sender as UIElement);
+            var dialog = new ConfirmDialog(msg, title, okLabel, cancelLabel);
+            await dialog.ShowAsync();
+            return dialog.Result;
+        }
 
-            // 如果是鼠标右键点击
-            if (position.Properties.IsRightButtonPressed)
+        // 设备组列表鼠标点击事件 弹出菜单
+        private void LB_DeviceGroupListItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var senderElement = (FrameworkElement)sender;
+            var flyoutBase = (MenuFlyout)FlyoutBase.GetAttachedFlyout(senderElement);
+            var group = (DeviceGroup)senderElement.DataContext;
+
+            // 全部分组不显示菜单
+            if (group.Id == "0")
             {
-                // 显示右键菜单
-                this.MF_DeviceGroupMenu.ShowAt(this.LB_DeviceGroupList, position.Position);
+                return;
             }
+
+            flyoutBase.ShowAt(senderElement, e.GetPosition(senderElement));
+        }
+        // 删除设备分组菜单按下
+        private async void MFI_DeviceGroupDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var group = (DeviceGroup)((FrameworkElement)sender).DataContext;
+            var isConfirm = await ShowConfirmDialog(string.Format("是否删除分组“{0}”", group.Name));
+
+            if (isConfirm)
+            {
+                // 删除
+                configStorage.DeleteGroup(group.Id);
+                viewModel.DeviceGroupList.Remove(group);
+
+                // 保存
+                await configStorage.SaveAsync();
+            }
+        }
+        // 编辑设备分组菜单按下
+        private void MFI_DeviceGroupEdit_Click(object sender, RoutedEventArgs e)
+        {
+            var group = editDeviceGroup = (DeviceGroup)((FrameworkElement)sender).DataContext;
+
+            // 准备设备列表
+            viewModel.DeviceCheckList.Clear();
+            viewModel.DeviceCheckList.AddRange(viewModel.DeviceList);
+
+            for (int i = 0; i < group.DeviceList.Count; i++)
+            {
+                if (viewModel.DeviceCheckList.Count == 0)
+                    break;
+
+                var deviceCheck = viewModel.DeviceCheckList.First(item => item.Device.Id == group.DeviceList[i]);
+                if (deviceCheck != null)
+                {
+                    deviceCheck.IsChecked = true;
+                }
+            }
+            // 设置文本框内容
+            TXT_AddDeviceGroupName.Text = group.Name;
+            // 设置设备全选框状态
+            SetSelectAllDeviceCheckBoxState();
+            // 打开
+            SV_DeviceGroupConfig.IsPaneOpen = true;
+        }
+        // 设备组列表项选中事件
+        private void LB_DeviceGroupList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Debug.WriteLine(e.AddedItems);
         }
         // 添加设备分组按钮按下
         private void BTN_AddDeviceGroup_Click(object sender, RoutedEventArgs e)
         {
+            // 准备设备列表
+            viewModel.DeviceCheckList.Clear();
+            viewModel.DeviceCheckList.AddRange(viewModel.DeviceList);
             // 打开
             SV_DeviceGroupConfig.IsPaneOpen = true;
         }
@@ -236,13 +305,38 @@ namespace YeelightForCortana
                 args.Cancel = true;
             }
 
-            // 添加分组
-            var group = new ConfigStorage.Entiry.Group() { Id = Guid.NewGuid().ToString(), Name = TXT_AddDeviceGroupName.Text };
-            configStorage.AddGroup(group);
-            viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = group.Id, Name = group.Name });
+            // 获取选中的设备
+            var checkedDevices = viewModel.DeviceCheckList.Count == 0
+                ? new List<DeviceCheck>()
+                : viewModel.DeviceCheckList.Where(item => item.IsChecked).ToList();
+            var checkedDeviceList = new List<string>();
+            for (int i = 0; i < checkedDevices.Count; i++)
+                checkedDeviceList.Add(checkedDevices[i].Device.Id);
+
+            // 新增
+            if (editDeviceGroup == null)
+            {
+                // 添加分组
+                var group = new ConfigStorage.Entiry.Group() { Id = Guid.NewGuid().ToString(), Name = TXT_AddDeviceGroupName.Text, Devices = checkedDeviceList };
+                configStorage.AddGroup(group);
+                viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = group.Id, Name = group.Name, DeviceList = checkedDeviceList });
+            }
+            // 修改
+            else
+            {
+                // 获取分组
+                var group = configStorage.GetGroup(editDeviceGroup.Id);
+                // 修改分组
+                editDeviceGroup.Name = group.Name = TXT_AddDeviceGroupName.Text;
+                editDeviceGroup.DeviceList = group.Devices = checkedDeviceList;
+            }
+
+            // 清除
+            editDeviceGroup = null;
+            // 保存
             configStorage.SaveAsync();
         }
-        // 设备全选框按下
+        // 设备全选选择框框按下
         private void CB_SelectAllDevice_Click(object sender, RoutedEventArgs e)
         {
             // !!!进入此函数时CheckBox状态已改变!!!
@@ -259,7 +353,7 @@ namespace YeelightForCortana
             foreach (DeviceCheck item in LB_DeviceCheckList.Items)
                 item.IsChecked = isChecked;
         }
-        // 设备全选框列表的全选框按下
+        // 设备列表的选择框按下
         private void CB_DeviceListCheckBox_Click(object sender, RoutedEventArgs e)
         {
             // 设置设备全选框状态
@@ -371,16 +465,20 @@ namespace YeelightForCortana
             flyoutBase.ShowAt(senderElement, e.GetPosition(senderElement));
         }
         // 删除设备菜单按下
-        private void MFI_DeviceDelete_Click(object sender, RoutedEventArgs e)
+        private async void MFI_DeviceDelete_Click(object sender, RoutedEventArgs e)
         {
             var device = (Device)((FrameworkElement)sender).DataContext;
+            var isConfirm = await ShowConfirmDialog(string.Format("是否删除设备“{0}”", device.Name));
 
-            // 删除
-            configStorage.DeleteDevice(device.Id);
-            viewModel.DeviceList.Remove(device);
+            if (isConfirm)
+            {
+                // 删除
+                configStorage.DeleteDevice(device.Id);
+                viewModel.DeviceList.Remove(device);
 
-            // 保存
-            configStorage.SaveAsync();
+                // 保存
+                await configStorage.SaveAsync();
+            }
         }
         // 设备电源开关触发
         private async void TS_DevicePower_Toggled(object sender, RoutedEventArgs e)

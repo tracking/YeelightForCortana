@@ -9,8 +9,21 @@ namespace YeelightForCortana.ViewModel
 {
     public class DeviceGroup : BaseModel
     {
+        private string name;
+
         public string Id { get; set; }
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                this.name = value;
+                EmitPropertyChanged("Name");
+            }
+        }
         public List<string> DeviceList { get; set; }
 
         public DeviceGroup()

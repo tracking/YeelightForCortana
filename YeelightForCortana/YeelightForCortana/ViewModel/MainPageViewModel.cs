@@ -101,6 +101,7 @@ namespace YeelightForCortana.ViewModel
             this.DeviceList = new DeviceList();
             this.NewDeviceList = new DeviceList();
             this.DeviceGroupList = new DeviceGroupList();
+            this.DeviceCheckList = new DeviceCheckList();
             this.CommandTypeList = new CommandTypeList();
             this.VoiceCommandSetList = new VoiceCommandSetList();
 

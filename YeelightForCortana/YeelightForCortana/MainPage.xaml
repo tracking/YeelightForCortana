@@ -46,6 +46,12 @@
         <MenuFlyout x:Key="MF_DeviceListMenu" Placement="Right">
             <MenuFlyoutItem x:Name="MFI_DeviceDelete" Text="删除" Click="MFI_DeviceDelete_Click"/>
         </MenuFlyout>
+        <!--设备组列表菜单-->
+        <MenuFlyout x:Key="MF_DeviceGroupMenu" Placement="Right">
+            <MenuFlyoutItem x:Name="MFI_DeviceGroupRename" Text="重命名" Click="MFI_DeviceGroupEdit_Click"/>
+            <MenuFlyoutItem x:Name="MFI_DeviceGroupManage" Text="管理" Click="MFI_DeviceGroupEdit_Click"/>
+            <MenuFlyoutItem x:Name="MFI_DeviceGroupDelete" Text="删除" Click="MFI_DeviceGroupDelete_Click"/>
+        </MenuFlyout>
 
         <!--通用下拉列表样式-->
         <Style x:Key="CommonComboBoxStyle" TargetType="ComboBox">
@@ -1016,7 +1022,7 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
-                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -2211,7 +2217,9 @@
 
         <!--设备分组列表数据模板-->
         <DataTemplate x:Key="DeviceGroupListTemplate">
-            <TextBlock Text="{Binding Name}" />
+            <Grid FlyoutBase.AttachedFlyout="{StaticResource MF_DeviceGroupMenu}" RightTapped="LB_DeviceGroupListItem_RightTapped" Background="Transparent">
+                <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Grid>
         </DataTemplate>
         <!--操作类型数据模板-->
         <DataTemplate x:Key="CommandTypeTemplate">
@@ -2271,13 +2279,13 @@
         <!--新设备列表数据模板-->
         <DataTemplate x:Key="NewDeviceListBoxItemDataTemplate">
             <Grid>
-                <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" KeyUp="TXT_NewDeviceName_KeyUp" />
-                <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding Online}"/>
+                <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}"  Background="Transparent" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" KeyUp="TXT_NewDeviceName_KeyUp" />
+                <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding IsEnabled}" Toggled="TS_DevicePower_Toggled"/>
             </Grid>
         </DataTemplate>
         <!--设备列表数据模板-->
         <DataTemplate x:Key="DeviceListBoxItemDataTemplate">
-            <Grid FlyoutBase.AttachedFlyout="{StaticResource MF_DeviceListMenu}" RightTapped="LB_DeviceListItem_RightTapped" Background="#FF141414">
+            <Grid FlyoutBase.AttachedFlyout="{StaticResource MF_DeviceListMenu}" RightTapped="LB_DeviceListItem_RightTapped" Background="Transparent">
                 <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" KeyUp="TXT_DeviceName_KeyUp" />
                 <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding IsEnabled}" Toggled="TS_DevicePower_Toggled"/>
             </Grid>
@@ -2328,15 +2336,7 @@
                 <!--左区分组列表-->
                 <ScrollViewer Margin="0" Grid.Row="1" Background="#FF191919" VerticalScrollBarVisibility="Auto" Style="{StaticResource CommonScrollViewerStyle}">
                     <StackPanel VerticalAlignment="Top">
-                        <ListBox x:Name="LB_DeviceGroupList" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Background="{x:Null}" ItemContainerStyle="{StaticResource DeviceGroupListBoxItemStyle}" ItemsSource="{Binding DeviceGroupList}" ItemTemplate="{StaticResource DeviceGroupListTemplate}" PointerPressed="LB_DeviceGroupList_PointerPressed" SelectedIndex="{Binding DeviceGroupListSelectedIndex}">
-                            <FlyoutBase.AttachedFlyout>
-                                <MenuFlyout x:Name="MF_DeviceGroupMenu" Placement="Right">
-                                    <MenuFlyoutItem x:Name="MFI_DeviceGroupRename" Text="重命名"/>
-                                    <MenuFlyoutItem x:Name="MFI_DeviceGroupManage" Text="管理"/>
-                                    <MenuFlyoutItem x:Name="MFI_DeviceGroupDelete" Text="删除"/>
-                                </MenuFlyout>
-                            </FlyoutBase.AttachedFlyout>
-                        </ListBox>
+                        <ListBox x:Name="LB_DeviceGroupList" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Background="{x:Null}" ItemContainerStyle="{StaticResource DeviceGroupListBoxItemStyle}" ItemsSource="{Binding DeviceGroupList}" ItemTemplate="{StaticResource DeviceGroupListTemplate}" SelectedIndex="{Binding DeviceGroupListSelectedIndex}" SelectionChanged="LB_DeviceGroupList_SelectionChanged"/>
                         <Button x:Name="BTN_AddDeviceGroup" Content="+" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{x:Null}" Height="39" MinHeight="68" FontWeight="Bold" FontSize="25" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_AddDeviceGroup_Click"/>
                     </StackPanel>
                 </ScrollViewer>
@@ -2359,29 +2359,79 @@
                 </Grid>
             </Grid>
             <!--中区-->
-            <Grid x:Name="VoiceCommandSetGrid" Grid.Column="2" Grid.Row="1" Visibility="{Binding ShowVoiceCommandSetGrid, Converter={StaticResource BooleanConvertToVisibility}}" d:IsHidden="True">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="48"/>
-                    <RowDefinition Height="2"/>
-                    <RowDefinition Height="595*"/>
-                </Grid.RowDefinitions>
-                <!--中区头部操作栏-->
-                <Grid Background="#FF141414">
-                    <Button x:Name="BTN_AddVoiceCommand" VerticalAlignment="Stretch" d:LayoutOverrides="Height" Width="120" HorizontalAlignment="Left" UseLayoutRounding="True" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CenterAreaHeaderMenuButtonStyle}">
-                        <Grid>
-                            <TextBlock Text="+" VerticalAlignment="Center" FontSize="26.667" HorizontalAlignment="Left" Margin="18,-6,0,0"/>
-                            <TextBlock Text="添加口令" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="42,0,0,0"/>
+            <Grid Grid.Column="2" Grid.Row="1">
+                <!--语音命令集-->
+                <Grid x:Name="VoiceCommandSetGrid" Visibility="{Binding ShowVoiceCommandSetGrid, Converter={StaticResource BooleanConvertToVisibility}}" d:IsHidden="True">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="2"/>
+                        <RowDefinition Height="595*"/>
+                    </Grid.RowDefinitions>
+                    <!--中区头部操作栏-->
+                    <Grid Background="#FF141414">
+                        <Button x:Name="BTN_AddVoiceCommand" VerticalAlignment="Stretch" d:LayoutOverrides="Height" Width="120" HorizontalAlignment="Left" UseLayoutRounding="True" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CenterAreaHeaderMenuButtonStyle}">
+                            <Grid>
+                                <TextBlock Text="+" VerticalAlignment="Center" FontSize="26.667" HorizontalAlignment="Left" Margin="18,-6,0,0"/>
+                                <TextBlock Text="添加口令" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="42,0,0,0"/>
+                            </Grid>
+                        </Button>
+                        <ComboBox x:Name="CBB_CommandType" VerticalAlignment="Center" Width="120" d:LayoutOverrides="Height" HorizontalAlignment="Right" ItemTemplate="{StaticResource CommandTypeTemplate}" ItemsSource="{Binding CommandTypeList}" Style="{StaticResource CommonComboBoxStyle}" HorizontalContentAlignment="Right" Margin="0,0,5,0" ItemContainerStyle="{StaticResource CommonComboBoxItemStyle}" SelectedIndex="{Binding CommandTypeListSelectedIndex}"/>
+                        <!--中区头部按钮-->
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <ListBox x:Name="LB_VoiceCommandSetList" ItemContainerStyle="{StaticResource VoiceCommandSetListBoxItemStyle}" Background="#FF141414" ItemsSource="{Binding VoiceCommandSetList}"/>
+                        <Grid x:Name="Grid_VoiceCommandSetListIsNull" Visibility="{Binding DoesNotExistVoiceCommand, Converter={StaticResource BooleanConvertToVisibility}}" Background="#FF141414" d:IsHidden="True">
+                            <TextBlock TextWrapping="Wrap" Text="您尚未添加小娜口令" VerticalAlignment="Center" d:LayoutOverrides="Width" HorizontalAlignment="Center" Foreground="#FFCBCBCB"/>
                         </Grid>
-                    </Button>
-                    <ComboBox x:Name="CBB_CommandType" VerticalAlignment="Center" Width="120" d:LayoutOverrides="Height" HorizontalAlignment="Right" ItemTemplate="{StaticResource CommandTypeTemplate}" ItemsSource="{Binding CommandTypeList}" Style="{StaticResource CommonComboBoxStyle}" HorizontalContentAlignment="Right" Margin="0,0,5,0" ItemContainerStyle="{StaticResource CommonComboBoxItemStyle}" SelectedIndex="{Binding CommandTypeListSelectedIndex}"/>
-                    <!--中区头部按钮-->
-                </Grid>
-                <Grid Grid.Row="2">
-                    <ListBox x:Name="LB_VoiceCommandSetList" ItemContainerStyle="{StaticResource VoiceCommandSetListBoxItemStyle}" Background="#FF141414" ItemsSource="{Binding VoiceCommandSetList}"/>
-                    <Grid x:Name="Grid_VoiceCommandSetListIsNull" Visibility="{Binding DoesNotExistVoiceCommand, Converter={StaticResource BooleanConvertToVisibility}}" Background="#FF141414" d:IsHidden="True">
-                        <TextBlock TextWrapping="Wrap" Text="您尚未添加小娜口令" VerticalAlignment="Center" d:LayoutOverrides="Width" HorizontalAlignment="Center" Foreground="#FFCBCBCB"/>
                     </Grid>
                 </Grid>
+                <!--设备管理-->
+                <Grid x:Name="DeviceGrid" Visibility="{Binding ShowDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="2"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Background="#FF141414">
+                        <TextBlock HorizontalAlignment="Left" Margin="20,14,0,0" TextWrapping="Wrap" Text="设备" VerticalAlignment="Top"/>
+                    </Grid>
+                    <ScrollViewer Grid.Row="2" Background="#FF141414">
+                        <Grid ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" Background="Black">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid x:Name="NewDevice" VerticalAlignment="Top" Visibility="{Binding ShowNewDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="2"/>
+                                </Grid.RowDefinitions>
+                                <Grid Background="#FF262626">
+                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" Text="新设备" Margin="20,4,0,0"/>
+                                </Grid>
+                                <Grid Background="#FF141414" Grid.Row="2">
+                                    <ListBox x:Name="LB_NewDeviceList" ItemsSource="{Binding NewDeviceList}" ItemTemplate="{StaticResource NewDeviceListBoxItemDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
+                                </Grid>
+                            </Grid>
+                            <Grid x:Name="RememberDevice" VerticalAlignment="Top" Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24"/>
+                                    <RowDefinition Height="2"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid Background="#FF262626">
+                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" Margin="20,4,0,0" Text="已有设备"/>
+                                </Grid>
+                                <Grid Grid.Row="2" Background="#FF141414">
+                                    <ListBox x:Name="LB_DeviceList" ItemsSource="{Binding DeviceList}" ItemTemplate="{StaticResource DeviceListBoxItemDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+                <!--分组编辑-->
                 <SplitView x:Name="SV_DeviceGroupConfig" d:LayoutOverrides="Width" Grid.RowSpan="3" OpenPaneLength="250" IsPaneOpen="False" PaneClosing="SV_DeviceGroupConfig_PaneClosing">
                     <SplitView.Pane>
                         <Grid Background="Black">
@@ -2390,7 +2440,7 @@
                                 <RowDefinition Height="2"/>
                                 <RowDefinition Height="663*"/>
                             </Grid.RowDefinitions>
-                            <TextBox x:Name="TXT_AddDeviceGroupName" Text="未命名" d:LayoutOverrides="Height" BorderBrush="{x:Null}" PlaceholderText="输入分组名称" FontSize="18" Padding="20,8,20,0" UseLayoutRounding="False" Style="{StaticResource DeviceGroupNameTextBoxStyle}" AcceptsReturn="True"/>
+                            <TextBox x:Name="TXT_AddDeviceGroupName" Text="未命名" d:LayoutOverrides="Height" BorderBrush="{x:Null}" PlaceholderText="输入分组名称" FontSize="18" Padding="20,8,20,0" UseLayoutRounding="False" Style="{StaticResource DeviceGroupNameTextBoxStyle}"/>
                             <StackPanel Grid.Row="2" Padding="22,0">
                                 <CheckBox x:Name="CB_SelectAllDevice" Content="全选" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="34" HorizontalContentAlignment="Left" FontSize="13" Foreground="#CCFFFFFF" Padding="8,6,0,0" Style="{StaticResource CommonCheckBoxStyle}" ContentTemplate="{StaticResource CommonCheckBoxDataTemplate}" Click="CB_SelectAllDevice_Click"/>
                                 <ListBox x:Name="LB_DeviceCheckList" Background="{x:Null}" VerticalAlignment="Top" ItemsSource="{Binding DeviceCheckList}" Style="{StaticResource DeviceCheckListBoxStyle}" ItemContainerStyle="{StaticResource DeviceCheckBoxListBoxItemStyle}"/>
@@ -2398,51 +2448,6 @@
                         </Grid>
                     </SplitView.Pane>
                 </SplitView>
-            </Grid>
-            <Grid x:Name="DeviceGrid" Grid.Column="2" Grid.Row="1" Visibility="{Binding ShowDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="48"/>
-                    <RowDefinition Height="2"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid Background="#FF141414">
-                    <TextBlock HorizontalAlignment="Left" Margin="20,14,0,0" TextWrapping="Wrap" Text="设备" VerticalAlignment="Top"/>
-                </Grid>
-                <ScrollViewer Grid.Row="2" Background="#FF141414">
-                    <Grid ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" Background="Black">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid x:Name="NewDevice" VerticalAlignment="Top" Visibility="{Binding ShowNewDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="24"/>
-                                <RowDefinition Height="2"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="2"/>
-                            </Grid.RowDefinitions>
-                            <Grid Background="#FF262626">
-                                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" Text="新设备" Margin="20,4,0,0"/>
-                            </Grid>
-                            <Grid Background="#FF141414" Grid.Row="2">
-                                <ListBox x:Name="LB_NewDeviceList" ItemsSource="{Binding NewDeviceList}" ItemTemplate="{StaticResource NewDeviceListBoxItemDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
-                            </Grid>
-                        </Grid>
-                        <Grid x:Name="RememberDevice" VerticalAlignment="Top" Grid.Row="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="24"/>
-                                <RowDefinition Height="2"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid Background="#FF262626">
-                                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="12" Margin="20,4,0,0" Text="已有设备"/>
-                            </Grid>
-                            <Grid Grid.Row="2" Background="#FF141414">
-                                <ListBox x:Name="LB_DeviceList" ItemsSource="{Binding DeviceList}" ItemTemplate="{StaticResource DeviceListBoxItemDataTemplate}" ItemContainerStyle="{StaticResource DeviceListListBoxItemStyle}" Background="{x:Null}"/>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </ScrollViewer>
             </Grid>
             <!--右区-->
             <Grid x:Name="VoiceCommandSetDetailGrid" Grid.Row="1" Grid.Column="3" Visibility="{Binding ShowVoiceCommandSetDetailGrid, Converter={StaticResource BooleanConvertToVisibility}}">

@@ -26,5 +26,9 @@ namespace YeelightForCortana.ViewModel
         {
 
         }
+        public DeviceCheck(Device device)
+        {
+            this.Device = device;
+        }
     }
 }
