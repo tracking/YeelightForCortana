@@ -85,12 +85,14 @@ namespace YeelightForCortana
             // 添加默认分组
             viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = "0", Name = "全部" });
             // 添加默认操作类型
-            viewModel.CommandTypeList.Add(new CommandType());   // 全部
             viewModel.CommandTypeList.Add(new CommandType(ActionType.PowerOn));
             viewModel.CommandTypeList.Add(new CommandType(ActionType.PowerOff));
             viewModel.CommandTypeList.Add(new CommandType(ActionType.BrightUp));
             viewModel.CommandTypeList.Add(new CommandType(ActionType.BrightDown));
             viewModel.CommandTypeList.Add(new CommandType(ActionType.SwitchColor));
+            viewModel.CommandTypeDisplayList.Add(new CommandType());   // 全部
+            foreach (var item in viewModel.CommandTypeList)
+                viewModel.CommandTypeDisplayList.Add(item);
 
             // 实例化配置存储对象
             configStorage = new JsonConfigStorage();
@@ -176,7 +178,8 @@ namespace YeelightForCortana
                 }
 
                 // 创建父菜单
-                var menuSubItem = new MenuFlyoutSubItem() { Text = group.Name, DataContext = group };
+                var menuSubItem = new MenuFlyoutSubItem() { DataContext = group };
+                menuSubItem.SetBinding(MenuFlyoutSubItem.TextProperty, new Binding() { Path = new PropertyPath("Name") });
                 menuSubItem.Tapped += CBB_SelectTarget_MenuSubItem_Tapped;
 
                 foreach (var device in group.DeviceList)
@@ -184,7 +187,8 @@ namespace YeelightForCortana
                     // 从单身列表中移除
                     singleDogDeviceList.Remove(device);
                     // 菜单项
-                    var item = new MenuFlyoutItem() { Text = device.Name, DataContext = device };
+                    var item = new MenuFlyoutItem() { DataContext = device };
+                    item.SetBinding(MenuFlyoutItem.TextProperty, new Binding() { Path = new PropertyPath("Name") });
                     item.Click += CBB_SelectTarget_MenuItem_Click;
                     // 加入父菜单
                     menuSubItem.Items.Add(item);
@@ -196,7 +200,8 @@ namespace YeelightForCortana
             foreach (var device in singleDogDeviceList)
             {
                 // 菜单项
-                var item = new MenuFlyoutItem() { Text = device.Name, DataContext = device };
+                var item = new MenuFlyoutItem() { DataContext = device };
+                item.SetBinding(MenuFlyoutItem.TextProperty, new Binding() { Path = new PropertyPath("Name") });
                 item.Click += CBB_SelectTarget_MenuItem_Click;
                 flyoutBase.Items.Add(new MenuFlyoutItem() { Text = device.Name, DataContext = device });
             }
@@ -285,7 +290,7 @@ namespace YeelightForCortana
         /// <returns></returns>
         private async Task<bool> ShowConfirmDialog(string msg, string title = "提示", string okLabel = "确定", string cancelLabel = "取消")
         {
-            var dialog = new ConfirmDialog(msg, title, okLabel, cancelLabel);
+            var dialog = new CustomControl.ConfirmDialog(msg, title, okLabel, cancelLabel);
             await dialog.ShowAsync();
             return dialog.Result;
         }
@@ -627,7 +632,7 @@ namespace YeelightForCortana
             // 清空
             CBB_SelectTarget.Items.Clear();
             // 创建项
-            var cbbItem = new ComboBoxItem() { Content = content };
+            var cbbItem = new ComboBoxItem() { Content = content, DataContext = dataContext };
             CBB_SelectTarget.Items.Add(cbbItem);
             // 选中
             CBB_SelectTarget.SelectedItem = cbbItem;
@@ -638,6 +643,35 @@ namespace YeelightForCortana
             // 触发
             CBB_SelectTarget_MenuItem_Click(sender, null);
         }
+        // 选择操作选择框项改变
+        private void CBB_SelectAction_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // 全隐藏
+            viewModel.ShowSetBrightGrid = false;
+            viewModel.ShowSetBrightGrid = false;
 
+            // 未选择
+            if (CBB_SelectAction.SelectedItem == null)
+            {
+                return;
+            }
+
+            var action = (CommandType)CBB_SelectAction.SelectedItem;
+
+            switch (action.Type)
+            {
+                case ActionType.PowerOn:
+                    break;
+                case ActionType.PowerOff:
+                    break;
+                case ActionType.BrightUp:
+                case ActionType.BrightDown:
+                    viewModel.ShowSetBrightGrid = true;
+                    break;
+                case ActionType.SwitchColor:
+                    viewModel.ShowSwitchColorGrid = true;
+                    break;
+            }
+        }
     }
 }

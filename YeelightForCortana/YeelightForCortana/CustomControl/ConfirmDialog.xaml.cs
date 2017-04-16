@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 
-namespace YeelightForCortana
+namespace YeelightForCortana.CustomControl
 {
     /// <summary>
     /// 确认对话框

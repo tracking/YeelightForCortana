@@ -16,6 +16,10 @@ namespace YeelightForCortana.ViewModel
         private bool showNewDeviceGrid;
         // 语音命令集详情
         private VoiceCommandSet voiceCommandSetDetail;
+        // 是否显示设置亮度面板
+        private bool showSetBrightGrid;
+        // 是否显示切换颜色面板
+        private bool showSwitchColorGrid;
 
         // 设备列表
         public DeviceList DeviceList { get; set; }
@@ -25,6 +29,8 @@ namespace YeelightForCortana.ViewModel
         public DeviceCheckList DeviceCheckList { get; set; }
         // 设备分组列表
         public DeviceGroupList DeviceGroupList { get; set; }
+        // 命令类型列表(显示用)
+        public CommandTypeList CommandTypeDisplayList { get; set; }
         // 命令类型列表
         public CommandTypeList CommandTypeList { get; set; }
         // 语音命令集列表
@@ -95,7 +101,39 @@ namespace YeelightForCortana.ViewModel
         {
             get
             {
-                return this.VoiceCommandSetDetail != null;
+                return this.voiceCommandSetDetail != null;
+            }
+        }
+        // 是否显示设置亮度面板
+        public bool ShowSetBrightGrid
+        {
+            get { return this.showSetBrightGrid; }
+            set
+            {
+                if (value)
+                {
+                    // 隐藏其他面板
+                    this.ShowSwitchColorGrid = false;
+                }
+
+                this.showSetBrightGrid = value;
+                this.EmitPropertyChanged("ShowSetBrightGrid");
+            }
+        }
+        // 是否显示切换颜色面板
+        public bool ShowSwitchColorGrid
+        {
+            get { return this.showSwitchColorGrid; }
+            set
+            {
+                if (value)
+                {
+                    // 隐藏其他面板
+                    this.ShowSetBrightGrid = false;
+                }
+
+                this.showSwitchColorGrid = value;
+                this.EmitPropertyChanged("ShowSwitchColorGrid");
             }
         }
 
@@ -115,6 +153,7 @@ namespace YeelightForCortana.ViewModel
             this.NewDeviceList = new DeviceList();
             this.DeviceGroupList = new DeviceGroupList();
             this.DeviceCheckList = new DeviceCheckList();
+            this.CommandTypeDisplayList = new CommandTypeList();
             this.CommandTypeList = new CommandTypeList();
             this.VoiceCommandSetList = new VoiceCommandSetList();
 
