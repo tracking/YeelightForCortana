@@ -20,6 +20,12 @@ namespace YeelightForCortana.ViewModel
         private bool showSetBrightGrid;
         // 是否显示切换颜色面板
         private bool showSwitchColorGrid;
+        // 语音命令详情是否已修改
+        private bool voiceCommandSetDetailIsEdit;
+        // 是否显示语音详情中Say面板
+        private bool showVoiceCommandSetDetailSayGrid;
+        // 是否显示语音详情中Answer面板
+        private bool showVoiceCommandSetDetailAnswerGrid;
 
         // 设备列表
         public DeviceList DeviceList { get; set; }
@@ -104,6 +110,19 @@ namespace YeelightForCortana.ViewModel
                 return this.voiceCommandSetDetail != null;
             }
         }
+        // 语音命令详情是否已修改
+        public bool VoiceCommandSetDetailIsEdit
+        {
+            get
+            {
+                return voiceCommandSetDetailIsEdit;
+            }
+            set
+            {
+                voiceCommandSetDetailIsEdit = value;
+                EmitPropertyChanged("VoiceCommandSetDetailIsEdit");
+            }
+        }
         // 是否显示设置亮度面板
         public bool ShowSetBrightGrid
         {
@@ -134,6 +153,38 @@ namespace YeelightForCortana.ViewModel
 
                 this.showSwitchColorGrid = value;
                 this.EmitPropertyChanged("ShowSwitchColorGrid");
+            }
+        }
+        // 是否显示语音详情中Say面板
+        public bool ShowVoiceCommandSetDetailSayGrid
+        {
+            get { return this.showVoiceCommandSetDetailSayGrid; }
+            set
+            {
+                if (value)
+                {
+                    // 隐藏其他面板
+                    this.ShowVoiceCommandSetDetailAnswerGrid = false;
+                }
+
+                this.showVoiceCommandSetDetailSayGrid = value;
+                this.EmitPropertyChanged("ShowVoiceCommandSetDetailSayGrid");
+            }
+        }   
+        // 是否显示语音详情中Answer面板
+        public bool ShowVoiceCommandSetDetailAnswerGrid
+        {
+            get { return this.showVoiceCommandSetDetailAnswerGrid; }
+            set
+            {
+                if (value)
+                {
+                    // 隐藏其他面板
+                    this.ShowVoiceCommandSetDetailSayGrid = false;
+                }
+
+                this.showVoiceCommandSetDetailAnswerGrid = value;
+                this.EmitPropertyChanged("ShowVoiceCommandSetDetailAnswerGrid");
             }
         }
 

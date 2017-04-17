@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace YeelightForCortana.ViewModel
 
         public string Id { get; set; }
         public CommandType CommandType { get; set; }
-        public List<VoiceCommand> VoiceCommandList { get; set; }
+        public ObservableCollection<VoiceCommand> VoiceCommandList { get; set; }
         public string ObjectName
         {
             get
@@ -43,17 +44,17 @@ namespace YeelightForCortana.ViewModel
 
         public VoiceCommandSet()
         {
-            this.VoiceCommandList = new List<VoiceCommand>();
+            this.VoiceCommandList = new ObservableCollection<VoiceCommand>();
         }
         public VoiceCommandSet(Device device)
         {
             this.device = device;
-            this.VoiceCommandList = new List<VoiceCommand>();
+            this.VoiceCommandList = new ObservableCollection<VoiceCommand>();
         }
         public VoiceCommandSet(DeviceGroup deviceGroup)
         {
             this.deviceGroup = deviceGroup;
-            this.VoiceCommandList = new List<VoiceCommand>();
+            this.VoiceCommandList = new ObservableCollection<VoiceCommand>();
         }
     }
 }

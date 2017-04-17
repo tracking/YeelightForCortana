@@ -281,6 +281,19 @@ namespace YeelightForCortana
             control.IsTabStop = isTabStop;
         }
         /// <summary>
+        /// 显示提示对话框
+        /// </summary>
+        /// <param name="msg">显示内容</param>
+        /// <param name="title">标题</param>
+        /// <param name="okLabel">确定文本</param>
+        /// <returns></returns>
+        private async Task<bool> ShowMessageDialog(string msg, string title = "提示", string okLabel = "确定")
+        {
+            var dialog = new CustomControl.ConfirmDialog(msg, title, okLabel, null);
+            await dialog.ShowAsync();
+            return dialog.Result;
+        }
+        /// <summary>
         /// 显示确认对话框
         /// </summary>
         /// <param name="msg">显示内容</param>
@@ -591,13 +604,19 @@ namespace YeelightForCortana
             // 恢复
             device.IsBusy = false;
         }
-        // 添加语音命令按钮按下
+        // 添加语音命令集按钮按下
         private void BTN_AddVoiceCommand_Click(object sender, RoutedEventArgs e)
         {
             // 刷新选择对象下拉框
             RefreshSelectTargetCombobox();
             // 创建新的语音命令集
             viewModel.VoiceCommandSetDetail = new VoiceCommandSet() { Id = Guid.NewGuid().ToString() };
+            // 置空
+            CBB_CommandType.DataContext = null;
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
+            // 显示Say框
+            viewModel.ShowVoiceCommandSetDetailSayGrid = true;
         }
         // 选择对象选择框点击
         private void CBB_SelectTarget_Tapped(object sender, TappedRoutedEventArgs e)
@@ -636,6 +655,8 @@ namespace YeelightForCortana
             CBB_SelectTarget.Items.Add(cbbItem);
             // 选中
             CBB_SelectTarget.SelectedItem = cbbItem;
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
         }
         // 选择对象父菜单项按下
         private void CBB_SelectTarget_MenuSubItem_Tapped(object sender, TappedRoutedEventArgs e)
@@ -672,6 +693,124 @@ namespace YeelightForCortana
                     viewModel.ShowSwitchColorGrid = true;
                     break;
             }
+
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
+        }
+        // 语音命令集详情遮罩点击
+        private async void VoiceCommandSetDetailMaskGrid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (await ShowConfirmDialog("是否放弃当前的修改?", null, "是", "否"))
+            {
+                // 清空
+                viewModel.VoiceCommandSetDetail = null;
+                // 设置状态为未编辑
+                viewModel.VoiceCommandSetDetailIsEdit = false;
+            }
+        }
+        // Say输入框按键抬起
+        private void TXT_Say_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // 只处理回车
+            if (e.Key != Windows.System.VirtualKey.Enter) return;
+            // 空的
+            if (string.IsNullOrEmpty(TXT_Say.Text.Trim())) return;
+
+
+            // 创建新的语音命令
+            var voiceCommand = new VoiceCommand() { Id = Guid.NewGuid().ToString(), Say = TXT_Say.Text };
+            // 加入列表
+            viewModel.VoiceCommandSetDetail.VoiceCommandList.Add(voiceCommand);
+            // 显示Answer框
+            viewModel.ShowVoiceCommandSetDetailAnswerGrid = true;
+            // 切入焦点
+            TXT_Answer.Text = "";
+            TXT_Answer.Focus(FocusState.Programmatic);
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
+        }
+        // Answer输入框按键抬起
+        private void TXT_Answer_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // 只处理回车
+            if (e.Key != Windows.System.VirtualKey.Enter) return;
+            // 空的
+            if (string.IsNullOrEmpty(TXT_Answer.Text.Trim())) return;
+
+            // 设置最后一条命令的回答
+            var voiceCommand = viewModel.VoiceCommandSetDetail.VoiceCommandList.Last();
+            voiceCommand.Answer = TXT_Answer.Text;
+            // 显示Say框
+            viewModel.ShowVoiceCommandSetDetailSayGrid = true;
+            // 切入焦点
+            TXT_Say.Text = "";
+            TXT_Say.Focus(FocusState.Programmatic);
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
+        }
+        // 删除语音命令按钮按下
+        private void DeleteVoiceCommandButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var dataContext = (VoiceCommand)((FrameworkElement)sender).DataContext;
+
+            // 删除
+            viewModel.VoiceCommandSetDetail.VoiceCommandList.Remove(dataContext);
+
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
+        }
+        // 删除语音命令集详情按钮按下
+        private async void ABB_DeleteVoiceCommandSet_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (await ShowConfirmDialog("是否删除语音命令?", null, "是", "否"))
+            {
+                // 删除
+                configStorage.DeleteVoiceCommandSet(viewModel.VoiceCommandSetDetail.Id);
+                viewModel.VoiceCommandSetList.Remove(viewModel.VoiceCommandSetDetail);
+                // 清空
+                viewModel.VoiceCommandSetDetail = null;
+                // 设置状态为未编辑
+                viewModel.VoiceCommandSetDetailIsEdit = false;
+                // 保存
+                await configStorage.SaveAsync();
+            }
+        }
+        // 保存语音命令集详情按钮按下
+        private async void ABB_SaveVoiceCommandSet_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            // 检查基本设置
+            if (CBB_CommandType.DataContext == null)
+            {
+                await ShowMessageDialog("请选择对象");
+                PVT_VoiceCommandSetDetail.SelectedIndex = 0;
+                return;
+            }
+            if (CBB_SelectAction.SelectedItem == null)
+            {
+                await ShowMessageDialog("请选择操作");
+                PVT_VoiceCommandSetDetail.SelectedIndex = 0;
+                return;
+            }
+            // 检查语音指令
+            if (viewModel.VoiceCommandSetDetail.VoiceCommandList.Count == 0 )
+            {
+                await ShowMessageDialog("请添加语音指令");
+                PVT_VoiceCommandSetDetail.SelectedIndex = 1;
+                return;
+            }
+            if (string.IsNullOrEmpty(viewModel.VoiceCommandSetDetail.VoiceCommandList.Last().Answer))
+            {
+                await ShowMessageDialog("请将语音指令补充完整");
+                PVT_VoiceCommandSetDetail.SelectedIndex = 1;
+                return;
+            }
+
+            //TODO
+
+            // 设置状态为未编辑
+            viewModel.VoiceCommandSetDetailIsEdit = false;
+            // 保存
+            await configStorage.SaveAsync();
         }
     }
 }

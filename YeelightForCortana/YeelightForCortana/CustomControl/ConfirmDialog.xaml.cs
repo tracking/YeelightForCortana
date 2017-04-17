@@ -16,13 +16,15 @@ namespace YeelightForCortana.CustomControl
         /// <param name="title">标题</param>
         /// <param name="okButtonText">确定文本</param>
         /// <param name="cancelButtonText">取消文本</param>
-        public ConfirmDialog(string text, string title = "提示", string okButtonText = "确定", string cancelButtonText = "取消")
+        public ConfirmDialog(string text, string title, string okButtonText, string cancelButtonText)
         {
             this.InitializeComponent();
             this.TB_Text.Text = text;
             this.Title = title;
-            this.PrimaryButtonText = okButtonText;
-            this.SecondaryButtonText = cancelButtonText;
+            if (!string.IsNullOrEmpty(okButtonText))
+                this.PrimaryButtonText = okButtonText;
+            if (!string.IsNullOrEmpty(cancelButtonText))
+                this.SecondaryButtonText = cancelButtonText;
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

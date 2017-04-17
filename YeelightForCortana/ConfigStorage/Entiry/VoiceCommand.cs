@@ -16,6 +16,6 @@
         /// <summary>
         /// 回答
         /// </summary>
-        public string Anwser { get; set; }
+        public string Answer { get; set; }
     }
 }

@@ -50,6 +50,8 @@
 
         <!--bool到visibility转换器-->
         <Converter:BooleanConvertToVisibility x:Key="BooleanConvertToVisibility"/>
+        <!--null到collasped.y转换器-->
+        <Converter:NullConvertToCollasped x:Key="NullConvertToCollasped"/>
 
         <!--设备列表菜单-->
         <MenuFlyout x:Key="MF_DeviceListMenu" Placement="Right">
@@ -1763,19 +1765,21 @@
                             </VisualStateManager.VisualStateGroups>
                             <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
                             <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap"/>
-                            <Polygon x:Name="DeleteVoiceCommandButton" Stroke="#CCFFFFFF" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Visibility="Collapsed" StrokeThickness="2">
-                                <Polygon.Points>
-                                    <Foundation:Point>0,0</Foundation:Point>
-                                    <Foundation:Point>5,5</Foundation:Point>
-                                    <Foundation:Point>10,0</Foundation:Point>
-                                    <Foundation:Point>5,5</Foundation:Point>
-                                    <Foundation:Point>10,10</Foundation:Point>
-                                    <Foundation:Point>5,5</Foundation:Point>
-                                    <Foundation:Point>0,10</Foundation:Point>
-                                    <Foundation:Point>5,5</Foundation:Point>
-                                    <Foundation:Point>0,0</Foundation:Point>
-                                </Polygon.Points>
-                            </Polygon>
+                            <Grid x:Name="DeleteVoiceCommandButton" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Visibility="Collapsed" Background="Transparent" Tapped="DeleteVoiceCommandButton_Tapped">
+                                <Polygon Stroke="#CCFFFFFF" StrokeThickness="2">
+                                    <Polygon.Points>
+                                        <Foundation:Point>0,0</Foundation:Point>
+                                        <Foundation:Point>5,5</Foundation:Point>
+                                        <Foundation:Point>10,0</Foundation:Point>
+                                        <Foundation:Point>5,5</Foundation:Point>
+                                        <Foundation:Point>10,10</Foundation:Point>
+                                        <Foundation:Point>5,5</Foundation:Point>
+                                        <Foundation:Point>0,10</Foundation:Point>
+                                        <Foundation:Point>5,5</Foundation:Point>
+                                        <Foundation:Point>0,0</Foundation:Point>
+                                    </Polygon.Points>
+                                </Polygon>
+                            </Grid>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -1887,7 +1891,7 @@
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="#FFFFFFFF"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundPointerOver}"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FF191919"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -2255,7 +2259,7 @@
                 <Grid x:Name="Say" VerticalAlignment="Top" Grid.Column="2" Background="#19FFFFFF" MinHeight="40" Padding="10,8" Grid.Row="1">
                     <TextBlock TextWrapping="Wrap" Text="{Binding Say}" VerticalAlignment="Top" LineHeight="24" HorizontalAlignment="Left"/>
                 </Grid>
-                <Grid x:Name="Answer" VerticalAlignment="Top" Grid.Row="3" Grid.Column="2" Background="#19FFFFFF" MinHeight="40" Padding="10,8">
+                <Grid x:Name="Answer" VerticalAlignment="Top" Grid.Row="3" Grid.Column="2" Background="#19FFFFFF" MinHeight="40" Padding="10,8" Visibility="{Binding Answer, Converter={StaticResource NullConvertToCollasped}}" >
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Answer}" VerticalAlignment="Top" LineHeight="24"/>
                 </Grid>
                 <Grid x:Name="BottomLine" Grid.ColumnSpan="3" Grid.RowSpan="4" VerticalAlignment="Top" Grid.Row="5" Height="1" Background="#FF191919" Grid.Column="1" Visibility="Collapsed"/>
@@ -2266,7 +2270,7 @@
                         <Foundation:Point>0,8</Foundation:Point>
                     </Polygon.Points>
                 </Polygon>
-                <Polygon x:Name="AnswerTriangle" Stroke="White" Fill="#19FFFFFF" Width="8" Height="8" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Margin="0,16,0,0" Grid.Column="1" >
+                <Polygon x:Name="AnswerTriangle" Stroke="White" Fill="#19FFFFFF" Width="8" Height="8" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Top" StrokeThickness="0" Margin="0,16,0,0" Grid.Column="1" Visibility="{Binding Answer, Converter={StaticResource NullConvertToCollasped}}">
                     <Polygon.Points>
                         <Foundation:Point>8,0</Foundation:Point>
                         <Foundation:Point>0,4</Foundation:Point>
@@ -2277,7 +2281,7 @@
                     <Ellipse Fill="#FF666666" HorizontalAlignment="Left" Height="28" Stroke="#FF666666" StrokeThickness="0" VerticalAlignment="Top" Width="28" Margin="0"/>
                     <PathIcon Data="M16.5,14.9c1.5-0.9,2.5-2.5,2.5-4.3c0-2.7-2.2-5-5-5    c-2.7,0-5,2.2-5,5c0,1.8,1,3.4,2.5,4.3h-0.1c-3.1,0.9-5.5,3.4-5.8,6.7c0,0,0,0.7,0.5,0.7c0.7,0,0.7-0.7,0.7-0.7    c0.4-3.6,3.4-5.9,7.1-5.9c3.7,0,6.7,2.3,7.2,5.9c0,0,0,0.7,0.6,0.7c0.6,0,0.6-0.7,0.6-0.7C22,18.3,19.6,15.9,16.5,14.9L16.5,14.9z     M10.3,10.6c0-2.1,1.7-3.8,3.8-3.8s3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8C12,14.4,10.3,12.7,10.3,10.6L10.3,10.6z" Foreground="White"/>
                 </Grid>
-                <Grid x:Name="CortanaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Margin="0,6,0,0" Grid.Column="1">
+                <Grid x:Name="CortanaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Margin="0,6,0,0" Grid.Column="1" Visibility="{Binding Answer, Converter={StaticResource NullConvertToCollasped}}">
                     <PathIcon Data="M14,0C6.3,0,0,6.3,0,14c0,7.7,6.3,14,14,14s14-6.3,14-14C28,6.3,21.7,0,14,0z M14,23.8  c-5.4,0-9.8-4.4-9.8-9.8S8.6,4.2,14,4.2s9.8,4.4,9.8,9.8S19.4,23.8,14,23.8z" Foreground="#7F2EA4DD"/>
                     <PathIcon Data="M14,8.2c3.2,0,5.8,2.6,5.8,5.8s-2.6,5.8-5.8,5.8S8.2,17.2,8.2,14S10.8,8.2,14,8.2 M14,4.2  c-5.4,0-9.8,4.4-9.8,9.8s4.4,9.8,9.8,9.8s9.8-4.4,9.8-9.8S19.4,4.2,14,4.2L14,4.2z" Foreground="#FF2EA4DD"/>
                 </Grid>
@@ -2630,8 +2634,8 @@
                             <ScrollViewer HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CommonScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
                                 <ListBox x:Name="LB_VoiceCommandList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" VerticalAlignment="Top" Background="{x:Null}" ItemsSource="{Binding VoiceCommandSetDetail.VoiceCommandList}" ItemContainerStyle="{StaticResource VoiceCommandListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandListItemDataTemplate}" Padding="2,0,0,0"/>
                             </ScrollViewer>
-                            <Grid x:Name="Say" Grid.Row="1" Padding="2,0,0,0">
-                                <TextBox x:Name="TXT_Say" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入语音命令。 例：天黑了，帮我开一下床头灯" Style="{StaticResource VoiceCommandTextBoxStyle}"/>
+                            <Grid x:Name="Say" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailSayGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                                <TextBox x:Name="TXT_Say" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入语音命令。 例：天黑了，帮我开一下床头灯" Style="{StaticResource VoiceCommandTextBoxStyle}" KeyUp="TXT_Say_KeyUp"/>
                                 <Grid x:Name="UserIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Width="38" Height="28" Margin="10,10,0,0">
                                     <Ellipse Fill="#FF666666" HorizontalAlignment="Left" Height="28" Stroke="#FF666666" StrokeThickness="0" VerticalAlignment="Top" Width="28" Margin="0"/>
                                     <PathIcon Data="M16.5,14.9c1.5-0.9,2.5-2.5,2.5-4.3c0-2.7-2.2-5-5-5    c-2.7,0-5,2.2-5,5c0,1.8,1,3.4,2.5,4.3h-0.1c-3.1,0.9-5.5,3.4-5.8,6.7c0,0,0,0.7,0.5,0.7c0.7,0,0.7-0.7,0.7-0.7    c0.4-3.6,3.4-5.9,7.1-5.9c3.7,0,6.7,2.3,7.2,5.9c0,0,0,0.7,0.6,0.7c0.6,0,0.6-0.7,0.6-0.7C22,18.3,19.6,15.9,16.5,14.9L16.5,14.9z     M10.3,10.6c0-2.1,1.7-3.8,3.8-3.8s3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8C12,14.4,10.3,12.7,10.3,10.6L10.3,10.6z" Foreground="White"/>
@@ -2639,8 +2643,8 @@
                                 </Grid>
                                 <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Stroke="#FF666666" Margin="0,0,10,10" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
                             </Grid>
-                            <Grid x:Name="Answer" Grid.Row="1" Padding="2,0,0,0">
-                                <TextBox x:Name="TXT_Answer" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入小娜的回应。 例：好的，我知道了" Style="{StaticResource VoiceCommandTextBoxStyle}"/>
+                            <Grid x:Name="Answer" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailAnswerGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                                <TextBox x:Name="TXT_Answer" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入小娜的回应。 例：好的，我知道了" Style="{StaticResource VoiceCommandTextBoxStyle}" KeyUp="TXT_Answer_KeyUp"/>
                                 <Grid x:Name="CortanaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Width="38" Height="28" Margin="10,10,0,0">
                                     <PathIcon Data="M14,0C6.3,0,0,6.3,0,14c0,7.7,6.3,14,14,14s14-6.3,14-14C28,6.3,21.7,0,14,0z M14,23.8  c-5.4,0-9.8-4.4-9.8-9.8S8.6,4.2,14,4.2s9.8,4.4,9.8,9.8S19.4,23.8,14,23.8z" Foreground="#7F2EA4DD"/>
                                     <PathIcon Data="M14,8.2c3.2,0,5.8,2.6,5.8,5.8s-2.6,5.8-5.8,5.8S8.2,17.2,8.2,14S10.8,8.2,14,8.2 M14,4.2  c-5.4,0-9.8,4.4-9.8,9.8s4.4,9.8,9.8,9.8s9.8-4.4,9.8-9.8S19.4,4.2,14,4.2L14,4.2z" Foreground="#FF2EA4DD"/>
@@ -2651,9 +2655,11 @@
                         </Grid>
                     </PivotItem>
                 </Pivot>
-                <AppBarButton x:Name="ABB_DeleteVoiceCommandSet" HorizontalAlignment="Right" Icon="Delete" Height="48" Width="48" Margin="0,0,80,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}"/>
-                <AppBarButton x:Name="ABB_SaveVoiceCommandSet" HorizontalAlignment="Right" Icon="Save" Width="48" Height="48" Margin="0,0,10,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}"/>
+                <AppBarButton x:Name="ABB_DeleteVoiceCommandSet" HorizontalAlignment="Right" Icon="Delete" Height="48" Width="48" Margin="0,0,80,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}" Tapped="ABB_DeleteVoiceCommandSet_Tapped"/>
+                <AppBarButton x:Name="ABB_SaveVoiceCommandSet" HorizontalAlignment="Right" Icon="Save" Width="48" Height="48" Margin="0,0,10,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}" Tapped="ABB_SaveVoiceCommandSet_Tapped"/>
             </Grid>
+            <!--语音命令详情遮罩层-->
+            <Grid x:Name="VoiceCommandSetDetailMaskGrid" Grid.Row="1" Grid.ColumnSpan="3" Background="Transparent" Visibility="{Binding VoiceCommandSetDetailIsEdit, Converter={StaticResource BooleanConvertToVisibility}}" Tapped="VoiceCommandSetDetailMaskGrid_Tapped" />
         </Grid>
     </Grid>
 </Page>
