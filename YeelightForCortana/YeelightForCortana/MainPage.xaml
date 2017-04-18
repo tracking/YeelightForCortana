@@ -2620,7 +2620,7 @@
                                 </Grid>
                                 <Grid x:Name="Grid_Action_SwitchColor" VerticalAlignment="Top" Visibility="{Binding ShowSwitchColorGrid, Converter={StaticResource BooleanConvertToVisibility}}">
                                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="选取颜色" VerticalAlignment="Top" Margin="0,0,0,-20"/>
-                                    <CustomControl:ColorSelector HorizontalAlignment="Left" Height="200" Margin="0,32,0,0" VerticalAlignment="Top" Width="200"/>
+                                    <CustomControl:ColorSelector x:Name="CS_ColorSelector" HorizontalAlignment="Left" Height="200" Margin="0,32,0,0" VerticalAlignment="Top" Width="200"/>
                                 </Grid>
                             </Grid>
                         </Grid>

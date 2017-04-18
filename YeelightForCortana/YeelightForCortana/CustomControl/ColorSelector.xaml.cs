@@ -25,12 +25,27 @@ namespace YeelightForCortana.CustomControl
         private Hsv hsv;
         private Rgb rgb;
 
-        public Hsv Hsv { get => hsv; }
+        public Hsv Hsv
+        {
+            get => hsv;
+            set
+            {
+                this.hsv = value;
+                this.hsv.V = 1;
+
+                // 重新计算位置
+                this.CalculatePoint();
+            }
+        }
         public Rgb Rgb { get => rgb; }
 
         public ColorSelector()
         {
             this.InitializeComponent();
+
+            // 初始化默认颜色
+            this.hsv = new Hsv() { H = 0, S = 0, V = 1 };
+            this.rgb = this.hsv.To<Rgb>();
         }
 
         // 颜色选择框鼠标按下
@@ -79,22 +94,40 @@ namespace YeelightForCortana.CustomControl
         // 计算颜色
         private void CalculateColor()
         {
-            double left = Math.Max(Math.Min(Dot.Margin.Left, ColorViewer.ActualWidth), 0);
-            double top = Math.Max(Math.Min(Dot.Margin.Top, ColorViewer.ActualHeight), 0);
+            double left = Math.Max(Math.Min(Dot.Margin.Left + (Dot.Width / 2), ColorViewer.ActualWidth), 0);
+            double top = Math.Max(Math.Min(Dot.Margin.Top + (Dot.Height / 2), ColorViewer.ActualHeight), 0);
             double h = (left / ColorViewer.ActualWidth) * 360;
-            double s = (top / ColorViewer.ActualHeight) * 100;
+            double s = top / ColorViewer.ActualHeight;
 
             // 创建HSV
             hsv = new Hsv();
             hsv.V = 1;
             hsv.H = h;
-            hsv.S = s / 100;
+            hsv.S = s;
 
             // 计算颜色
             rgb = hsv.To<Rgb>();
 
             // 显示颜色
             ColorViewer.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, (byte)rgb.R, (byte)rgb.G, (byte)rgb.B));
+        }
+        /// <summary>
+        /// 计算Point
+        /// </summary>
+        private void CalculatePoint()
+        {
+            double left = ((this.hsv.H / 360) * ColorViewer.ActualWidth) - (Dot.Width / 2);
+            double top = (this.hsv.S * ColorViewer.ActualHeight) - (Dot.Height / 2);
+
+            var margin = Dot.Margin;
+            margin.Left = left;
+            margin.Top = top;
+            margin.Right = 0;
+            margin.Bottom = 0;
+            Dot.Margin = margin;
+
+            // 重新渲染颜色
+            CalculateColor();
         }
     }
 }

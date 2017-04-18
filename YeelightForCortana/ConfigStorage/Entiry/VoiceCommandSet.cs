@@ -21,6 +21,10 @@ namespace ConfigStorage.Entiry
         /// </summary>
         public string Action { get; set; }
         /// <summary>
+        /// 操作参数
+        /// </summary>
+        public string ActionParams { get; set; }
+        /// <summary>
         /// 对象是否为全部
         /// </summary>
         public bool IsAll { get; set; }

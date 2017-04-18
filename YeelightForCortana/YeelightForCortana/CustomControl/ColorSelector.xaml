@@ -11,7 +11,7 @@
 
     <Grid>
         <Grid x:Name="ColorViewer" Background="White" PointerPressed="ColorViewer_PointerPressed" PointerReleased="ColorViewer_PointerReleased" PointerMoved="ColorViewer_PointerMoved">
-            <Ellipse x:Name="Dot" HorizontalAlignment="Left" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Top" Width="15" StrokeThickness="2"/>
+            <Ellipse x:Name="Dot" HorizontalAlignment="Left" Height="15" Margin="-7.5,-7.5,0,0" Stroke="Black" VerticalAlignment="Top" Width="15" StrokeThickness="2"/>
         </Grid>
 
     </Grid>
