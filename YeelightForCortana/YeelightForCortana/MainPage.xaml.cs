@@ -43,6 +43,11 @@ namespace YeelightForCortana
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        // 页面加载完成
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
             this.Init();
         }
 
@@ -69,6 +74,10 @@ namespace YeelightForCortana
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.InactiveBackgroundColor = titleBar.BackgroundColor = titleBar.ButtonBackgroundColor = Colors.Black;
             titleBar.InactiveForegroundColor = titleBar.ForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
+
+            //// 强制刷新自定义控件大小
+            //CS_ColorSelector.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            //CS_ColorSelector.Arrange(new Rect(0, 0, CS_ColorSelector.DesiredSize.Width, CS_ColorSelector.DesiredSize.Height));
         }
         /// <summary>
         /// 数据初始化
@@ -76,8 +85,13 @@ namespace YeelightForCortana
         /// <returns></returns>
         private async Task DataInit()
         {
+            // 实例化配置存储对象
+            configStorage = new JsonConfigStorage();
+            // 加载配置
+            await configStorage.LoadAsync();
+
             // 实例化viewModel
-            viewModel = new MainPageViewModel();
+            var viewModel = new MainPageViewModel();
             // 绑定数据上下文
             DataContext = viewModel;
             // 显示默认面板
@@ -94,11 +108,6 @@ namespace YeelightForCortana
             foreach (var item in viewModel.CommandTypeList)
                 viewModel.CommandTypeDisplayList.Add(item);
 
-            // 实例化配置存储对象
-            configStorage = new JsonConfigStorage();
-            // 加载配置
-            await configStorage.LoadAsync();
-
             // 初始化设备
             var devices = configStorage.GetDevices();
 
@@ -106,9 +115,6 @@ namespace YeelightForCortana
             {
                 viewModel.DeviceList.Add(new Device(item.RawDeviceInfo) { Name = item.Name });
             }
-
-            // 刷新设备状态（无需等待）
-            RefreshDevicesStatus();
 
             // 初始化分组
             var groups = configStorage.GetGroups();
@@ -133,7 +139,15 @@ namespace YeelightForCortana
                 });
             }
 
+            this.viewModel = viewModel;
+
+            // 默认选择第一个
+            this.viewModel.CommandTypeListSelectedIndex = 0;
+
             SetLoading(false);
+
+            // 刷新设备状态（无需等待）
+            RefreshDevicesStatus();
         }
         /// <summary>
         /// 设置设备全选框状态
@@ -154,6 +168,67 @@ namespace YeelightForCortana
                 CB_SelectAllDevice.IsChecked = true;
             else
                 CB_SelectAllDevice.IsChecked = null;
+        }
+        /// <summary>
+        /// 刷新语音命令集列表
+        /// </summary>
+        private void RefreshVoiceCommandSetList()
+        {
+            var group = (DeviceGroup)LB_DeviceGroupList.SelectedItem;
+            var commandType = (CommandType)CBB_CommandType.SelectedItem;
+
+            if (group == null || commandType == null) return;
+
+            // 获取所有命令
+            var vcss = configStorage.GetVoiceCommandSets()
+                // 查找
+                .Where(item =>
+                {
+                    // 操作类型不相同 并且 不是全部
+                    if (commandType.Type != null && item.Action != commandType.Type.ToString())
+                        return false;
+
+                    // 分组不相同 并且 设备不在该组内 并且 不是全部
+                    if (group.Id != "0" && item.GroupId != group.Id && group.DeviceList.Where(i => i.Id == item.DeviceId).Count() == 0)
+                        return false;
+
+                    return true;
+                })
+                // 转换
+                .Select(item =>
+                {
+                    try
+                    {
+                        var vcs = new VoiceCommandSet();
+                        vcs.Id = item.Id;
+                        vcs.ActionParams = item.ActionParams;
+                        vcs.CommandType = new CommandType((ActionType)Enum.Parse(typeof(ActionType), item.Action));
+
+                        if (item.DeviceId != null)
+                            vcs.Device = viewModel.DeviceList.First(i => i.Id == item.DeviceId);
+                        if (item.GroupId != null)
+                            vcs.DeviceGroup = viewModel.DeviceGroupList.First(i => i.Id == item.GroupId);
+
+                        vcs.VoiceCommandList = new System.Collections.ObjectModel.ObservableCollection<VoiceCommand>(item.VoiceCommands.Select(i => new VoiceCommand()
+                        {
+                            Id = i.Id,
+                            Answer = i.Answer,
+                            Say = i.Say
+                        }));
+
+                        return vcs;
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                });
+
+            // 清空
+            viewModel.VoiceCommandSetList.Clear();
+            // 加入查到的
+            foreach (var item in vcss.ToList())
+                viewModel.VoiceCommandSetList.Add(item);
         }
         /// <summary>
         /// 刷新选择对象下拉框
@@ -213,6 +288,40 @@ namespace YeelightForCortana
             }
         }
         /// <summary>
+        /// 转换操作参数到控件
+        /// </summary>
+        /// <param name="type">操作类型</param>
+        /// <param name="param">参数</param>
+        private void TransformActionParams(ActionType? type, string param)
+        {
+            if (type == null) return;
+
+            try
+            {
+                switch (type)
+                {
+                    case ActionType.BrightUp:
+                    case ActionType.BrightDown:
+                        SLD_Bright.Value = Convert.ToInt32(param);
+                        break;
+                    case ActionType.SwitchColor:
+                        var hsv = param.Split(',');
+                        CS_ColorSelector.Hsv = new ColorMine.ColorSpaces.Hsv()
+                        {
+                            H = Convert.ToDouble(hsv[0]),
+                            S = Convert.ToDouble(hsv[1]),
+                            V = Convert.ToDouble(hsv[2])
+                        };
+                        break;
+                    case ActionType.PowerOn:
+                    case ActionType.PowerOff:
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex) { }
+        }
+        /// <summary>
         /// 刷新设备状态
         /// </summary>
         private async Task RefreshDeviceStatus(Device device)
@@ -221,6 +330,8 @@ namespace YeelightForCortana
             {
                 // 更新设备信息
                 await device.RawDevice.UpdateDeviceInfo();
+                // 电源
+                device.Power = device.RawDevice.Power == YeelightPower.on;
                 // 无异常表示在线
                 device.Online = true;
             }
@@ -314,6 +425,7 @@ namespace YeelightForCortana
             return dialog.Result;
         }
 
+        #region 左区-设备组列表相关
         // 设备组列表鼠标点击事件 弹出菜单
         private void LB_DeviceGroupListItem_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
@@ -345,6 +457,19 @@ namespace YeelightForCortana
                 await configStorage.SaveAsync();
             }
         }
+        // 添加设备分组按钮按下
+        private void BTN_AddDeviceGroup_Click(object sender, RoutedEventArgs e)
+        {
+            // 准备设备列表
+            viewModel.DeviceCheckList.Clear();
+            viewModel.DeviceCheckList.AddRange(viewModel.DeviceList);
+            // 设置默认分组名
+            TXT_AddDeviceGroupName.Text = "未命名";
+            // 设置全选框状态
+            SetSelectAllDeviceCheckBoxState();
+            // 打开
+            SV_DeviceGroupConfig.IsPaneOpen = true;
+        }
         // 编辑设备分组菜单按下
         private void MFI_DeviceGroupEdit_Click(object sender, RoutedEventArgs e)
         {
@@ -368,24 +493,6 @@ namespace YeelightForCortana
             // 设置文本框内容
             TXT_AddDeviceGroupName.Text = group.Name;
             // 设置设备全选框状态
-            SetSelectAllDeviceCheckBoxState();
-            // 打开
-            SV_DeviceGroupConfig.IsPaneOpen = true;
-        }
-        // 设备组列表项选中事件
-        private void LB_DeviceGroupList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Debug.WriteLine(e.AddedItems);
-        }
-        // 添加设备分组按钮按下
-        private void BTN_AddDeviceGroup_Click(object sender, RoutedEventArgs e)
-        {
-            // 准备设备列表
-            viewModel.DeviceCheckList.Clear();
-            viewModel.DeviceCheckList.AddRange(viewModel.DeviceList);
-            // 设置默认分组名
-            TXT_AddDeviceGroupName.Text = "未命名";
-            // 设置全选框状态
             SetSelectAllDeviceCheckBoxState();
             // 打开
             SV_DeviceGroupConfig.IsPaneOpen = true;
@@ -436,6 +543,14 @@ namespace YeelightForCortana
             // 保存
             configStorage.SaveAsync();
         }
+        // 设备组列表项选中事件
+        private void LB_DeviceGroupList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (viewModel == null) return;
+
+            // 刷新列表
+            RefreshVoiceCommandSetList();
+        }
         // 设备全选选择框框按下
         private void CB_SelectAllDevice_Click(object sender, RoutedEventArgs e)
         {
@@ -459,7 +574,9 @@ namespace YeelightForCortana
             // 设置设备全选框状态
             SetSelectAllDeviceCheckBoxState();
         }
+        #endregion
 
+        #region 左区-设备管理相关
         // 查找设备按钮按下
         private async void BTN_SearchDevice_Click(object sender, RoutedEventArgs e)
         {
@@ -540,7 +657,7 @@ namespace YeelightForCortana
             if (device.Name == txt.Text)
             {
                 // 取消焦点
-                txt.Focus(FocusState.Unfocused);
+                LoseFocus(txt);
                 return;
             }
 
@@ -586,6 +703,11 @@ namespace YeelightForCortana
             var el = (ToggleSwitch)sender;
             var device = (Device)el.DataContext;
 
+            if (device == null || device.Power == el.IsOn)
+            {
+                return;
+            }
+
             // 设备正忙不进行处理
             if (device.IsBusy)
             {
@@ -610,20 +732,110 @@ namespace YeelightForCortana
             // 恢复
             device.IsBusy = false;
         }
+        #endregion
+
+        #region 中区-语音命令管理相关
+        // 操作类型列表选择变更事件
+        private void CBB_CommandType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (viewModel == null) return;
+
+            // 刷新列表
+            RefreshVoiceCommandSetList();
+        }
         // 添加语音命令集按钮按下
         private void BTN_AddVoiceCommand_Click(object sender, RoutedEventArgs e)
         {
+            // 清空编辑标志
+            PVT_VoiceCommandSetDetail.Tag = null;
+
             // 刷新选择对象下拉框
             RefreshSelectTargetCombobox();
             // 创建新的语音命令集
             viewModel.VoiceCommandSetDetail = new VoiceCommandSet() { Id = Guid.NewGuid().ToString() };
             // 置空
             CBB_SelectTarget.SelectedItem = null;
+            CBB_SelectAction.SelectedItem = null;
+            SLD_Bright.Value = 0;
+            CS_ColorSelector.Hsv = new ColorMine.ColorSpaces.Hsv();
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
             // 显示Say框
             viewModel.ShowVoiceCommandSetDetailSayGrid = true;
         }
+        // 语音命令集列表选中
+        private void LB_VoiceCommandSetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var vcs = (VoiceCommandSet)LB_VoiceCommandSetList.SelectedItem;
+
+            if (vcs == null) return;
+
+            // 创建新的语音命令集(防止修改对象引起别处发生变更)
+            viewModel.VoiceCommandSetDetail = new VoiceCommandSet()
+            {
+                Id = vcs.Id,
+                ActionParams = vcs.ActionParams,
+                CommandType = vcs.CommandType,
+                Device = vcs.Device,
+                DeviceGroup = vcs.DeviceGroup,
+                VoiceCommandList = new System.Collections.ObjectModel.ObservableCollection<VoiceCommand>(vcs.VoiceCommandList.Select(item =>
+                {
+                    return new VoiceCommand()
+                    {
+                        Id = item.Id,
+                        Answer = item.Answer,
+                        Say = item.Say
+                    };
+                }))
+            };
+
+            // 刷新选择对象下拉框
+            RefreshSelectTargetCombobox();
+
+            // 选中对应的对象
+            // 清空
+            CBB_SelectTarget.Items.Clear();
+            // 创建项
+            var cbbItem = new ComboBoxItem() { DataContext = vcs.Device != null ? (object)vcs.Device : (object)vcs.DeviceGroup };
+            cbbItem.SetBinding(ComboBoxItem.ContentProperty, new Binding() { Path = new PropertyPath("Name") });
+            CBB_SelectTarget.Items.Add(cbbItem);
+            // 选中
+            CBB_SelectTarget.SelectedItem = cbbItem;
+
+            // 选中对应的操作
+            CBB_SelectAction.SelectedItem = viewModel.CommandTypeList.Where(item =>
+            {
+                return ((CommandType)item).Type == vcs.CommandType.Type;
+            }).ToList()[0];
+
+            // 转换参数到控件
+            TransformActionParams(vcs.CommandType.Type, vcs.ActionParams);
+
+            // 显示Say框
+            viewModel.ShowVoiceCommandSetDetailSayGrid = true;
+            // 设置语音命令详情为未编辑状态
+            viewModel.VoiceCommandSetDetailIsEdit = false;
+            // 设置编辑标志
+            PVT_VoiceCommandSetDetail.Tag = true;
+        }
+        // 删除语音命令集按钮按下
+        private async void DeleteVoiceCommandSetButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var vcs = (VoiceCommandSet)((FrameworkElement)sender).DataContext;
+
+            if (await ShowConfirmDialog("是否删除语音命令?", null, "是", "否"))
+            {
+                // 删除
+                configStorage.DeleteVoiceCommandSet(vcs.Id);
+                // 保存
+                await configStorage.SaveAsync();
+                // 刷新列表
+                RefreshVoiceCommandSetList();
+            }
+        }
+        #endregion
+
+        #region 右区-语音命令集详情管理相关
         // 选择对象选择框点击
         private void CBB_SelectTarget_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -665,18 +877,16 @@ namespace YeelightForCortana
             viewModel.ShowSetBrightGrid = false;
 
             // 未选择
-            if (CBB_SelectAction.SelectedItem == null)
-            {
-                return;
-            }
+            if (CBB_SelectAction.SelectedItem == null) return;
 
             var action = (CommandType)CBB_SelectAction.SelectedItem;
 
             switch (action.Type)
             {
                 case ActionType.PowerOn:
-                    break;
                 case ActionType.PowerOff:
+                    viewModel.ShowSwitchColorGrid = false;
+                    viewModel.ShowSetBrightGrid = false;
                     break;
                 case ActionType.BrightUp:
                 case ActionType.BrightDown:
@@ -699,6 +909,8 @@ namespace YeelightForCortana
                 viewModel.VoiceCommandSetDetail = null;
                 // 设置状态为未编辑
                 viewModel.VoiceCommandSetDetailIsEdit = false;
+                // 刷新列表
+                RefreshVoiceCommandSetList();
             }
         }
         // Say输入框按键抬起
@@ -759,20 +971,22 @@ namespace YeelightForCortana
             {
                 // 删除
                 configStorage.DeleteVoiceCommandSet(viewModel.VoiceCommandSetDetail.Id);
-                viewModel.VoiceCommandSetList.Remove(viewModel.VoiceCommandSetDetail);
                 // 清空
                 viewModel.VoiceCommandSetDetail = null;
                 // 设置状态为未编辑
                 viewModel.VoiceCommandSetDetailIsEdit = false;
                 // 保存
                 await configStorage.SaveAsync();
+                // 刷新列表
+                RefreshVoiceCommandSetList();
             }
         }
         // 保存语音命令集详情按钮按下
         private async void ABB_SaveVoiceCommandSet_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            CS_ColorSelector.Hsv = CS_ColorSelector.Hsv;
-            return;
+            // 未编辑不保存
+            if (!viewModel.VoiceCommandSetDetailIsEdit) return;
+
             // 检查基本设置
             if (CBB_SelectTarget.SelectedItem == null)
             {
@@ -805,10 +1019,12 @@ namespace YeelightForCortana
             // 对象
             var target = ((ComboBoxItem)CBB_SelectTarget.SelectedItem).DataContext;
             // 创建实体
-            var voiceCommandSetEntiry = new ConfigStorage.Entiry.VoiceCommandSet();
-            voiceCommandSetEntiry.Id = viewModel.VoiceCommandSetDetail.Id;
-            voiceCommandSetEntiry.Action = actionType.Type.ToString();
-            voiceCommandSetEntiry.ActionParams = TransformActionParams(actionType.Type);
+            var voiceCommandSetEntiry = new ConfigStorage.Entiry.VoiceCommandSet()
+            {
+                Id = viewModel.VoiceCommandSetDetail.Id,
+                Action = actionType.Type.ToString(),
+                ActionParams = TransformActionParams(actionType.Type)
+            };
 
             // 如果对象是组
             if (target.GetType() == typeof(DeviceGroup))
@@ -823,7 +1039,7 @@ namespace YeelightForCortana
             else
             {
                 voiceCommandSetEntiry.DeviceId = ((Device)target).Id;
-                voiceCommandSetEntiry.IsAll = true;
+                voiceCommandSetEntiry.IsAll = false;
             }
 
             // 遍历语音命令
@@ -833,13 +1049,29 @@ namespace YeelightForCortana
                 voiceCommandSetEntiry.VoiceCommands.Add(new ConfigStorage.Entiry.VoiceCommand() { Id = item.Id, Say = item.Say, Answer = item.Answer });
             }
 
-            // 加入配置
-            configStorage.AddVoiceCommandSet(voiceCommandSetEntiry);
+            // 编辑
+            if (PVT_VoiceCommandSetDetail.Tag != null)
+                // 更新配置
+                configStorage.UpdateVoiceCommandSet(voiceCommandSetEntiry.Id, voiceCommandSetEntiry);
+            else
+                // 加入配置
+                configStorage.AddVoiceCommandSet(voiceCommandSetEntiry);
 
+            // 清空
+            viewModel.VoiceCommandSetDetail = null;
             // 设置状态为未编辑
             viewModel.VoiceCommandSetDetailIsEdit = false;
             // 保存
             await configStorage.SaveAsync();
+
+            // 刷新列表
+            RefreshVoiceCommandSetList();
+        }
+        #endregion
+
+        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -178,8 +178,8 @@
     </ViewModel:MainPageViewModel.VoiceCommandSetDetail>
     <ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>0</ViewModel:MainPageViewModel.CommandTypeListSelectedIndex>
     <ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>0</ViewModel:MainPageViewModel.DeviceGroupListSelectedIndex>
-    <ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>true</ViewModel:MainPageViewModel.DoesNotExistVoiceCommand>
+    <ViewModel:MainPageViewModel.ShowDeviceGrid>false</ViewModel:MainPageViewModel.ShowDeviceGrid>
+    <ViewModel:MainPageViewModel.ShowVoiceCommandSetGrid>true</ViewModel:MainPageViewModel.ShowVoiceCommandSetGrid>
     <ViewModel:MainPageViewModel.ShowVoiceCommandSetDetailGrid>true</ViewModel:MainPageViewModel.ShowVoiceCommandSetDetailGrid>
     <ViewModel:MainPageViewModel.ShowSwitchColorGrid>true</ViewModel:MainPageViewModel.ShowSwitchColorGrid>
-    <ViewModel:MainPageViewModel.ShowDeviceGrid>true</ViewModel:MainPageViewModel.ShowDeviceGrid>
 </ViewModel:MainPageViewModel>

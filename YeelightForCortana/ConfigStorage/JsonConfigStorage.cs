@@ -95,7 +95,11 @@ namespace ConfigStorage
         /// <returns>设备</returns>
         public Device GetDevice(string id)
         {
-            return (from item in config.Devices where item.Id == id select item).First();
+            var list = from item in config.Devices where item.Id == id select item;
+
+            if (list.Count() == 0) return null;
+
+            return list.First();
         }
         /// <summary>
         /// 获取设备列表
@@ -112,6 +116,7 @@ namespace ConfigStorage
         /// <returns设备列表></returns>
         public List<Device> GetDevices(string name)
         {
+            if (config.Devices.Count == 0) return null;
             return (from item in config.Devices where item.Name.IndexOf(name) != -1 select item).ToList<Device>();
         }
         /// <summary>
@@ -121,7 +126,11 @@ namespace ConfigStorage
         /// <returns>分组</returns>
         public Group GetGroup(string id)
         {
-            return (from item in config.Groups where item.Id == id select item).First();
+            var list = from item in config.Groups where item.Id == id select item;
+
+            if (list.Count() == 0) return null;
+
+            return list.First();
         }
         /// <summary>
         /// 获取分组列表
@@ -138,6 +147,7 @@ namespace ConfigStorage
         /// <returns>分组列表</returns>
         public List<Group> GetGroups(string name)
         {
+            if (config.Groups.Count == 0) return null;
             return (from item in config.Groups where item.Name.IndexOf(name) != -1 select item).ToList<Group>();
         }
         /// <summary>
@@ -147,7 +157,11 @@ namespace ConfigStorage
         /// <returns>语音命令集</returns>
         public VoiceCommandSet GetVoiceCommandSet(string id)
         {
-            return (from item in config.VoiceCommandSets where item.Id == id select item).First();
+            var list = from item in config.VoiceCommandSets where item.Id == id select item;
+
+            if (list.Count() == 0) return null;
+
+            return list.First();
         }
         /// <summary>
         /// 获取语音命令集列表
@@ -165,6 +179,7 @@ namespace ConfigStorage
         /// <returns>是否存在</returns>
         public bool HasDevice(string id)
         {
+            if (config.Devices.Count == 0) return false;
             return config.Devices.Exists(item => item.Id == id);
         }
         /// <summary>
@@ -174,6 +189,7 @@ namespace ConfigStorage
         /// <returns>是否存在</returns>
         public bool HasGroup(string id)
         {
+            if (config.Groups.Count == 0) return false;
             return config.Groups.Exists(item => item.Id == id);
         }
         /// <summary>
@@ -183,6 +199,7 @@ namespace ConfigStorage
         /// <returns>是否存在</returns>
         public bool HasVoiceCommandSet(string id)
         {
+            if (config.VoiceCommandSets.Count == 0) return false;
             return config.VoiceCommandSets.Exists(item => item.Id == id);
         }
 

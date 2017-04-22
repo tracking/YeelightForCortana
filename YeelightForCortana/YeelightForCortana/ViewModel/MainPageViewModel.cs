@@ -8,6 +8,10 @@ namespace YeelightForCortana.ViewModel
 {
     public class MainPageViewModel : BaseModel
     {
+        // 设备分组列表选中索引
+        private int? deviceGroupListSelectedIndex;
+        // 命令类型列表选中索引
+        private int commandTypeListSelectedIndex;
         // 是否显示语音命令集面板
         private bool showVoiceCommandSetGrid;
         // 是否显示设备面板
@@ -56,9 +60,37 @@ namespace YeelightForCortana.ViewModel
             }
         }
         // 设备分组列表选中索引
-        public int DeviceGroupListSelectedIndex { get; set; }
+        public int? DeviceGroupListSelectedIndex
+        {
+            get
+            {
+                return deviceGroupListSelectedIndex;
+            }
+            set
+            {
+                if (value >= 0)
+                {
+                    // 显示面板
+                    this.ShowVoiceCommandSetGrid = true;
+                }
+
+                this.deviceGroupListSelectedIndex = value;
+                this.EmitPropertyChanged("DeviceGroupListSelectedIndex");
+            }
+        }
         // 命令类型列表选中索引
-        public int CommandTypeListSelectedIndex { get; set; }
+        public int CommandTypeListSelectedIndex
+        {
+            get
+            {
+                return commandTypeListSelectedIndex;
+            }
+            set
+            {
+                this.commandTypeListSelectedIndex = value;
+                this.EmitPropertyChanged("CommandTypeListSelectedIndex");
+            }
+        }
 
         // 是否显示语音命令集面板
         public bool ShowVoiceCommandSetGrid
@@ -86,6 +118,7 @@ namespace YeelightForCortana.ViewModel
                 {
                     // 隐藏其他面板
                     this.ShowVoiceCommandSetGrid = false;
+                    this.DeviceGroupListSelectedIndex = null;
                 }
 
                 this.showDeviceGrid = value;
@@ -170,7 +203,7 @@ namespace YeelightForCortana.ViewModel
                 this.showVoiceCommandSetDetailSayGrid = value;
                 this.EmitPropertyChanged("ShowVoiceCommandSetDetailSayGrid");
             }
-        }   
+        }
         // 是否显示语音详情中Answer面板
         public bool ShowVoiceCommandSetDetailAnswerGrid
         {
@@ -188,15 +221,6 @@ namespace YeelightForCortana.ViewModel
             }
         }
 
-        // 没有添加任何语音命令
-        public bool DoesNotExistVoiceCommand
-        {
-            get
-            {
-                return VoiceCommandSetList == null || VoiceCommandSetList.Count == 0;
-            }
-        }
-
         public MainPageViewModel()
         {
             // 默认数据
@@ -208,8 +232,9 @@ namespace YeelightForCortana.ViewModel
             this.CommandTypeList = new CommandTypeList();
             this.VoiceCommandSetList = new VoiceCommandSetList();
 
+            // 默认不选中
+            this.DeviceGroupListSelectedIndex = null;
             // 默认选择第一个
-            this.DeviceGroupListSelectedIndex = 0;
             this.CommandTypeListSelectedIndex = 0;
         }
     }

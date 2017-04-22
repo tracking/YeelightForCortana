@@ -99,6 +99,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\IntConvertToVisible.cs" />
     <Compile Include="Converter\NullConvertToCollasped.cs" />
     <Compile Include="CustomControl\ColorSelector.xaml.cs">
       <DependentUpon>ColorSelector.xaml</DependentUpon>

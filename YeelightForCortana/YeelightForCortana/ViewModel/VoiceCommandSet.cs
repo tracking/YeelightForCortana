@@ -15,12 +15,13 @@ namespace YeelightForCortana.ViewModel
 
         public string Id { get; set; }
         public CommandType CommandType { get; set; }
+        public string ActionParams { get; set; }
         public ObservableCollection<VoiceCommand> VoiceCommandList { get; set; }
         public string ObjectName
         {
             get
             {
-                return device == null ? deviceGroup.Name : device.Name;
+                return Device == null ? DeviceGroup.Name : Device.Name;
             }
         }
         public string FirstSay
@@ -42,18 +43,21 @@ namespace YeelightForCortana.ViewModel
             }
         }
 
+        public Device Device { get => device; set => device = value; }
+        public DeviceGroup DeviceGroup { get => deviceGroup; set => deviceGroup = value; }
+
         public VoiceCommandSet()
         {
             this.VoiceCommandList = new ObservableCollection<VoiceCommand>();
         }
         public VoiceCommandSet(Device device)
         {
-            this.device = device;
+            this.Device = device;
             this.VoiceCommandList = new ObservableCollection<VoiceCommand>();
         }
         public VoiceCommandSet(DeviceGroup deviceGroup)
         {
-            this.deviceGroup = deviceGroup;
+            this.DeviceGroup = deviceGroup;
             this.VoiceCommandList = new ObservableCollection<VoiceCommand>();
         }
     }
