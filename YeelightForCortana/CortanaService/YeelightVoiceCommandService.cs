@@ -1,10 +1,7 @@
 ﻿using ConfigStorage;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
@@ -151,6 +148,10 @@ namespace CortanaService
                 // 回应
                 await Response(answer);
             }
+            catch (Exception ex)
+            {
+                await Log(string.Format("{0}\n{1}\n\n", ex.Message, ex.StackTrace));
+            }
             finally
             {
                 if (this.serviceDeferral != null)
@@ -211,9 +212,19 @@ namespace CortanaService
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                await Log(string.Format("{0}\n{1}\n\n", ex.Message, ex.StackTrace));
             }
+        }
+
+        private async Task Log(string msg)
+        {
+            // 本地文件夹
+            var tempFolder = ApplicationData.Current.TemporaryFolder;
+            // 设置文件
+            var settingFile = await tempFolder.CreateFileAsync("log.json", CreationCollisionOption.OpenIfExists);
+            await FileIO.AppendTextAsync(settingFile, msg);
         }
     }
 }

@@ -1,27 +1,21 @@
 ﻿using ConfigStorage;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
 using YeelightAPI;
 using YeelightForCortana.ViewModel;
 
@@ -75,12 +69,8 @@ namespace YeelightForCortana
 
             // 设置标题栏颜色
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.InactiveBackgroundColor = titleBar.BackgroundColor = titleBar.ButtonBackgroundColor = Colors.Black;
-            titleBar.InactiveForegroundColor = titleBar.ForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
-
-            //// 强制刷新自定义控件大小
-            //CS_ColorSelector.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            //CS_ColorSelector.Arrange(new Rect(0, 0, CS_ColorSelector.DesiredSize.Width, CS_ColorSelector.DesiredSize.Height));
+            titleBar.InactiveBackgroundColor = titleBar.BackgroundColor = titleBar.ButtonInactiveBackgroundColor = titleBar.ButtonBackgroundColor = Colors.Black;
+            titleBar.InactiveForegroundColor = titleBar.ForegroundColor = titleBar.ButtonInactiveForegroundColor = titleBar.ButtonForegroundColor = Colors.White;
         }
         /// <summary>
         /// 数据初始化
@@ -622,7 +612,7 @@ namespace YeelightForCortana
         {
             if (string.IsNullOrEmpty(TXT_AddDeviceGroupName.Text))
             {
-                args.Cancel = true;
+                TXT_AddDeviceGroupName.Text = "未命名";
             }
 
             // 获取选中的设备
@@ -874,7 +864,7 @@ namespace YeelightForCortana
             // 刷新选择对象下拉框
             RefreshSelectTargetCombobox();
             // 创建新的语音命令集
-            viewModel.VoiceCommandSetDetail = new VoiceCommandSet() { Id = Guid.NewGuid().ToString() };
+            var vcs = new VoiceCommandSet() { Id = Guid.NewGuid().ToString() };
             // 置空
             CBB_SelectTarget.SelectedItem = null;
             CBB_SelectAction.SelectedItem = null;
@@ -882,8 +872,12 @@ namespace YeelightForCortana
             CS_ColorSelector.Hsv = new ColorMine.ColorSpaces.Hsv();
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
+            // 选中第一个面板
+            PVT_VoiceCommandSetDetail.SelectedIndex = 0;
             // 显示Say框
             viewModel.ShowVoiceCommandSetDetailSayGrid = true;
+            // 给值
+            viewModel.VoiceCommandSetDetail = vcs;
         }
         // 语音命令集列表选中
         private void LB_VoiceCommandSetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
