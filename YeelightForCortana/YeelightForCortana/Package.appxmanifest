@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="e2e7056a-690f-41f5-90b6-5b7c27d9b16e" Publisher="CN=T" Version="0.1.1.0" />
-  <mp:PhoneIdentity PhoneProductId="e2e7056a-690f-41f5-90b6-5b7c27d9b16e" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="48379Tracking.Yeelight" Publisher="CN=CE03861C-2A5D-4C76-9703-20880EACBCFD" Version="0.1.1.0" />
+  <mp:PhoneIdentity PhoneProductId="86ffd567-f506-4feb-a7d8-35accbf1d5ff" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>YeelightForCortana</DisplayName>
+    <DisplayName>Yeelight小娜</DisplayName>
     <PublisherDisplayName>Tracking</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
