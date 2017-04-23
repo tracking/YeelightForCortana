@@ -108,6 +108,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Yeelight.cs" />
     <Compile Include="YeelightUtils.cs" />

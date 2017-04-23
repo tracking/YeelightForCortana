@@ -538,8 +538,16 @@ namespace YeelightAPI
             this.tcpClient = new StreamSocket();
             var a = new StreamSocketListener();
 
+            // timeout
+            var cts = new System.Threading.CancellationTokenSource();
+            cts.CancelAfter(3000);
+
             // 连接设备
-            await this.tcpClient.ConnectAsync(new HostName(this.ip), this.port);
+            var connectAsync = this.tcpClient.ConnectAsync(new HostName(this.ip), this.port);
+            // 设置超时
+            var connectTask = connectAsync.AsTask(cts.Token);
+
+            await connectTask;
         }
         /// <summary>
         /// 断开设备连接

@@ -87,6 +87,17 @@ namespace ConfigStorage
 
             return result;
         }
+        /// <summary>
+        /// 通过分组编号删除语音命令集
+        /// </summary>
+        /// <param name="id">分组编号</param>
+        /// <returns></returns>
+        public bool DeleteVoiceCommandSetByGroupId(string id)
+        {
+            var result = config.VoiceCommandSets.RemoveAll(item => item.GroupId == id);
+
+            return result > 0;
+        }
 
         /// <summary>
         /// 获取设备
@@ -335,6 +346,7 @@ namespace ConfigStorage
                 old.DeviceId = voiceCommandSet.DeviceId;
                 old.GroupId = voiceCommandSet.GroupId;
                 old.Action = voiceCommandSet.Action;
+                old.ActionParams = voiceCommandSet.ActionParams;
                 old.VoiceCommands = voiceCommandSet.VoiceCommands;
 
                 return true;

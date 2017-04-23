@@ -133,6 +133,12 @@ namespace ConfigStorage
         /// <param name="id">语音命令集编号</param>
         /// <returns>是否成功</returns>
         bool DeleteVoiceCommandSet(string id);
+        /// <summary>
+        /// 通过分组编号删除语音命令集
+        /// </summary>
+        /// <param name="id">分组编号</param>
+        /// <returns>是否成功</returns>
+        bool DeleteVoiceCommandSetByGroupId(string id);
 
         /// <summary>
         /// 加载配置

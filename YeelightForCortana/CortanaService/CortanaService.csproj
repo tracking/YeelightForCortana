@@ -108,48 +108,18 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddCommandContentDialog.xaml.cs">
-      <DependentUpon>AddCommandContentDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CortanaConfig.xaml.cs">
-      <DependentUpon>CortanaConfig.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LightActionPage\LightActionBrightPage.xaml.cs">
-      <DependentUpon>LightActionBrightPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LightActionType.cs" />
-    <Compile Include="LightAction.cs" />
-    <Compile Include="LightActionPage\ILightActionPage.cs" />
-    <Compile Include="LightActionPage\LightActionPowerPage.xaml.cs">
-      <DependentUpon>LightActionPowerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SettingHelper.cs" />
     <Compile Include="YeelightVoiceCommandService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConfigStorage\ConfigStorage.csproj">
+      <Project>{7728f151-32b8-46fc-ba20-3d9dc8fa9ad2}</Project>
+      <Name>ConfigStorage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\YeelightAPI\YeelightAPI.csproj">
       <Project>{c9709d9f-858e-4026-be3e-c53ca31d0088}</Project>
       <Name>YeelightAPI</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="AddCommandContentDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CortanaConfig.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LightActionPage\LightActionBrightPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LightActionPage\LightActionPowerPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

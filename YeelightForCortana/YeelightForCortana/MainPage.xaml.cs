@@ -5,9 +5,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -177,7 +180,11 @@ namespace YeelightForCortana
             var group = (DeviceGroup)LB_DeviceGroupList.SelectedItem;
             var commandType = (CommandType)CBB_CommandType.SelectedItem;
 
-            if (group == null || commandType == null) return;
+            if (group == null || commandType == null)
+            {
+                viewModel.VoiceCommandSetList.Clear();
+                return;
+            }
 
             // 获取所有命令
             var vcss = configStorage.GetVoiceCommandSets()
@@ -319,7 +326,7 @@ namespace YeelightForCortana
                         break;
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
         }
         /// <summary>
         /// 刷新设备状态
@@ -424,6 +431,113 @@ namespace YeelightForCortana
             await dialog.ShowAsync();
             return dialog.Result;
         }
+        /// <summary>
+        /// 保存小娜配置
+        /// </summary>
+        /// <returns></returns>
+        private async Task SaveCortanaConfig()
+        {
+            // 整合语音命令
+            var vcss = configStorage.GetVoiceCommandSets();
+            var sayList = new List<string>();
+
+            // 遍历语音命令集
+            foreach (var vcs in vcss)
+            {
+                // 遍历语音命令
+                foreach (var vc in vcs.VoiceCommands)
+                {
+                    if (!sayList.Contains(vc.Say))
+                        sayList.Add(vc.Say);
+                }
+            }
+
+            // 构建XML
+            XNamespace xnVoiceCommands = "http://schemas.microsoft.com/voicecommands/1.2";
+            XDocument xdoc = new XDocument();
+            XElement VoiceCommands = new XElement(xnVoiceCommands + "VoiceCommands");
+            XElement CommandSet = new XElement(xnVoiceCommands + "CommandSet");
+            XElement AppName = new XElement(xnVoiceCommands + "AppName");
+            XElement AppExample = new XElement(xnVoiceCommands + "Example");
+            XElement Command = new XElement(xnVoiceCommands + "Command");
+            XElement CommandExample = new XElement(xnVoiceCommands + "Example");
+            XElement ListenFor = new XElement(xnVoiceCommands + "ListenFor");
+            XElement Feedback = new XElement(xnVoiceCommands + "Feedback");
+            XElement VoiceCommandService = new XElement(xnVoiceCommands + "VoiceCommandService");
+            XElement PhraseList = new XElement(xnVoiceCommands + "PhraseList");
+
+            // xdoc
+            xdoc.Declaration = new XDeclaration("1.0", "utf-8", "");
+            xdoc.Add(VoiceCommands);
+
+            // VoiceCommands
+            VoiceCommands.SetAttributeValue("xmlns", xnVoiceCommands);
+            VoiceCommands.Add(CommandSet);
+
+            // CommandSet
+            CommandSet.SetAttributeValue(XNamespace.Xml + "lang", "zh-cn");
+            CommandSet.SetAttributeValue("Name", "YeelightVoiceCommandSet_zh-cn");
+            CommandSet.Add(AppName);
+            CommandSet.Add(AppExample);
+
+            // AppName
+            AppName.SetValue("你好小娜");
+
+            // AppExample
+            AppExample.SetValue("你好小娜");
+
+            // Command
+            Command.SetAttributeValue("Name", "Action");
+            Command.Add(CommandExample);
+
+            // Example
+            CommandExample.SetValue("你好小娜，帮我开下灯");
+
+            // ListenFor
+            ListenFor.SetValue("{Say}");
+            Command.Add(ListenFor);
+
+
+            // Feedback
+            Feedback.SetValue("已收到指令");
+            Command.Add(Feedback);
+
+            // VoiceCommandService
+            VoiceCommandService.SetAttributeValue("Target", "YeelightVoiceCommandService");
+            Command.Add(VoiceCommandService);
+
+            // 加入
+            CommandSet.Add(Command);
+
+            // PhraseList
+            PhraseList.SetAttributeValue("Label", "Say");
+
+            // PhraseListItem
+            foreach (var say in sayList)
+            {
+                XElement Item = new XElement(xnVoiceCommands + "Item");
+                Item.SetValue(say);
+                PhraseList.Add(Item);
+            }
+
+            // 加入
+            CommandSet.Add(PhraseList);
+
+            // 写到文件
+            var vcdFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(@"Voice.xml", CreationCollisionOption.ReplaceExisting);
+            using (var stream = await vcdFile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                // 创建写入流
+                Stream writeStream = stream.AsStreamForWrite();
+                // XML数据写入流
+                xdoc.Save(writeStream);
+                // 写入磁盘
+                await writeStream.FlushAsync();
+            }
+
+            // 安装语音命令文件
+            await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdFile);
+        }
 
         #region 左区-设备组列表相关
         // 设备组列表鼠标点击事件 弹出菜单
@@ -452,6 +566,12 @@ namespace YeelightForCortana
                 // 删除
                 configStorage.DeleteGroup(group.Id);
                 viewModel.DeviceGroupList.Remove(group);
+
+                // 删除与分组相关的语音命令集
+                configStorage.DeleteVoiceCommandSetByGroupId(group.Id);
+
+                // 刷新
+                RefreshVoiceCommandSetList();
 
                 // 保存
                 await configStorage.SaveAsync();
@@ -609,7 +729,9 @@ namespace YeelightForCortana
                 // 不存在
                 if (!configStorage.HasDevice(item.Id))
                 {
-                    viewModel.NewDeviceList.Add(new Device(item) { Name = item.Id, Online = true });
+                    var device = new Device(item) { Name = item.Id, Online = true };
+                    device.Power = device.RawDevice.Power == YeelightPower.on;
+                    viewModel.NewDeviceList.Add(device);
                 }
             }
 
@@ -831,6 +953,8 @@ namespace YeelightForCortana
                 await configStorage.SaveAsync();
                 // 刷新列表
                 RefreshVoiceCommandSetList();
+                // 保存小娜设置
+                await SaveCortanaConfig();
             }
         }
         #endregion
@@ -900,6 +1024,20 @@ namespace YeelightForCortana
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
         }
+        // 滑动条数据变更
+        private void SLD_Bright_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            if (viewModel == null) return;
+
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
+        }
+        // 颜色选择器颜色变更
+        private void CS_ColorSelector_ColorChange(object sender)
+        {
+            // 设置语音命令详情为已编辑状态 显示遮罩
+            viewModel.VoiceCommandSetDetailIsEdit = true;
+        }
         // 语音命令集详情遮罩点击
         private async void VoiceCommandSetDetailMaskGrid_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -914,13 +1052,19 @@ namespace YeelightForCortana
             }
         }
         // Say输入框按键抬起
-        private void TXT_Say_KeyUp(object sender, KeyRoutedEventArgs e)
+        private async void TXT_Say_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             // 只处理回车
             if (e.Key != Windows.System.VirtualKey.Enter) return;
+
             // 空的
             if (string.IsNullOrEmpty(TXT_Say.Text.Trim())) return;
-
+            // 不允许输入除中文/字母/数字以外的字符
+            if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\s]*$").Match(TXT_Say.Text).Success)
+            {
+                await ShowMessageDialog("不能输入除中文/字母/数字/空格以外的字");
+                return;
+            }
 
             // 创建新的语音命令
             var voiceCommand = new VoiceCommand() { Id = Guid.NewGuid().ToString(), Say = TXT_Say.Text };
@@ -935,12 +1079,19 @@ namespace YeelightForCortana
             viewModel.VoiceCommandSetDetailIsEdit = true;
         }
         // Answer输入框按键抬起
-        private void TXT_Answer_KeyUp(object sender, KeyRoutedEventArgs e)
+        private async void TXT_Answer_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             // 只处理回车
             if (e.Key != Windows.System.VirtualKey.Enter) return;
+
             // 空的
             if (string.IsNullOrEmpty(TXT_Answer.Text.Trim())) return;
+            // 不允许输入除中文/字母/数字以外的字符
+            if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\s]*$").Match(TXT_Answer.Text).Success)
+            {
+                await ShowMessageDialog("不能输入除中文/字母/数字/空格以外的字");
+                return;
+            }
 
             // 设置最后一条命令的回答
             var voiceCommand = viewModel.VoiceCommandSetDetail.VoiceCommandList.Last();
@@ -979,6 +1130,8 @@ namespace YeelightForCortana
                 await configStorage.SaveAsync();
                 // 刷新列表
                 RefreshVoiceCommandSetList();
+                // 保存小娜设置
+                await SaveCortanaConfig();
             }
         }
         // 保存语音命令集详情按钮按下
@@ -1066,12 +1219,9 @@ namespace YeelightForCortana
 
             // 刷新列表
             RefreshVoiceCommandSetList();
+            // 保存小娜设置
+            await SaveCortanaConfig();
         }
         #endregion
-
-        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-
-        }
     }
 }

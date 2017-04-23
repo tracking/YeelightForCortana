@@ -25,6 +25,10 @@ namespace YeelightForCortana.CustomControl
         private Hsv hsv;
         private Rgb rgb;
 
+        // 颜色改变事件
+        public delegate void ColorChangeEvent(object sender);
+        public event ColorChangeEvent ColorChange;
+
         public Hsv Hsv
         {
             get => hsv;
@@ -89,6 +93,8 @@ namespace YeelightForCortana.CustomControl
 
             // 计算颜色
             CalculateColor();
+            // 触发事件
+            ColorChange?.Invoke(sender);
         }
 
         // 计算颜色
