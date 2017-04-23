@@ -1406,7 +1406,7 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" BorderBrush="White"/>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" BorderBrush="White" Background="Transparent"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -2468,7 +2468,7 @@
                     <!--中区头部操作栏-->
                     <Grid Background="#FF141414">
                         <Button x:Name="BTN_AddVoiceCommand" VerticalAlignment="Stretch" d:LayoutOverrides="Height" Width="120" HorizontalAlignment="Left" UseLayoutRounding="True" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CenterAreaHeaderMenuButtonStyle}" Click="BTN_AddVoiceCommand_Click">
-                            <Grid>
+                            <Grid Background="Transparent">
                                 <TextBlock Text="+" VerticalAlignment="Center" FontSize="26.667" HorizontalAlignment="Left" Margin="18,-6,0,0"/>
                                 <TextBlock Text="添加口令" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="42,0,0,0"/>
                             </Grid>

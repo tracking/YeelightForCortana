@@ -173,10 +173,11 @@ namespace CortanaService
         {
             // 声明用户消息
             var userMessage = new VoiceCommandUserMessage();
-            userMessage.SpokenMessage = msg;
+            userMessage.DisplayMessage = userMessage.SpokenMessage = msg;
 
             // 声明语音回应
             VoiceCommandResponse response = VoiceCommandResponse.CreateResponse(userMessage);
+
             // 回应小娜
             await voiceServiceConnection.ReportSuccessAsync(response);
         }

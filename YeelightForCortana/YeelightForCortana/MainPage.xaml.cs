@@ -471,7 +471,7 @@ namespace YeelightForCortana
             CommandSet.Add(AppExample);
 
             // AppName
-            AppName.SetValue("你好小娜");
+            AppName.SetValue("我告诉你");
 
             // AppExample
             AppExample.SetValue("你好小娜");
