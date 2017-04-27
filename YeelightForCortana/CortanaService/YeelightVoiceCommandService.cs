@@ -29,6 +29,8 @@ namespace CortanaService
         {
             // 获取后台任务相关的详细信息
             var triggerDetails = (AppServiceTriggerDetails)taskInstance.TriggerDetails;
+            // 任务取消事件
+            taskInstance.Canceled += OnTaskCanceled;
 
             // 保存后台任务延迟实例
             this.serviceDeferral = taskInstance.GetDeferral();
@@ -161,6 +163,12 @@ namespace CortanaService
 
         // 语音命令完成事件
         private void OnVoiceCommandCompleted(VoiceCommandServiceConnection sender, VoiceCommandCompletedEventArgs args)
+        {
+            if (this.serviceDeferral != null)
+                this.serviceDeferral.Complete();
+        }
+        // 任务取消事件
+        private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
             if (this.serviceDeferral != null)
                 this.serviceDeferral.Complete();
