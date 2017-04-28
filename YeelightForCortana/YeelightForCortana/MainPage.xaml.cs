@@ -334,12 +334,14 @@ namespace YeelightForCortana
             }
             catch (Exception)
             {
+                // 异常表示离线
+                device.Online = false;
             }
         }
         /// <summary>
         /// 刷新所有设备状态
         /// </summary>
-        private async void RefreshDevicesStatus()
+        private async Task RefreshDevicesStatus()
         {
             if (deviceStatusRefreshing)
             {
@@ -693,8 +695,6 @@ namespace YeelightForCortana
             // 刷新设备状态
             RefreshDevicesStatus();
 
-            // 显示设备管理面板
-            viewModel.ShowDeviceGrid = true;
             // 显示新设备面板
             viewModel.ShowNewDeviceGrid = true;
 
@@ -736,6 +736,19 @@ namespace YeelightForCortana
         {
             // 显示设备管理面板
             viewModel.ShowDeviceGrid = true;
+        }
+        #endregion
+
+        #region 中区-设备管理相关
+        // 刷新设备状态按钮按下
+        private async void BTN_RefreshDeviceStatus_Click(object sender, RoutedEventArgs e)
+        {
+            SetLoading(true);
+
+            // 刷新设备状态
+            await RefreshDevicesStatus();
+
+            SetLoading(false);
         }
         // 新设备列表项设备名输入框按键抬起
         private void TXT_NewDeviceName_KeyUp(object sender, KeyRoutedEventArgs e)
