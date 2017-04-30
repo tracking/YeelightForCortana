@@ -480,7 +480,7 @@ namespace YeelightForCortana
             CommandSet.Add(AppExample);
 
             // AppName
-            AppName.SetValue("我告诉你");
+            AppName.SetValue("你好小娜");
 
             // AppExample
             AppExample.SetValue("你好小娜");
@@ -615,6 +615,8 @@ namespace YeelightForCortana
             SetSelectAllDeviceCheckBoxState();
             // 打开
             SV_DeviceGroupConfig.IsPaneOpen = true;
+            // 全选文本
+            TXT_AddDeviceGroupName.SelectAll();
         }
         // 分组编辑面板关闭中
         private void SV_DeviceGroupConfig_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
@@ -741,18 +743,21 @@ namespace YeelightForCortana
             // 显示设备管理面板
             viewModel.ShowDeviceGrid = true;
         }
+        // 更多按钮点击
+        private void BTN_MoreMenu_Click(object sender, RoutedEventArgs e)
+        {
+            SV_MoreFunction.IsPaneOpen = true;
+            // 这里如果不加这句会导致在点关于时切换到index 1时报异常AccessViolationException 目前没找到原因
+            PVT_MoreFunction.SelectedIndex = 1;
+            PVT_MoreFunction.SelectedIndex = 0;
+        }
         #endregion
 
         #region 中区-设备管理相关
         // 刷新设备状态按钮按下
-        private async void BTN_RefreshDeviceStatus_Click(object sender, RoutedEventArgs e)
+        private void BTN_RefreshDeviceStatus_Click(object sender, RoutedEventArgs e)
         {
-            SetLoading(true);
-
-            // 刷新设备状态
-            await RefreshDevicesStatus();
-
-            SetLoading(false);
+            BTN_SearchDevice_Click(null, null);
         }
         // 新设备列表项设备名输入框按键抬起
         private void TXT_NewDeviceName_KeyUp(object sender, KeyRoutedEventArgs e)
@@ -1248,6 +1253,34 @@ namespace YeelightForCortana
             RefreshVoiceCommandSetList();
             // 保存小娜设置
             await SaveCortanaConfig();
+        }
+        #endregion
+
+        #region 右区-更多功能相关
+        // 帮助按钮按下
+        private async void BTN_Help_Click(object sender, RoutedEventArgs e)
+        {
+            string url = @"http://mura.la/blog/2017/05/yeelight%E5%B0%8F%E5%A8%9C-%E4%BD%BF%E7%94%A8%E5%B8%AE%E5%8A%A9/";
+            var uri = new Uri(url);
+            await Windows.System.Launcher.LaunchUriAsync(uri);
+        }
+        // 反馈按钮按下
+        private async void BTN_Feedback_Click(object sender, RoutedEventArgs e)
+        {
+            string url = @"http://mura.la/blog/2017/05/yeelight%E5%B0%8F%E5%A8%9C-%E4%BD%BF%E7%94%A8%E5%8F%8D%E9%A6%88/";
+            var uri = new Uri(url);
+            await Windows.System.Launcher.LaunchUriAsync(uri);
+        }
+        // 关于按钮按下
+        private void BTN_About_Click(object sender, RoutedEventArgs e)
+        {
+            // 切换到关于面板
+            PVT_MoreFunction.SelectedIndex = 1;
+        }
+        // 关于面板返回按钮点击
+        private void BTN_AboutBack_Click(object sender, RoutedEventArgs e)
+        {
+            PVT_MoreFunction.SelectedIndex = 0;
         }
         #endregion
     }

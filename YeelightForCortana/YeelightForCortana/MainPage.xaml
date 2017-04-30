@@ -2102,20 +2102,10 @@
                             </VisualStateManager.VisualStateGroups>
                             <Rectangle x:Name="PressedBackground" Fill="Transparent" Control.IsTemplateFocusTarget="True"/>
                             <ContentPresenter x:Name="ContentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" Style="{StaticResource BodyContentPresenterStyle}" TextWrapping="NoWrap"/>
-                            <Grid x:Name="DeleteVoiceCommandButton" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Visibility="Collapsed" Background="Transparent" Tapped="DeleteVoiceCommandButton_Tapped">
-                                <Polygon Stroke="#CCFFFFFF" StrokeThickness="2">
-                                    <Polygon.Points>
-                                        <Foundation:Point>0,0</Foundation:Point>
-                                        <Foundation:Point>5,5</Foundation:Point>
-                                        <Foundation:Point>10,0</Foundation:Point>
-                                        <Foundation:Point>5,5</Foundation:Point>
-                                        <Foundation:Point>10,10</Foundation:Point>
-                                        <Foundation:Point>5,5</Foundation:Point>
-                                        <Foundation:Point>0,10</Foundation:Point>
-                                        <Foundation:Point>5,5</Foundation:Point>
-                                        <Foundation:Point>0,0</Foundation:Point>
-                                    </Polygon.Points>
-                                </Polygon>
+                            <Grid x:Name="DeleteVoiceCommandButton" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Background="Transparent" Tapped="DeleteVoiceCommandButton_Tapped" Visibility="Collapsed">
+                                <Viewbox Width="10" Height="10" >
+                                    <SymbolIcon Symbol="Clear" Foreground="#CCFFFFFF"/>
+                                </Viewbox>
                             </Grid>
                         </Grid>
                     </ControlTemplate>
@@ -2459,6 +2449,248 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!--右区更多内容Pivot样式-->
+        <Style x:Key="MoreFunctionPivotStyle" TargetType="Pivot">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="{ThemeResource PivotBackground}"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Pivot">
+                        <Grid x:Name="RootElement" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <Grid.Resources>
+                                <Style x:Key="BaseContentControlStyle" TargetType="ContentControl">
+                                    <Setter Property="FontFamily" Value="XamlAutoFontFamily"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                    <Setter Property="FontSize" Value="15"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ContentControl">
+                                                <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" OpticalMarginAlignment="TrimSideBearings" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                                <Style x:Key="TitleContentControlStyle" BasedOn="{StaticResource BaseContentControlStyle}" TargetType="ContentControl">
+                                    <Setter Property="FontFamily" Value="{ThemeResource PivotTitleFontFamily}"/>
+                                    <Setter Property="FontWeight" Value="{ThemeResource PivotTitleThemeFontWeight}"/>
+                                    <Setter Property="FontSize" Value="{ThemeResource PivotTitleFontSize}"/>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Orientation">
+                                    <VisualState x:Name="Portrait">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPortraitThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Landscape">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotLandscapeThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="NavigationButtonsVisibility">
+                                    <VisualState x:Name="NavigationButtonsHidden"/>
+                                    <VisualState x:Name="NavigationButtonsVisible">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PreviousButtonVisible">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="PreviousButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="NextButtonVisible">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="1"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IsEnabled" Storyboard.TargetName="NextButton">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="True"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="HeaderStates">
+                                    <VisualState x:Name="HeaderDynamic"/>
+                                    <VisualState x:Name="HeaderStatic">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="Header">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="StaticHeader">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentControl x:Name="TitleContentControl" ContentTemplate="{TemplateBinding TitleTemplate}" Content="{TemplateBinding Title}" IsTabStop="False" Margin="{StaticResource PivotPortraitThemePadding}" Style="{StaticResource TitleContentControlStyle}" Visibility="Collapsed"/>
+                            <Grid Grid.Row="1">
+                                <Grid.Resources>
+                                    <ControlTemplate x:Key="NextTemplate" TargetType="Button">
+                                        <Border x:Name="Root" BorderBrush="{ThemeResource PivotNextButtonBorderBrush}" BorderThickness="{ThemeResource PivotNavButtonBorderThemeThickness}" Background="{ThemeResource PivotNextButtonBackground}">
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualState x:Name="Normal"/>
+                                                    <VisualState x:Name="PointerOver">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBackgroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBorderBrushPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonForegroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBackgroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonBorderBrushPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotNextButtonForegroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <FontIcon x:Name="Arrow" Foreground="{ThemeResource PivotNextButtonForeground}" FontSize="12" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE0E3;" HorizontalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                    <ControlTemplate x:Key="PreviousTemplate" TargetType="Button">
+                                        <Border x:Name="Root" BorderBrush="{ThemeResource PivotPreviousButtonBorderBrush}" BorderThickness="{ThemeResource PivotNavButtonBorderThemeThickness}" Background="{ThemeResource PivotPreviousButtonBackground}">
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualState x:Name="Normal"/>
+                                                    <VisualState x:Name="PointerOver">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBackgroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBorderBrushPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonForegroundPointerOver}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Pressed">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBackgroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Root">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonBorderBrushPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="Arrow">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPreviousButtonForegroundPressed}"/>
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                            <FontIcon x:Name="Arrow" Foreground="{ThemeResource PivotPreviousButtonForeground}" FontSize="12" FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE0E2;" HorizontalAlignment="Center" MirroredWhenRightToLeft="True" UseLayoutRounding="False" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Grid.Resources>
+                                <ScrollViewer x:Name="ScrollViewer" BringIntoViewOnFocusChange="False" HorizontalSnapPointsAlignment="Center" HorizontalSnapPointsType="MandatorySingle" HorizontalScrollBarVisibility="Hidden" Margin="{TemplateBinding Padding}" Template="{StaticResource ScrollViewerScrollBarlessTemplate}" VerticalSnapPointsType="None" VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled" VerticalContentAlignment="Stretch" ZoomMode="Disabled">
+                                    <PivotPanel x:Name="Panel" VerticalAlignment="Stretch">
+                                        <Grid x:Name="PivotLayoutElement">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.RenderTransform>
+                                                <CompositeTransform x:Name="PivotLayoutElementTranslateTransform"/>
+                                            </Grid.RenderTransform>
+                                            <ContentPresenter x:Name="LeftHeaderPresenter" ContentTemplate="{TemplateBinding LeftHeaderTemplate}" Content="{TemplateBinding LeftHeader}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                            <ContentControl x:Name="HeaderClipper" Grid.Column="1" HorizontalContentAlignment="Stretch" UseSystemFocusVisuals="True" Visibility="Collapsed">
+                                                <ContentControl.Clip>
+                                                    <RectangleGeometry x:Name="HeaderClipperGeometry"/>
+                                                </ContentControl.Clip>
+                                                <Grid Background="{ThemeResource PivotHeaderBackground}">
+                                                    <Grid.RenderTransform>
+                                                        <CompositeTransform x:Name="HeaderOffsetTranslateTransform"/>
+                                                    </Grid.RenderTransform>
+                                                    <PivotHeaderPanel x:Name="StaticHeader" Visibility="Collapsed">
+                                                        <PivotHeaderPanel.RenderTransform>
+                                                            <CompositeTransform x:Name="StaticHeaderTranslateTransform"/>
+                                                        </PivotHeaderPanel.RenderTransform>
+                                                    </PivotHeaderPanel>
+                                                    <PivotHeaderPanel x:Name="Header">
+                                                        <PivotHeaderPanel.RenderTransform>
+                                                            <CompositeTransform x:Name="HeaderTranslateTransform"/>
+                                                        </PivotHeaderPanel.RenderTransform>
+                                                    </PivotHeaderPanel>
+                                                </Grid>
+                                            </ContentControl>
+                                            <Button x:Name="PreviousButton" Background="Transparent" Grid.Column="1" HorizontalAlignment="Left" Height="36" IsTabStop="False" IsEnabled="False" Margin="{ThemeResource PivotNavButtonMargin}" Opacity="0" Template="{StaticResource PreviousTemplate}" UseSystemFocusVisuals="False" VerticalAlignment="Top" Width="20"/>
+                                            <Button x:Name="NextButton" Background="Transparent" Grid.Column="1" HorizontalAlignment="Right" Height="36" IsTabStop="False" IsEnabled="False" Margin="{ThemeResource PivotNavButtonMargin}" Opacity="0" Template="{StaticResource NextTemplate}" UseSystemFocusVisuals="False" VerticalAlignment="Top" Width="20"/>
+                                            <ContentPresenter x:Name="RightHeaderPresenter" ContentTemplate="{TemplateBinding RightHeaderTemplate}" Content="{TemplateBinding RightHeader}" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                            <ItemsPresenter x:Name="PivotItemPresenter" Grid.ColumnSpan="3" Grid.RowSpan="2">
+                                                <ItemsPresenter.RenderTransform>
+                                                    <TransformGroup>
+                                                        <TranslateTransform x:Name="ItemsPresenterTranslateTransform"/>
+                                                        <CompositeTransform x:Name="ItemsPresenterCompositeTransform"/>
+                                                    </TransformGroup>
+                                                </ItemsPresenter.RenderTransform>
+                                            </ItemsPresenter>
+                                        </Grid>
+                                    </PivotPanel>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <!--左区设备分组列表数据模板-->
         <DataTemplate x:Key="DeviceGroupListTemplate">
@@ -2615,12 +2847,12 @@
                                 </InteractivityCore:DataTriggerBehavior>
                             </Interactivity:Interaction.Behaviors>
                         </Button>
-                        <Button x:Name="BTN_MoreMenu" Content="更多" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}"/>
+                        <Button x:Name="BTN_MoreMenu" Content="更多" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_MoreMenu_Click"/>
                     </StackPanel>
                 </Grid>
             </Grid>
             <!--中区-->
-            <Grid Grid.Column="2" Grid.Row="1">
+            <Grid x:Name="Center" Grid.Column="2" Grid.Row="1">
                 <!--语音命令集-->
                 <Grid x:Name="VoiceCommandSetGrid" Visibility="{Binding ShowVoiceCommandSetGrid, Converter={StaticResource BooleanConvertToVisibility}}">
                     <Grid.RowDefinitions>
@@ -2714,80 +2946,117 @@
                 </SplitView>
             </Grid>
             <!--右区-->
-            <Grid x:Name="VoiceCommandSetDetailGrid" Grid.Row="1" Grid.Column="3" Visibility="{Binding ShowVoiceCommandSetDetailGrid, Converter={StaticResource BooleanConvertToVisibility}}">
-                <Pivot x:Name="PVT_VoiceCommandSetDetail">
-                    <Pivot.Resources>
-                        <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource CommonPivotHeaderItemStyle}"/>
-                    </Pivot.Resources>
-                    <Pivot.ItemContainerStyle>
-                        <StaticResource ResourceKey="VoiceCommandSetDetailPivotItemStyle"/>
-                    </Pivot.ItemContainerStyle>
-                    <PivotItem Header="基本设置">
+            <Grid Grid.Row="1" Grid.Column="3">
+                <!--语音命令集详情-->
+                <Grid x:Name="VoiceCommandSetDetailGrid" Visibility="{Binding ShowVoiceCommandSetDetailGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                    <Pivot x:Name="PVT_VoiceCommandSetDetail">
+                        <Pivot.Resources>
+                            <Style TargetType="PivotHeaderItem" BasedOn="{StaticResource CommonPivotHeaderItemStyle}"/>
+                        </Pivot.Resources>
+                        <Pivot.ItemContainerStyle>
+                            <StaticResource ResourceKey="VoiceCommandSetDetailPivotItemStyle"/>
+                        </Pivot.ItemContainerStyle>
+                        <PivotItem Header="基本设置">
+                            <Grid>
+                                <ComboBox x:Name="CBB_SelectTarget" HorizontalAlignment="Left" Margin="20,32,0,0" VerticalAlignment="Top" Width="200" Header="选择对象" Tapped="CBB_SelectTarget_Tapped" >
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout Placement="Bottom">
+                                            <MenuFlyout.MenuFlyoutPresenterStyle>
+                                                <Style TargetType="MenuFlyoutPresenter">
+                                                    <Setter Property="MinWidth" Value="200" />
+                                                </Style>
+                                            </MenuFlyout.MenuFlyoutPresenterStyle>
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                </ComboBox>
+                                <ComboBox x:Name="CBB_SelectAction" HorizontalAlignment="Left" Margin="20,124,0,0" VerticalAlignment="Top" Width="200" Header="选择操作" ItemsSource="{Binding CommandTypeList}" ItemTemplate="{Binding Source={StaticResource CommandTypeTemplate}}" SelectionChanged="CBB_SelectAction_SelectionChanged"/>
+                                <Grid x:Name="Grid_ActionConfig" VerticalAlignment="Top" Margin="20,216,20,0">
+                                    <Grid x:Name="Grid_Action_Bright" VerticalAlignment="Top" Visibility="{Binding ShowSetBrightGrid, Converter={StaticResource BooleanConvertToVisibility}}" d:IsHidden="True">
+                                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="移动滑块调节亮度值" VerticalAlignment="Top"/>
+                                        <Slider x:Name="SLD_Bright" VerticalAlignment="Top" Margin="0,32,0,0" LargeChange="1" Minimum="1" Value="0" ValueChanged="SLD_Bright_ValueChanged"/>
+                                    </Grid>
+                                    <Grid x:Name="Grid_Action_SwitchColor" VerticalAlignment="Top" Visibility="{Binding ShowSwitchColorGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="选取颜色" VerticalAlignment="Top" Margin="0,0,0,-20"/>
+                                        <CustomControl:ColorSelector x:Name="CS_ColorSelector" HorizontalAlignment="Left" Height="200" Margin="0,32,0,0" VerticalAlignment="Top" Width="200" ColorChange="CS_ColorSelector_ColorChange"/>
+                                    </Grid>
+                                </Grid>
+                                <Grid HorizontalAlignment="Left" Height="28" Margin="22,62,0,0" VerticalAlignment="Top" Width="168" Background="Transparent" Tapped="Grid_SelectTarget_Tapped"/>
+                            </Grid>
+                        </PivotItem>
+                        <PivotItem Header="语音指令">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="100"/>
+                                </Grid.RowDefinitions>
+                                <ScrollViewer HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CommonScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+                                    <ListBox x:Name="LB_VoiceCommandList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" VerticalAlignment="Top" Background="{x:Null}" ItemsSource="{Binding VoiceCommandSetDetail.VoiceCommandList}" ItemContainerStyle="{StaticResource VoiceCommandListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandListItemDataTemplate}" Padding="2,0,0,0"/>
+                                </ScrollViewer>
+                                <Grid x:Name="Say" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailSayGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                                    <TextBox x:Name="TXT_Say" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入语音命令。 例：天黑了，帮我开一下床头灯" Style="{StaticResource VoiceCommandTextBoxStyle}" KeyUp="TXT_Say_KeyUp"/>
+                                    <Grid x:Name="UserIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Width="38" Height="28" Margin="10,10,0,0">
+                                        <Ellipse Fill="#FF666666" HorizontalAlignment="Left" Height="28" Stroke="#FF666666" StrokeThickness="0" VerticalAlignment="Top" Width="28" Margin="0"/>
+                                        <PathIcon Data="M16.5,14.9c1.5-0.9,2.5-2.5,2.5-4.3c0-2.7-2.2-5-5-5    c-2.7,0-5,2.2-5,5c0,1.8,1,3.4,2.5,4.3h-0.1c-3.1,0.9-5.5,3.4-5.8,6.7c0,0,0,0.7,0.5,0.7c0.7,0,0.7-0.7,0.7-0.7    c0.4-3.6,3.4-5.9,7.1-5.9c3.7,0,6.7,2.3,7.2,5.9c0,0,0,0.7,0.6,0.7c0.6,0,0.6-0.7,0.6-0.7C22,18.3,19.6,15.9,16.5,14.9L16.5,14.9z     M10.3,10.6c0-2.1,1.7-3.8,3.8-3.8s3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8C12,14.4,10.3,12.7,10.3,10.6L10.3,10.6z" Foreground="White"/>
+                                        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text=":" VerticalAlignment="Center" Foreground="Black"/>
+                                    </Grid>
+                                    <Grid Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Background="Transparent" Tapped="Grid_SayEnter_Tapped">
+                                        <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Stroke="#FF666666" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
+                                    </Grid>
+                                </Grid>
+                                <Grid x:Name="Answer" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailAnswerGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                                    <TextBox x:Name="TXT_Answer" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入小娜的回应。 例：好的，我知道了" Style="{StaticResource VoiceCommandTextBoxStyle}" KeyUp="TXT_Answer_KeyUp"/>
+                                    <Grid x:Name="CortanaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Width="38" Height="28" Margin="10,10,0,0">
+                                        <PathIcon Data="M14,0C6.3,0,0,6.3,0,14c0,7.7,6.3,14,14,14s14-6.3,14-14C28,6.3,21.7,0,14,0z M14,23.8  c-5.4,0-9.8-4.4-9.8-9.8S8.6,4.2,14,4.2s9.8,4.4,9.8,9.8S19.4,23.8,14,23.8z" Foreground="#7F2EA4DD"/>
+                                        <PathIcon Data="M14,8.2c3.2,0,5.8,2.6,5.8,5.8s-2.6,5.8-5.8,5.8S8.2,17.2,8.2,14S10.8,8.2,14,8.2 M14,4.2  c-5.4,0-9.8,4.4-9.8,9.8s4.4,9.8,9.8,9.8s9.8-4.4,9.8-9.8S19.4,4.2,14,4.2L14,4.2z" Foreground="#FF2EA4DD"/>
+                                        <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text=":" VerticalAlignment="Center" Foreground="Black"/>
+                                    </Grid>
+                                    <Grid Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Background="Transparent" Tapped="Grid_AnswerEnter_Tapped">
+                                        <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Stroke="#FF666666" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </PivotItem>
+                    </Pivot>
+                    <AppBarButton x:Name="ABB_DeleteVoiceCommandSet" HorizontalAlignment="Right" Icon="Delete" Height="48" Width="48" Margin="0,0,80,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}" Tapped="ABB_DeleteVoiceCommandSet_Tapped"/>
+                    <AppBarButton x:Name="ABB_SaveVoiceCommandSet" HorizontalAlignment="Right" Icon="Save" Width="48" Height="48" Margin="0,0,10,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}" Tapped="ABB_SaveVoiceCommandSet_Tapped"/>
+                </Grid>
+                <!--更多功能-->
+                <SplitView x:Name="SV_MoreFunction" Grid.Column="3" Grid.Row="1" d:LayoutOverrides="Width, LeftPosition, RightPosition" PanePlacement="Right" OpenPaneLength="200">
+                    <SplitView.Pane>
                         <Grid>
-                            <ComboBox x:Name="CBB_SelectTarget" HorizontalAlignment="Left" Margin="20,32,0,0" VerticalAlignment="Top" Width="200" Header="选择对象" Tapped="CBB_SelectTarget_Tapped" >
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout Placement="Bottom">
-                                        <MenuFlyout.MenuFlyoutPresenterStyle>
-                                            <Style TargetType="MenuFlyoutPresenter">
-                                                <Setter Property="MinWidth" Value="200" />
-                                            </Style>
-                                        </MenuFlyout.MenuFlyoutPresenterStyle>
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
-                            </ComboBox>
-                            <ComboBox x:Name="CBB_SelectAction" HorizontalAlignment="Left" Margin="20,124,0,0" VerticalAlignment="Top" Width="200" Header="选择操作" ItemsSource="{Binding CommandTypeList}" ItemTemplate="{Binding Source={StaticResource CommandTypeTemplate}}" SelectionChanged="CBB_SelectAction_SelectionChanged"/>
-                            <Grid x:Name="Grid_ActionConfig" VerticalAlignment="Top" Margin="20,216,20,0">
-                                <Grid x:Name="Grid_Action_Bright" VerticalAlignment="Top" Visibility="{Binding ShowSetBrightGrid, Converter={StaticResource BooleanConvertToVisibility}}" d:IsHidden="True">
-                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="移动滑块调节亮度值" VerticalAlignment="Top"/>
-                                    <Slider x:Name="SLD_Bright" VerticalAlignment="Top" Margin="0,32,0,0" LargeChange="1" Minimum="1" Value="0" ValueChanged="SLD_Bright_ValueChanged"/>
-                                </Grid>
-                                <Grid x:Name="Grid_Action_SwitchColor" VerticalAlignment="Top" Visibility="{Binding ShowSwitchColorGrid, Converter={StaticResource BooleanConvertToVisibility}}">
-                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="选取颜色" VerticalAlignment="Top" Margin="0,0,0,-20"/>
-                                    <CustomControl:ColorSelector x:Name="CS_ColorSelector" HorizontalAlignment="Left" Height="200" Margin="0,32,0,0" VerticalAlignment="Top" Width="200" ColorChange="CS_ColorSelector_ColorChange"/>
-                                </Grid>
-                            </Grid>
-                            <Grid HorizontalAlignment="Left" Height="28" Margin="22,62,0,0" VerticalAlignment="Top" Width="168" Background="Transparent" Tapped="Grid_SelectTarget_Tapped"/>
+                            <Pivot x:Name="PVT_MoreFunction" Style="{StaticResource MoreFunctionPivotStyle}">
+                                <PivotItem Header="更多" Margin="0">
+                                    <Grid>
+                                        <StackPanel VerticalAlignment="Top" Margin="0,10,0,0">
+                                            <Button x:Name="BTN_Help" Content="帮助" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="36" BorderBrush="{x:Null}" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,4,8,4" Background="Transparent" Click="BTN_Help_Click"/>
+                                            <Button x:Name="BTN_Feedback" Content="反馈" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="36" BorderBrush="{x:Null}" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,4,8,4" Background="Transparent" Click="BTN_Feedback_Click"/>
+                                            <Button x:Name="BTN_About" Content="关于" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="36" BorderBrush="{x:Null}" BorderThickness="0" HorizontalContentAlignment="Left" Padding="20,4,8,4" Background="Transparent" Click="BTN_About_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </PivotItem>
+                                <PivotItem Header="关于" Margin="0">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="48"/>
+                                            <RowDefinition Height="681*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid>
+                                            <Button x:Name="BTN_AboutBack" VerticalAlignment="Stretch" Width="32" Height="32" Style="{StaticResource CommonIconButtonStyle}" Background="Transparent" Click="BTN_AboutBack_Click" Margin="8,0,0,0">
+                                                <Path Data="M5.5,12 C5.4,12 5.2,11.9 5.1,11.8 L0.2,6.4 C0,6.2 0,5.8 0.2,5.6 L5.1,0.2 C5.3,0 5.6,0 5.9,0.2" Stroke="#CCFFFFFF"/>
+                                            </Button>
+                                            <TextBlock TextWrapping="Wrap" Text="关于" d:LayoutOverrides="Width" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="45,0,0,0" FontSize="13" Foreground="#CCFFFFFF"/>
+                                        </Grid>
+                                        <TextBlock Text="大家好，我们是两个风（chou）华（bu）正（yao）茂（lian）的追风少年，作为Yeelight和Cortana的用户，由于现在AI（人工智能）还未至成熟，以及各个智能产品没有通用的API（应用程序接口），所以真正完整的智能家居使用及普及还需一段时间。因此我们就先做了这款应用来尝一尝鲜，提前感受下智能家居生活场景。这是我们用业余时间所开发的第一款UWP应用，不足之处希望大家多多反馈，同时也希望能为UWP生态贡献一份力！" Grid.Row="1" Padding="10" FontSize="13" LineHeight="26.667" TextWrapping="WrapWholeWords" Foreground="#CCFFFFFF"/>
+                                    </Grid>
+                                </PivotItem>
+                            </Pivot>
                         </Grid>
-                    </PivotItem>
-                    <PivotItem Header="语音指令">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="100"/>
-                            </Grid.RowDefinitions>
-                            <ScrollViewer HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CommonScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
-                                <ListBox x:Name="LB_VoiceCommandList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" VerticalAlignment="Top" Background="{x:Null}" ItemsSource="{Binding VoiceCommandSetDetail.VoiceCommandList}" ItemContainerStyle="{StaticResource VoiceCommandListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandListItemDataTemplate}" Padding="2,0,0,0"/>
-                            </ScrollViewer>
-                            <Grid x:Name="Say" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailSayGrid, Converter={StaticResource BooleanConvertToVisibility}}">
-                                <TextBox x:Name="TXT_Say" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入语音命令。 例：天黑了，帮我开一下床头灯" Style="{StaticResource VoiceCommandTextBoxStyle}" KeyUp="TXT_Say_KeyUp"/>
-                                <Grid x:Name="UserIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Width="38" Height="28" Margin="10,10,0,0">
-                                    <Ellipse Fill="#FF666666" HorizontalAlignment="Left" Height="28" Stroke="#FF666666" StrokeThickness="0" VerticalAlignment="Top" Width="28" Margin="0"/>
-                                    <PathIcon Data="M16.5,14.9c1.5-0.9,2.5-2.5,2.5-4.3c0-2.7-2.2-5-5-5    c-2.7,0-5,2.2-5,5c0,1.8,1,3.4,2.5,4.3h-0.1c-3.1,0.9-5.5,3.4-5.8,6.7c0,0,0,0.7,0.5,0.7c0.7,0,0.7-0.7,0.7-0.7    c0.4-3.6,3.4-5.9,7.1-5.9c3.7,0,6.7,2.3,7.2,5.9c0,0,0,0.7,0.6,0.7c0.6,0,0.6-0.7,0.6-0.7C22,18.3,19.6,15.9,16.5,14.9L16.5,14.9z     M10.3,10.6c0-2.1,1.7-3.8,3.8-3.8s3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8C12,14.4,10.3,12.7,10.3,10.6L10.3,10.6z" Foreground="White"/>
-                                    <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text=":" VerticalAlignment="Center" Foreground="Black"/>
-                                </Grid>
-                                <Grid Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Background="Transparent" Tapped="Grid_SayEnter_Tapped">
-                                    <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Stroke="#FF666666" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
-                                </Grid>
-                            </Grid>
-                            <Grid x:Name="Answer" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailAnswerGrid, Converter={StaticResource BooleanConvertToVisibility}}">
-                                <TextBox x:Name="TXT_Answer" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入小娜的回应。 例：好的，我知道了" Style="{StaticResource VoiceCommandTextBoxStyle}" KeyUp="TXT_Answer_KeyUp"/>
-                                <Grid x:Name="CortanaIcon" HorizontalAlignment="Left" VerticalAlignment="Top" Width="38" Height="28" Margin="10,10,0,0">
-                                    <PathIcon Data="M14,0C6.3,0,0,6.3,0,14c0,7.7,6.3,14,14,14s14-6.3,14-14C28,6.3,21.7,0,14,0z M14,23.8  c-5.4,0-9.8-4.4-9.8-9.8S8.6,4.2,14,4.2s9.8,4.4,9.8,9.8S19.4,23.8,14,23.8z" Foreground="#7F2EA4DD"/>
-                                    <PathIcon Data="M14,8.2c3.2,0,5.8,2.6,5.8,5.8s-2.6,5.8-5.8,5.8S8.2,17.2,8.2,14S10.8,8.2,14,8.2 M14,4.2  c-5.4,0-9.8,4.4-9.8,9.8s4.4,9.8,9.8,9.8s9.8-4.4,9.8-9.8S19.4,4.2,14,4.2L14,4.2z" Foreground="#FF2EA4DD"/>
-                                    <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text=":" VerticalAlignment="Center" Foreground="Black"/>
-                                </Grid>
-                                <Grid Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Background="Transparent" Tapped="Grid_AnswerEnter_Tapped">
-                                    <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Stroke="#FF666666" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </PivotItem>
-                </Pivot>
-                <AppBarButton x:Name="ABB_DeleteVoiceCommandSet" HorizontalAlignment="Right" Icon="Delete" Height="48" Width="48" Margin="0,0,80,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}" Tapped="ABB_DeleteVoiceCommandSet_Tapped"/>
-                <AppBarButton x:Name="ABB_SaveVoiceCommandSet" HorizontalAlignment="Right" Icon="Save" Width="48" Height="48" Margin="0,0,10,0" Style="{StaticResource VoiceCommandAppBarButtonStyle}" Tapped="ABB_SaveVoiceCommandSet_Tapped"/>
+                    </SplitView.Pane>
+                </SplitView>
             </Grid>
             <!--语音命令详情遮罩层-->
             <Grid x:Name="VoiceCommandSetDetailMaskGrid" Grid.Row="1" Grid.ColumnSpan="3" Background="Transparent" Visibility="{Binding VoiceCommandSetDetailIsEdit, Converter={StaticResource BooleanConvertToVisibility}}" Tapped="VoiceCommandSetDetailMaskGrid_Tapped" />
+
         </Grid>
     </Grid>
 </Page>
