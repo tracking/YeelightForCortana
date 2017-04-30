@@ -16,8 +16,6 @@ namespace YeelightForCortana.ViewModel
         private bool showVoiceCommandSetGrid;
         // 是否显示设备面板
         private bool showDeviceGrid;
-        // 是否显示新设备面板
-        private bool showNewDeviceGrid;
         // 语音命令集详情
         private VoiceCommandSet voiceCommandSetDetail;
         // 是否显示设置亮度面板
@@ -128,11 +126,9 @@ namespace YeelightForCortana.ViewModel
         // 是否显示新设备面板
         public bool ShowNewDeviceGrid
         {
-            get { return this.showNewDeviceGrid; }
-            set
+            get
             {
-                this.showNewDeviceGrid = value;
-                this.EmitPropertyChanged("ShowNewDeviceGrid");
+                return this.NewDeviceList.Count != 0;
             }
         }
         // 是否显示语音命令集详情面板
@@ -232,10 +228,19 @@ namespace YeelightForCortana.ViewModel
             this.CommandTypeList = new CommandTypeList();
             this.VoiceCommandSetList = new VoiceCommandSetList();
 
+            // 列表变更事件
+            this.NewDeviceList.CollectionChanged += NewDeviceList_CollectionChanged;
+
             // 默认不选中
             this.DeviceGroupListSelectedIndex = null;
             // 默认选择第一个
             this.CommandTypeListSelectedIndex = 0;
+        }
+
+        // 新设备列表项变更
+        private void NewDeviceList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            EmitPropertyChanged("ShowNewDeviceGrid");
         }
     }
 }

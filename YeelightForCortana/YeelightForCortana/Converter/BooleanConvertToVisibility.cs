@@ -13,10 +13,21 @@ namespace YeelightForCortana.Converter
     /// </summary>
     public class BooleanConvertToVisibility : IValueConverter
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter">是否反转</param>
+        /// <param name="language"></param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             try
             {
+                if (parameter != null && parameter.ToString() == "Reversal")
+                    return (bool)value ? Visibility.Collapsed : Visibility.Visible;
+
                 return (bool)value ? Visibility.Visible : Visibility.Collapsed;
             }
             catch (Exception)
@@ -29,6 +40,9 @@ namespace YeelightForCortana.Converter
         {
             try
             {
+                if (parameter != null && parameter.ToString() == "Reversal")
+                    return (Visibility)value == Visibility.Visible ? false : true;
+
                 return (Visibility)value == Visibility.Visible ? true : false;
             }
             catch (Exception)

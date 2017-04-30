@@ -22,9 +22,9 @@
         <ViewModel:Device Name="大厅灯" Power="False" Online="False"/>
     </ViewModel:MainPageViewModel.DeviceList>
     <ViewModel:MainPageViewModel.NewDeviceList>
-        <ViewModel:Device Name="ADASDAASDASDASA" Power="True" Online="True"/>
-        <ViewModel:Device Name="ADASDAASDASDASB" Power="False" Online="True"/>
-        <ViewModel:Device Name="ADASDAASDASDASC" Power="False" Online="False"/>
+        <ViewModel:Device Name="床头灯" Power="True" Online="True"/>
+        <ViewModel:Device Name="床头灯" Power="True" Online="True"/>
+        <ViewModel:Device Name="床头灯" Power="True" Online="True"/>
     </ViewModel:MainPageViewModel.NewDeviceList>
     <ViewModel:MainPageViewModel.DeviceCheckList>
         <ViewModel:DeviceCheck IsChecked="True">

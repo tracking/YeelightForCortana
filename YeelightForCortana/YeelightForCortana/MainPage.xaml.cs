@@ -1,6 +1,7 @@
 ﻿using ConfigStorage;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -187,6 +188,10 @@ namespace YeelightForCortana
 
                     // 分组不相同 并且 设备不在该组内 并且 不是全部
                     if (group.Id != "0" && item.GroupId != group.Id && group.DeviceList.Where(i => i.Id == item.DeviceId).Count() == 0)
+                        return false;
+
+                    // 全部分组 但是 不存在该设备
+                    if (group.Id == "0" && item.DeviceId != null && viewModel.DeviceList.Where(i => i.Id == item.DeviceId).Count() == 0)
                         return false;
 
                     return true;
@@ -553,7 +558,7 @@ namespace YeelightForCortana
         private async void MFI_DeviceGroupDelete_Click(object sender, RoutedEventArgs e)
         {
             var group = (DeviceGroup)((FrameworkElement)sender).DataContext;
-            var isConfirm = await ShowConfirmDialog(string.Format("是否删除分组“{0}”", group.Name));
+            var isConfirm = await ShowConfirmDialog(string.Format("如果您删除了这个分组\n对应的语音命令也会被一起删除\n是否删除分组“{0}”", group.Name));
 
             if (isConfirm)
             {
@@ -697,9 +702,6 @@ namespace YeelightForCortana
             // 刷新设备状态
             RefreshDevicesStatus();
 
-            // 显示新设备面板
-            viewModel.ShowNewDeviceGrid = true;
-
             // 正在搜索中
             if (deviceSearching)
             {
@@ -819,6 +821,9 @@ namespace YeelightForCortana
                 // 删除
                 configStorage.DeleteDevice(device.Id);
                 viewModel.DeviceList.Remove(device);
+
+                // 刷新
+                RefreshVoiceCommandSetList();
 
                 // 保存
                 await configStorage.SaveAsync();
@@ -969,6 +974,11 @@ namespace YeelightForCortana
         #endregion
 
         #region 右区-语音命令集详情管理相关
+        // 选择对象选择框上层Grid点击
+        private void Grid_SelectTarget_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            CBB_SelectTarget_Tapped(CBB_SelectTarget, null);
+        }
         // 选择对象选择框点击
         private void CBB_SelectTarget_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -1061,11 +1071,22 @@ namespace YeelightForCortana
             }
         }
         // Say输入框按键抬起
-        private async void TXT_Say_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void TXT_Say_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             // 只处理回车
             if (e.Key != Windows.System.VirtualKey.Enter) return;
-
+            Grid_SayEnter_Tapped(null, null);
+        }
+        // Answer输入框按键抬起
+        private void TXT_Answer_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            // 只处理回车
+            if (e.Key != Windows.System.VirtualKey.Enter) return;
+            Grid_AnswerEnter_Tapped(null, null);
+        }
+        // Say输入框确定按钮按下
+        private async void Grid_SayEnter_Tapped(object sender, TappedRoutedEventArgs e)
+        {
             // 空的
             if (string.IsNullOrEmpty(TXT_Say.Text.Trim())) return;
             // 不允许输入除中文/字母/数字以外的字符
@@ -1087,12 +1108,9 @@ namespace YeelightForCortana
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
         }
-        // Answer输入框按键抬起
-        private async void TXT_Answer_KeyUp(object sender, KeyRoutedEventArgs e)
+        // Answer输入框确定按钮按下
+        private async void Grid_AnswerEnter_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            // 只处理回车
-            if (e.Key != Windows.System.VirtualKey.Enter) return;
-
             // 空的
             if (string.IsNullOrEmpty(TXT_Answer.Text.Trim())) return;
             // 不允许输入除中文/字母/数字以外的字符

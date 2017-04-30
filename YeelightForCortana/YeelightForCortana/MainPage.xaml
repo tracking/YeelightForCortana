@@ -14,8 +14,10 @@
 
     <!--资源-->
     <Page.Resources>
-        <!--修改系统默认配色-->
+        <!--颜色资源-->
         <Color x:Key="MainColor">#FFF9ED00</Color>
+        <SolidColorBrush x:Key="MainColorBrush" Color="{StaticResource MainColor}"/>
+        <!--修改系统默认配色-->
         <!--开关ON的填充色-->
         <SolidColorBrush x:Key="ToggleSwitchFillOn" Color="{StaticResource MainColor}"/>
         <SolidColorBrush x:Key="ToggleSwitchFillOnPointerOver" Color="{StaticResource MainColor}"/>
@@ -104,7 +106,7 @@
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -118,7 +120,7 @@
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -132,7 +134,7 @@
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
@@ -364,7 +366,7 @@
                                     <VisualState x:Name="Selected">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -384,7 +386,7 @@
                                     <VisualState x:Name="SelectedPointerOver">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -976,7 +978,7 @@
                                     <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
                                 </ContentPresenter.RenderTransform>
                             </ContentPresenter>
-                            <Grid x:Name="BottomSelectedTag" Height="2" Margin="20,0,15,0" VerticalAlignment="Bottom" Background="#FFF9ED00" Visibility="Collapsed"/>
+                            <Grid x:Name="BottomSelectedTag" Height="2" Margin="20,0,15,0" VerticalAlignment="Bottom" Background="{StaticResource MainColorBrush}" Visibility="Collapsed"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -1202,7 +1204,7 @@
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -1212,7 +1214,7 @@
                                     <VisualState x:Name="Selected">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -1222,7 +1224,7 @@
                                     <VisualState x:Name="SelectedUnfocused">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -1232,7 +1234,7 @@
                                     <VisualState x:Name="SelectedPointerOver">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -1242,7 +1244,7 @@
                                     <VisualState x:Name="SelectedPressed">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -1296,7 +1298,7 @@
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -1360,7 +1362,7 @@
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Black"/>
@@ -1380,7 +1382,7 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" BorderBrush="White" Background="#FFF9ED00" Foreground="Black"/>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" BorderBrush="White" Background="{StaticResource MainColorBrush}" Foreground="Black"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -1619,7 +1621,7 @@
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
@@ -1645,7 +1647,7 @@
                                     <VisualState x:Name="Selected">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
@@ -1671,7 +1673,7 @@
                                     <VisualState x:Name="SelectedUnfocused">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ObjectNameTextBlock">
@@ -1697,7 +1699,7 @@
                                     <VisualState x:Name="SelectedPointerOver">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="DeleteVoiceCommandSetButtonIcon">
@@ -1727,7 +1729,7 @@
                                     <VisualState x:Name="SelectedPressed">
                                         <Storyboard>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Fill" Storyboard.TargetName="PressedBackground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#FFF9ED00"/>
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource MainColorBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
 
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteVoiceCommandSetButton">
@@ -2475,7 +2477,8 @@
         <DataTemplate x:Key="DeviceListBoxItemDataTemplate">
             <Grid FlyoutBase.AttachedFlyout="{StaticResource MF_DeviceListMenu}" RightTapped="LB_DeviceListItem_RightTapped" Background="Transparent">
                 <TextBox TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" HorizontalAlignment="Left" Width="210" MinHeight="0" Margin="20,8,0,8" Padding="0,3,0,5" Style="{StaticResource ListBoxTextBoxStyle}" KeyUp="TXT_DeviceName_KeyUp" />
-                <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding IsEnabled}" Toggled="TS_DevicePower_Toggled"/>
+                <ToggleSwitch HorizontalAlignment="Right" Margin="0,3,20,0" VerticalAlignment="Top" MinWidth="0" HorizontalContentAlignment="Center" Height="31" IsOn="{Binding Power}" IsEnabled="{Binding IsEnabled}" Toggled="TS_DevicePower_Toggled" Visibility="{Binding Online, Converter={StaticResource BooleanConvertToVisibility}}"/>
+                <TextBlock HorizontalAlignment="Right" Margin="0,12,20,0" VerticalAlignment="Top" MinWidth="0" Height="31" Text="已离线" Foreground="#FF727272" Visibility="{Binding Online, ConverterParameter=Reversal, Converter={StaticResource BooleanConvertToVisibility}}"/>
             </Grid>
         </DataTemplate>
         <!--中区操作类型数据模板-->
@@ -2553,17 +2556,17 @@
                     <LinearGradientBrush EndPoint="1,1" StartPoint="0,1">
                         <GradientStop Color="#FFAAA31B"/>
                         <GradientStop Color="#FFAAA31B" Offset="1"/>
-                        <GradientStop Color="#FFF9ED00" Offset="0.5"/>
+                        <GradientStop Color="{StaticResource MainColor}" Offset="0.5"/>
                     </LinearGradientBrush>
                 </Grid.Background>
                 <Grid x:Name="Grid_TopProgress">
                     <Grid.Background>
                         <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
                             <GradientStop Color="Black"/>
-                            <GradientStop Color="#FFF9ED00"/>
+                            <GradientStop Color="{StaticResource MainColor}"/>
                             <GradientStop Color="Black"/>
                             <GradientStop Color="Black"/>
-                            <GradientStop Color="#FFF9ED00"/>
+                            <GradientStop Color="{StaticResource MainColor}"/>
                             <GradientStop Color="Black" Offset="0.2"/>
                         </LinearGradientBrush>
                     </Grid.Background>
@@ -2581,7 +2584,7 @@
                 <Grid Background="#FF191919">
                     <AppBarButton x:Name="ABB_MenuButton" HorizontalAlignment="Left" Label="" Margin="0" VerticalAlignment="Top" Height="48" Width="48">
                         <AppBarButton.Icon>
-                            <PathIcon Data="M0,1V0h16v1H0z M0,5V4h16v1H0z M0,9V8h16v1H0z" Margin="0" Foreground="#FFF9ED00" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <PathIcon Data="M0,1V0h16v1H0z M0,5V4h16v1H0z M0,9V8h16v1H0z" Margin="0" Foreground="{StaticResource MainColorBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
                 </Grid>
@@ -2589,14 +2592,20 @@
                 <ScrollViewer Margin="0" Grid.Row="1" Background="#FF191919" VerticalScrollBarVisibility="Auto" Style="{StaticResource CommonScrollViewerStyle}">
                     <StackPanel VerticalAlignment="Top">
                         <ListBox x:Name="LB_DeviceGroupList" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Background="{x:Null}" ItemContainerStyle="{StaticResource DeviceGroupListBoxItemStyle}" ItemsSource="{Binding DeviceGroupList}" ItemTemplate="{StaticResource DeviceGroupListTemplate}" SelectedIndex="{Binding DeviceGroupListSelectedIndex, Mode=TwoWay}" SelectionChanged="LB_DeviceGroupList_SelectionChanged"/>
-                        <Button x:Name="BTN_AddDeviceGroup" Content="+" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Height="39" MinHeight="68" FontWeight="Bold" FontSize="25" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_AddDeviceGroup_Click"/>
+                        <Button x:Name="BTN_AddDeviceGroup" Content="+" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Height="39" MinHeight="68" FontSize="25" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_AddDeviceGroup_Click" Padding="0,0,0,6"/>
                     </StackPanel>
                 </ScrollViewer>
                 <!--左区操作菜单-->
                 <Grid Grid.Row="3" Background="#FF191919">
                     <StackPanel d:LayoutOverrides="Width">
                         <Button x:Name="BTN_SearchDevice" Content="查找设备" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_SearchDevice_Click"/>
-                        <Button x:Name="BTN_DeviceManage" Content="设备管理" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_DeviceManage_Click">
+                        <Button x:Name="BTN_DeviceManage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Height="39" MinHeight="68" Style="{StaticResource LeftAreaMenuButtonStyle}" Click="BTN_DeviceManage_Click" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <Button.Content>
+                                <Grid>
+                                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="设备管理" VerticalAlignment="Center"/>
+                                    <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text="NEW" VerticalAlignment="Center" FontSize="10" Margin="0,0,20,0" Foreground="{StaticResource MainColorBrush}" Visibility="{Binding ShowNewDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}"/>
+                                </Grid>
+                            </Button.Content>
                             <Interactivity:Interaction.Behaviors>
                                 <InteractivityCore:DataTriggerBehavior Binding="{Binding ShowDeviceGrid}" Value="True">
                                     <InteractivityCore:ChangePropertyAction PropertyName="Style" Value="{StaticResource LeftAreaMenuButtonSelectedStyle}"/>
@@ -2638,7 +2647,7 @@
                     </Grid>
                 </Grid>
                 <!--设备管理-->
-                <Grid x:Name="DeviceGrid" Visibility="{Binding ShowDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}">
+                <Grid x:Name="DeviceGrid" Visibility="{Binding ShowDeviceGrid, Converter={StaticResource BooleanConvertToVisibility}}" d:IsHidden="True">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="48"/>
                         <RowDefinition Height="2"/>
@@ -2646,11 +2655,11 @@
                     </Grid.RowDefinitions>
                     <Grid Background="#FF141414">
                         <TextBlock HorizontalAlignment="Left" Margin="20,14,0,0" TextWrapping="Wrap" Text="设备" VerticalAlignment="Top"/>
-                        <Button x:Name="BTN_RefreshDeviceStatus" HorizontalAlignment="Right" VerticalAlignment="Center" Width="32" Height="32" Margin="0,0,10,0" Style="{StaticResource CommonIconButtonStyle}" Background="Transparent" Click="BTN_RefreshDeviceStatus_Click">
+                        <Button x:Name="BTN_RefreshDeviceStatus" HorizontalAlignment="Right" VerticalAlignment="Center" Width="48" Height="48" Style="{StaticResource CommonIconButtonStyle}" Background="Transparent" Click="BTN_RefreshDeviceStatus_Click">
                             <SymbolIcon Symbol="Sync"/>
                         </Button>
                     </Grid>
-                    <ScrollViewer Grid.Row="2" Background="#FF141414">
+                    <ScrollViewer Grid.Row="2" Background="#FF141414" VerticalScrollBarVisibility="Auto">
                         <Grid ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" Background="Black">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -2737,6 +2746,7 @@
                                     <CustomControl:ColorSelector x:Name="CS_ColorSelector" HorizontalAlignment="Left" Height="200" Margin="0,32,0,0" VerticalAlignment="Top" Width="200" ColorChange="CS_ColorSelector_ColorChange"/>
                                 </Grid>
                             </Grid>
+                            <Grid HorizontalAlignment="Left" Height="28" Margin="22,62,0,0" VerticalAlignment="Top" Width="168" Background="Transparent" Tapped="Grid_SelectTarget_Tapped"/>
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="语音指令">
@@ -2755,7 +2765,9 @@
                                     <PathIcon Data="M16.5,14.9c1.5-0.9,2.5-2.5,2.5-4.3c0-2.7-2.2-5-5-5    c-2.7,0-5,2.2-5,5c0,1.8,1,3.4,2.5,4.3h-0.1c-3.1,0.9-5.5,3.4-5.8,6.7c0,0,0,0.7,0.5,0.7c0.7,0,0.7-0.7,0.7-0.7    c0.4-3.6,3.4-5.9,7.1-5.9c3.7,0,6.7,2.3,7.2,5.9c0,0,0,0.7,0.6,0.7c0.6,0,0.6-0.7,0.6-0.7C22,18.3,19.6,15.9,16.5,14.9L16.5,14.9z     M10.3,10.6c0-2.1,1.7-3.8,3.8-3.8s3.8,1.7,3.8,3.8c0,2.1-1.7,3.8-3.8,3.8C12,14.4,10.3,12.7,10.3,10.6L10.3,10.6z" Foreground="White"/>
                                     <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text=":" VerticalAlignment="Center" Foreground="Black"/>
                                 </Grid>
-                                <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Stroke="#FF666666" Margin="0,0,10,10" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
+                                <Grid Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Background="Transparent" Tapped="Grid_SayEnter_Tapped">
+                                    <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Stroke="#FF666666" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
+                                </Grid>
                             </Grid>
                             <Grid x:Name="Answer" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailAnswerGrid, Converter={StaticResource BooleanConvertToVisibility}}">
                                 <TextBox x:Name="TXT_Answer" BorderThickness="0" Background="White" Foreground="#FF191919" TextWrapping="Wrap" Padding="60,15,50,30" FontSize="13" PlaceholderText="请输入小娜的回应。 例：好的，我知道了" Style="{StaticResource VoiceCommandTextBoxStyle}" KeyUp="TXT_Answer_KeyUp"/>
@@ -2764,7 +2776,9 @@
                                     <PathIcon Data="M14,8.2c3.2,0,5.8,2.6,5.8,5.8s-2.6,5.8-5.8,5.8S8.2,17.2,8.2,14S10.8,8.2,14,8.2 M14,4.2  c-5.4,0-9.8,4.4-9.8,9.8s4.4,9.8,9.8,9.8s9.8-4.4,9.8-9.8S19.4,4.2,14,4.2L14,4.2z" Foreground="#FF2EA4DD"/>
                                     <TextBlock HorizontalAlignment="Right" TextWrapping="Wrap" Text=":" VerticalAlignment="Center" Foreground="Black"/>
                                 </Grid>
-                                <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Stroke="#FF666666" Margin="0,0,10,10" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
+                                <Grid Width="18" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Background="Transparent" Tapped="Grid_AnswerEnter_Tapped">
+                                    <Path Data="M18,7.7 L1.9,7.7 L5.6,11.3 L4.9,12 L0,7.2 L4.9,2.4 L5.6,3.1 L1.9,6.7 L16.9,6.7 L16.9,0 L17.9,0 L17.9,7.71" Stroke="#FF666666" UseLayoutRounding="False" StrokeDashCap="Square" Stretch="Fill" Fill="#FF666666" StrokeThickness="0"/>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </PivotItem>
