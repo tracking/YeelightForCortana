@@ -373,12 +373,14 @@ namespace YeelightForCortana
         {
             if (IsLoading)
             {
+                Grid_TopProgress.Visibility = Visibility.Visible;
                 TopProgressStoryboard.Stop();
                 TopProgressStoryboard.RepeatBehavior = RepeatBehavior.Forever;
                 TopProgressStoryboard.Begin();
             }
             else
             {
+                Grid_TopProgress.Visibility = Visibility.Collapsed;
                 TopProgressStoryboard.RepeatBehavior = new RepeatBehavior(1);
             }
         }
