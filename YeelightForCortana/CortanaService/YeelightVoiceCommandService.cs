@@ -199,6 +199,9 @@ namespace CortanaService
         {
             try
             {
+                // 更新设备信息
+                await device.UpdateDeviceInfo();
+
                 switch (Enum.Parse(typeof(ActionType), type))
                 {
                     case ActionType.PowerOn:

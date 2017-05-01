@@ -2989,7 +2989,7 @@
                                     <RowDefinition/>
                                     <RowDefinition Height="100"/>
                                 </Grid.RowDefinitions>
-                                <ScrollViewer HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CommonScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+                                <ScrollViewer x:Name="SV_VoiceCommand" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Style="{StaticResource CommonScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
                                     <ListBox x:Name="LB_VoiceCommandList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Top" VerticalAlignment="Top" Background="{x:Null}" ItemsSource="{Binding VoiceCommandSetDetail.VoiceCommandList}" ItemContainerStyle="{StaticResource VoiceCommandListBoxItemStyle}" ItemTemplate="{StaticResource VoiceCommandListItemDataTemplate}" Padding="2,0,0,0"/>
                                 </ScrollViewer>
                                 <Grid x:Name="Say" Grid.Row="1" Padding="2,0,0,0" Visibility="{Binding ShowVoiceCommandSetDetailSayGrid, Converter={StaticResource BooleanConvertToVisibility}}">
@@ -3038,7 +3038,8 @@
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="48"/>
-                                            <RowDefinition Height="681*"/>
+                                            <RowDefinition MinHeight="495"/>
+                                            <RowDefinition Height="48"/>
                                         </Grid.RowDefinitions>
                                         <Grid>
                                             <Button x:Name="BTN_AboutBack" VerticalAlignment="Stretch" Width="32" Height="32" Style="{StaticResource CommonIconButtonStyle}" Background="Transparent" Click="BTN_AboutBack_Click" Margin="8,0,0,0">
@@ -3047,6 +3048,7 @@
                                             <TextBlock TextWrapping="Wrap" Text="关于" d:LayoutOverrides="Width" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="45,0,0,0" FontSize="13" Foreground="#CCFFFFFF"/>
                                         </Grid>
                                         <TextBlock Text="大家好，我们是两个风（chou）华（bu）正（yao）茂（lian）的追风少年，作为Yeelight和Cortana的用户，由于现在AI（人工智能）还未至成熟，以及各个智能产品没有通用的API（应用程序接口），所以真正完整的智能家居使用及普及还需一段时间。因此我们就先做了这款应用来尝一尝鲜，提前感受下智能家居生活场景。这是我们用业余时间所开发的第一款UWP应用，不足之处希望大家多多反馈，同时也希望能为UWP生态贡献一份力！" Grid.Row="1" Padding="10" FontSize="13" LineHeight="26.667" TextWrapping="WrapWholeWords" Foreground="#CCFFFFFF"/>
+                                        <TextBlock x:Name="TB_Version" HorizontalAlignment="Right" Grid.Row="2" TextWrapping="Wrap" Text="版本号 1.1.0" VerticalAlignment="Center" Margin="0,0,20,0" Foreground="#CC2EA4DD"/>
                                     </Grid>
                                 </PivotItem>
                             </Pivot>

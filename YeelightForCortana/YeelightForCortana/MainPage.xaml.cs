@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
@@ -370,6 +371,19 @@ namespace YeelightForCortana
             deviceStatusRefreshing = false;
         }
 
+        /// <summary>
+        /// 获取APP版本号
+        /// http://stackoverflow.com/questions/28635208/retrieve-the-current-app-version-from-package
+        /// </summary>
+        /// <returns></returns>
+        private string GetAppVersion()
+        {
+            Package package = Package.Current;
+            PackageId packageId = package.Id;
+            PackageVersion version = packageId.Version;
+
+            return string.Format("{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
+        }
         /// <summary>
         /// 设置加载中状态
         /// </summary>
@@ -1112,6 +1126,10 @@ namespace YeelightForCortana
             TXT_Answer.Focus(FocusState.Programmatic);
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
+
+            // 滚动到底
+            SV_VoiceCommand.UpdateLayout();
+            SV_VoiceCommand.ChangeView(null, SV_VoiceCommand.ExtentHeight, null);
         }
         // Answer输入框确定按钮按下
         private async void Grid_AnswerEnter_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1135,6 +1153,10 @@ namespace YeelightForCortana
             TXT_Say.Focus(FocusState.Programmatic);
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
+
+            // 滚动到底
+            SV_VoiceCommand.UpdateLayout();
+            SV_VoiceCommand.ChangeView(null, SV_VoiceCommand.ExtentHeight, null);
         }
         // 删除语音命令按钮按下
         private void DeleteVoiceCommandButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1274,6 +1296,8 @@ namespace YeelightForCortana
         // 关于按钮按下
         private void BTN_About_Click(object sender, RoutedEventArgs e)
         {
+            // 显示版本号
+            TB_Version.Text = string.Format("版本号 {0}", GetAppVersion());
             // 切换到关于面板
             PVT_MoreFunction.SelectedIndex = 1;
         }
