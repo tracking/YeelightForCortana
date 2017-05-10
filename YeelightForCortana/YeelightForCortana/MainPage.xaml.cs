@@ -42,8 +42,8 @@ namespace YeelightForCortana
         private bool deviceStatusRefreshing;
         // 当前编辑的分组
         private DeviceGroup editDeviceGroup;
-        // 保存的设备状态
-
+        // 设备状态快照(预览设备时记录)
+        private Dictionary<string, Dictionary<string, object>> deviceSnapshots;
 
         public MainPage()
         {
@@ -376,6 +376,93 @@ namespace YeelightForCortana
             await Task.WhenAll(taskList.ToArray());
             // 改变状态
             deviceStatusRefreshing = false;
+        }
+        /// <summary>
+        /// 保存设备状态快照
+        /// </summary>
+        /// <param name="deviceList">分组</param>
+        private async Task SnapshotDevices(DeviceGroup deviceGroup)
+        {
+            deviceSnapshots = new Dictionary<string, Dictionary<string, object>>();
+
+            var deviceList = new List<Device>();
+
+            // 全部
+            if (deviceGroup.Id == "0")
+                deviceList = viewModel.DeviceList.ToList();
+            else
+                deviceList = deviceGroup.DeviceList;
+
+            foreach (var item in deviceList)
+            {
+                // 不存在
+                if (!deviceSnapshots.ContainsKey(item.Id))
+                {
+                    var snapshot = new Dictionary<string, object>();
+
+                    // 更新设备信息
+                    await item.RawDevice.UpdateDeviceInfo();
+
+                    snapshot.Add("s", item.RawDevice.SAT);
+                    snapshot.Add("h", item.RawDevice.HUE);
+                    snapshot.Add("power", item.RawDevice.Power);
+                    deviceSnapshots.Add(item.Id, snapshot);
+                }
+            }
+        }
+        /// <summary>
+        /// 保存设备状态快照
+        /// </summary>
+        /// <param name="device">设备</param>
+        private async Task SnapshotDevices(Device device)
+        {
+            deviceSnapshots = new Dictionary<string, Dictionary<string, object>>();
+            var snapshot = new Dictionary<string, object>();
+
+            // 更新设备信息
+            await device.RawDevice.UpdateDeviceInfo();
+
+            snapshot.Add("s", device.RawDevice.SAT);
+            snapshot.Add("h", device.RawDevice.HUE);
+            snapshot.Add("power", device.RawDevice.Power);
+            deviceSnapshots.Add(device.Id, snapshot);
+        }
+        /// <summary>
+        /// 还原快照
+        /// </summary>
+        private async Task RevertSnapshotDevices()
+        {
+            if (deviceSnapshots == null)
+                return;
+
+            // 遍历快照
+            foreach (var key in deviceSnapshots.Keys)
+            {
+                // 查找设备
+                var result = viewModel.DeviceList.Where(item => item.Id == key).ToList();
+
+                if (result.Count == 0)
+                    continue;
+
+                var device = result[0];
+                var h = deviceSnapshots[key]["h"];
+                var s = deviceSnapshots[key]["s"];
+                var power = deviceSnapshots[key]["power"];
+
+                try
+                {
+                    // 设置hsv
+                    if (h != null && s != null)
+                        await device.RawDevice.SetHSV((int)h, (int)s);
+                    // 设置power
+                    if (power != null)
+                        await device.RawDevice.SetPower((YeelightPower)power);
+
+                    // 更新设备信息
+                    await device.RawDevice.UpdateDeviceInfo();
+                }
+                catch (Exception) { }
+            }
         }
 
         /// <summary>
@@ -948,6 +1035,8 @@ namespace YeelightForCortana
             CBB_SelectAction.SelectedItem = null;
             SLD_Bright.Value = 0;
             CS_ColorSelector.Hsv = new ColorMine.ColorSpaces.Hsv();
+            viewModel.ShowSetBrightGrid = false;
+            viewModel.ShowSwitchColorGrid = false;
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
             // 选中第一个面板
@@ -958,7 +1047,7 @@ namespace YeelightForCortana
             viewModel.VoiceCommandSetDetail = vcs;
         }
         // 语音命令集列表选中
-        private void LB_VoiceCommandSetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void LB_VoiceCommandSetList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var vcs = (VoiceCommandSet)LB_VoiceCommandSetList.SelectedItem;
 
@@ -1011,6 +1100,14 @@ namespace YeelightForCortana
             viewModel.VoiceCommandSetDetailIsEdit = false;
             // 设置编辑标志
             PVT_VoiceCommandSetDetail.Tag = true;
+
+            // 还原设备快照
+            await RevertSnapshotDevices();
+            // 设备快照
+            if (cbbItem.DataContext.GetType() == typeof(Device))
+                await SnapshotDevices((Device)cbbItem.DataContext);
+            else if (cbbItem.DataContext.GetType() == typeof(DeviceGroup))
+                await SnapshotDevices((DeviceGroup)cbbItem.DataContext);
         }
         // 删除语音命令集按钮按下
         private async void DeleteVoiceCommandSetButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1046,7 +1143,7 @@ namespace YeelightForCortana
             flyoutBase.ShowAt(senderElement);
         }
         // 选择对象菜单项按下
-        private void CBB_SelectTarget_MenuItem_Click(object sender, RoutedEventArgs e)
+        private async void CBB_SelectTarget_MenuItem_Click(object sender, RoutedEventArgs e)
         {
             // 隐藏菜单
             FlyoutBase.GetAttachedFlyout(CBB_SelectTarget).Hide();
@@ -1063,6 +1160,14 @@ namespace YeelightForCortana
             CBB_SelectTarget.SelectedItem = cbbItem;
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
+
+            // 还原设备快照
+            await RevertSnapshotDevices();
+            // 设备快照
+            if (dataContext.GetType() == typeof(Device))
+                await SnapshotDevices((Device)dataContext);
+            else if (dataContext.GetType() == typeof(DeviceGroup))
+                await SnapshotDevices((DeviceGroup)dataContext);
         }
         // 选择对象父菜单项按下
         private void CBB_SelectTarget_MenuSubItem_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1110,10 +1215,40 @@ namespace YeelightForCortana
             viewModel.VoiceCommandSetDetailIsEdit = true;
         }
         // 颜色选择器颜色变更
-        private void CS_ColorSelector_ColorChange(object sender)
+        private async void CS_ColorSelector_ColorChange(object sender)
         {
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
+
+            // 预览颜色
+            if (CBB_SelectTarget.SelectedItem != null && ((ComboBoxItem)CBB_SelectTarget.SelectedItem).DataContext != null)
+            {
+                var dataContext = ((ComboBoxItem)CBB_SelectTarget.SelectedItem).DataContext;
+                var deviceList = new List<Device>();
+
+                if (dataContext.GetType() == typeof(Device))
+                    deviceList.Add((Device)dataContext);
+                else if (dataContext.GetType() == typeof(DeviceGroup))
+                {
+                    var group = (DeviceGroup)dataContext;
+
+                    // 全部
+                    if (group.Id == "0")
+                        deviceList.AddRange(viewModel.DeviceList.ToList());
+                    else
+                        deviceList.AddRange(group.DeviceList);
+                }
+
+                foreach (var device in deviceList)
+                {
+                    try
+                    {
+                        await device.RawDevice.SetPower(YeelightPower.on);
+                        await device.RawDevice.SetHSV(Convert.ToInt32(CS_ColorSelector.Hsv.H), Convert.ToInt32(CS_ColorSelector.Hsv.S * 100));
+                    }
+                    catch (Exception) { }
+                }
+            }
         }
         // 语音命令集详情遮罩点击
         private async void VoiceCommandSetDetailMaskGrid_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1124,6 +1259,8 @@ namespace YeelightForCortana
                 viewModel.VoiceCommandSetDetail = null;
                 // 设置状态为未编辑
                 viewModel.VoiceCommandSetDetailIsEdit = false;
+                // 还原设备快照
+                await RevertSnapshotDevices();
                 // 刷新列表
                 RefreshVoiceCommandSetList();
             }
@@ -1221,6 +1358,8 @@ namespace YeelightForCortana
                 viewModel.VoiceCommandSetDetailIsEdit = false;
                 // 保存
                 await configStorage.SaveAsync();
+                // 还原设备快照
+                await RevertSnapshotDevices();
                 // 刷新列表
                 RefreshVoiceCommandSetList();
                 // 保存小娜设置
@@ -1309,7 +1448,8 @@ namespace YeelightForCortana
             viewModel.VoiceCommandSetDetailIsEdit = false;
             // 保存
             await configStorage.SaveAsync();
-
+            // 还原设备快照
+            await RevertSnapshotDevices();
             // 刷新列表
             RefreshVoiceCommandSetList();
             // 保存小娜设置
