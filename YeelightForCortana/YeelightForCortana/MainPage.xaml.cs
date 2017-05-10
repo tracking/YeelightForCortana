@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI;
@@ -28,6 +29,9 @@ namespace YeelightForCortana
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        // 资源
+        private ResourceLoader rl;
+
         // 配置存储对象
         private IConfigStorage configStorage;
         // ViewModel
@@ -38,10 +42,13 @@ namespace YeelightForCortana
         private bool deviceStatusRefreshing;
         // 当前编辑的分组
         private DeviceGroup editDeviceGroup;
+        // 保存的设备状态
+
 
         public MainPage()
         {
             this.InitializeComponent();
+            rl = new ResourceLoader();
         }
 
         // 页面加载完成
@@ -92,7 +99,7 @@ namespace YeelightForCortana
             // 显示默认面板
             viewModel.ShowVoiceCommandSetGrid = true;
             // 添加默认分组
-            viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = "0", Name = "全部" });
+            viewModel.DeviceGroupList.Add(new DeviceGroup() { Id = "0", Name = rl.GetString("DeviceGroupList_All") });
             // 添加默认操作类型
             viewModel.CommandTypeList.Add(new CommandType(ActionType.PowerOn));
             viewModel.CommandTypeList.Add(new CommandType(ActionType.PowerOff));
@@ -469,13 +476,27 @@ namespace YeelightForCortana
             XNamespace xnVoiceCommands = "http://schemas.microsoft.com/voicecommands/1.2";
             XDocument xdoc = new XDocument();
             XElement VoiceCommands = new XElement(xnVoiceCommands + "VoiceCommands");
-            XElement CommandSet = new XElement(xnVoiceCommands + "CommandSet");
-            XElement AppName = new XElement(xnVoiceCommands + "AppName");
-            XElement AppExample = new XElement(xnVoiceCommands + "Example");
-            XElement Command = new XElement(xnVoiceCommands + "Command");
-            XElement CommandExample = new XElement(xnVoiceCommands + "Example");
+
+            XElement CommandSetCN = new XElement(xnVoiceCommands + "CommandSet");
+            XElement CommandSetEN = new XElement(xnVoiceCommands + "CommandSet");
+
+            XElement AppNameCN = new XElement(xnVoiceCommands + "AppName");
+            XElement AppNameEN = new XElement(xnVoiceCommands + "AppName");
+
+            XElement AppExampleCN = new XElement(xnVoiceCommands + "Example");
+            XElement AppExampleEN = new XElement(xnVoiceCommands + "Example");
+
+            XElement CommandCN = new XElement(xnVoiceCommands + "Command");
+            XElement CommandEN = new XElement(xnVoiceCommands + "Command");
+
+            XElement CommandExampleCN = new XElement(xnVoiceCommands + "Example");
+            XElement CommandExampleEN = new XElement(xnVoiceCommands + "Example");
+
             XElement ListenFor = new XElement(xnVoiceCommands + "ListenFor");
-            XElement Feedback = new XElement(xnVoiceCommands + "Feedback");
+
+            XElement FeedbackCN = new XElement(xnVoiceCommands + "Feedback");
+            XElement FeedbackEN = new XElement(xnVoiceCommands + "Feedback");
+
             XElement VoiceCommandService = new XElement(xnVoiceCommands + "VoiceCommandService");
             XElement PhraseList = new XElement(xnVoiceCommands + "PhraseList");
 
@@ -485,42 +506,59 @@ namespace YeelightForCortana
 
             // VoiceCommands
             VoiceCommands.SetAttributeValue("xmlns", xnVoiceCommands);
-            VoiceCommands.Add(CommandSet);
+            VoiceCommands.Add(CommandSetCN);
+            VoiceCommands.Add(CommandSetEN);
 
             // CommandSet
-            CommandSet.SetAttributeValue(XNamespace.Xml + "lang", "zh-cn");
-            CommandSet.SetAttributeValue("Name", "YeelightVoiceCommandSet_zh-cn");
-            CommandSet.Add(AppName);
-            CommandSet.Add(AppExample);
+            CommandSetCN.SetAttributeValue(XNamespace.Xml + "lang", "zh-cn");
+            CommandSetCN.SetAttributeValue("Name", "YeelightVoiceCommandSet_zh-cn");
+            CommandSetCN.Add(AppNameCN);
+            CommandSetCN.Add(AppExampleCN);
+
+            CommandSetEN.SetAttributeValue(XNamespace.Xml + "lang", "en-us");
+            CommandSetEN.SetAttributeValue("Name", "YeelightVoiceCommandSet_en-us");
+            CommandSetEN.Add(AppNameEN);
+            CommandSetEN.Add(AppExampleEN);
 
             // AppName
-            AppName.SetValue("你好小娜");
+            AppNameCN.SetValue("你好小娜");
+            AppNameEN.SetValue("Hey Cortana");
 
             // AppExample
-            AppExample.SetValue("你好小娜");
+            AppExampleCN.SetValue("你好小娜");
+            AppExampleEN.SetValue("Hey Cortana");
 
             // Command
-            Command.SetAttributeValue("Name", "Action");
-            Command.Add(CommandExample);
+            CommandCN.SetAttributeValue("Name", "Action");
+            CommandCN.Add(CommandExampleCN);
+
+            CommandEN.SetAttributeValue("Name", "Action");
+            CommandEN.Add(CommandExampleEN);
 
             // Example
-            CommandExample.SetValue("你好小娜，帮我开下灯");
+            CommandExampleCN.SetValue("你好小娜，帮我开下灯");
+            CommandExampleEN.SetValue("Hey Cortana，Turn on the light");
 
             // ListenFor
             ListenFor.SetValue("{Say}");
-            Command.Add(ListenFor);
-
+            CommandCN.Add(ListenFor);
+            CommandEN.Add(ListenFor);
 
             // Feedback
-            Feedback.SetValue("已收到指令");
-            Command.Add(Feedback);
+            FeedbackCN.SetValue("已收到指令");
+            FeedbackEN.SetValue("Copy");
+
+            CommandCN.Add(FeedbackCN);
+            CommandEN.Add(FeedbackEN);
 
             // VoiceCommandService
             VoiceCommandService.SetAttributeValue("Target", "YeelightVoiceCommandService");
-            Command.Add(VoiceCommandService);
+            CommandCN.Add(VoiceCommandService);
+            CommandEN.Add(VoiceCommandService);
 
             // 加入
-            CommandSet.Add(Command);
+            CommandSetCN.Add(CommandCN);
+            CommandSetEN.Add(CommandEN);
 
             // PhraseList
             PhraseList.SetAttributeValue("Label", "Say");
@@ -534,7 +572,8 @@ namespace YeelightForCortana
             }
 
             // 加入
-            CommandSet.Add(PhraseList);
+            CommandSetCN.Add(PhraseList);
+            CommandSetEN.Add(PhraseList);
 
             // 写到文件
             var vcdFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(@"Voice.xml", CreationCollisionOption.ReplaceExisting);
@@ -572,7 +611,7 @@ namespace YeelightForCortana
         private async void MFI_DeviceGroupDelete_Click(object sender, RoutedEventArgs e)
         {
             var group = (DeviceGroup)((FrameworkElement)sender).DataContext;
-            var isConfirm = await ShowConfirmDialog(string.Format("如果您删除了这个分组\n对应的语音命令也会被一起删除\n是否删除分组“{0}”", group.Name));
+            var isConfirm = await ShowConfirmDialog(string.Format(rl.GetString("DeleteDeviceGroupConfirm"), group.Name));
 
             if (isConfirm)
             {
@@ -597,7 +636,7 @@ namespace YeelightForCortana
             viewModel.DeviceCheckList.Clear();
             viewModel.DeviceCheckList.AddRange(viewModel.DeviceList);
             // 设置默认分组名
-            TXT_AddDeviceGroupName.Text = "未命名";
+            TXT_AddDeviceGroupName.Text = rl.GetString("DefaultDeviceGroupName");
             // 设置全选框状态
             SetSelectAllDeviceCheckBoxState();
             // 打开
@@ -637,7 +676,7 @@ namespace YeelightForCortana
         {
             if (string.IsNullOrEmpty(TXT_AddDeviceGroupName.Text))
             {
-                TXT_AddDeviceGroupName.Text = "未命名";
+                TXT_AddDeviceGroupName.Text = rl.GetString("DefaultDeviceGroupName");
             }
 
             // 获取选中的设备
@@ -833,7 +872,7 @@ namespace YeelightForCortana
         private async void MFI_DeviceDelete_Click(object sender, RoutedEventArgs e)
         {
             var device = (Device)((FrameworkElement)sender).DataContext;
-            var isConfirm = await ShowConfirmDialog(string.Format("是否删除设备“{0}”", device.Name));
+            var isConfirm = await ShowConfirmDialog(string.Format(rl.GetString("DeleteDeviceConfirm"), device.Name));
 
             if (isConfirm)
             {
@@ -978,7 +1017,7 @@ namespace YeelightForCortana
         {
             var vcs = (VoiceCommandSet)((FrameworkElement)sender).DataContext;
 
-            if (await ShowConfirmDialog("是否删除语音命令?", null, "是", "否"))
+            if (await ShowConfirmDialog(rl.GetString("DeleteVoiceCommandSetConfirm"), null, "是", "否"))
             {
                 // 删除
                 configStorage.DeleteVoiceCommandSet(vcs.Id);
@@ -1079,7 +1118,7 @@ namespace YeelightForCortana
         // 语音命令集详情遮罩点击
         private async void VoiceCommandSetDetailMaskGrid_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (await ShowConfirmDialog("是否放弃当前的修改?", null, "是", "否"))
+            if (await ShowConfirmDialog(rl.GetString("LeaveVoiceCommandSetDetailConfirm"), null, "是", "否"))
             {
                 // 清空
                 viewModel.VoiceCommandSetDetail = null;
@@ -1111,7 +1150,7 @@ namespace YeelightForCortana
             // 不允许输入除中文/字母/数字以外的字符
             if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\s]*$").Match(TXT_Say.Text).Success)
             {
-                await ShowMessageDialog("不能输入除中文/字母/数字/空格以外的字");
+                await ShowMessageDialog(rl.GetString("SayTextBoxInputError"));
                 return;
             }
 
@@ -1139,7 +1178,7 @@ namespace YeelightForCortana
             // 不允许输入除中文/字母/数字以外的字符
             if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\s]*$").Match(TXT_Answer.Text).Success)
             {
-                await ShowMessageDialog("不能输入除中文/字母/数字/空格以外的字");
+                await ShowMessageDialog(rl.GetString("AnwserTextBoxInputError"));
                 return;
             }
 
@@ -1172,7 +1211,7 @@ namespace YeelightForCortana
         // 删除语音命令集详情按钮按下
         private async void ABB_DeleteVoiceCommandSet_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (await ShowConfirmDialog("是否删除语音命令?", null, "是", "否"))
+            if (await ShowConfirmDialog(rl.GetString("DeleteVoiceCommandSetConfirm"), null, "是", "否"))
             {
                 // 删除
                 configStorage.DeleteVoiceCommandSet(viewModel.VoiceCommandSetDetail.Id);
@@ -1197,26 +1236,26 @@ namespace YeelightForCortana
             // 检查基本设置
             if (CBB_SelectTarget.SelectedItem == null)
             {
-                await ShowMessageDialog("请选择对象");
+                await ShowMessageDialog(rl.GetString("SaveVoiceCommandSetError_TargetIsNull"));
                 PVT_VoiceCommandSetDetail.SelectedIndex = 0;
                 return;
             }
             if (CBB_SelectAction.SelectedItem == null)
             {
-                await ShowMessageDialog("请选择操作");
+                await ShowMessageDialog(rl.GetString("SaveVoiceCommandSetError_ActionIsNull"));
                 PVT_VoiceCommandSetDetail.SelectedIndex = 0;
                 return;
             }
             // 检查语音指令
             if (viewModel.VoiceCommandSetDetail.VoiceCommandList.Count == 0)
             {
-                await ShowMessageDialog("请添加语音指令");
+                await ShowMessageDialog(rl.GetString("SaveVoiceCommandSetError_VoiceCommandIsNull"));
                 PVT_VoiceCommandSetDetail.SelectedIndex = 1;
                 return;
             }
             if (string.IsNullOrEmpty(viewModel.VoiceCommandSetDetail.VoiceCommandList.Last().Answer))
             {
-                await ShowMessageDialog("请将语音指令补充完整");
+                await ShowMessageDialog(rl.GetString("SaveVoiceCommandSetError_VoiceCommandAnwserIsNull"));
                 PVT_VoiceCommandSetDetail.SelectedIndex = 1;
                 return;
             }
@@ -1297,7 +1336,7 @@ namespace YeelightForCortana
         private void BTN_About_Click(object sender, RoutedEventArgs e)
         {
             // 显示版本号
-            TB_Version.Text = string.Format("版本号 {0}", GetAppVersion());
+            TB_Version.Text = string.Format(rl.GetString("Version"), GetAppVersion());
             // 切换到关于面板
             PVT_MoreFunction.SelectedIndex = 1;
         }

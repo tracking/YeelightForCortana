@@ -65,6 +65,8 @@ namespace YeelightForCortana.CustomControl
         {
             // 设置不可移动
             Dot.Tag = null;
+            // 触发事件
+            ColorChange?.Invoke(sender);
         }
         // 颜色选择框鼠标移动
         private void ColorViewer_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -93,8 +95,6 @@ namespace YeelightForCortana.CustomControl
 
             // 计算颜色
             CalculateColor();
-            // 触发事件
-            ColorChange?.Invoke(sender);
         }
 
         // 计算颜色

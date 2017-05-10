@@ -13,7 +13,7 @@ using Windows.Storage.Streams;
 namespace YeelightAPI
 {
     /// <summary>
-    /// Yeelight颜色模式
+    /// Yeelight类型
     /// </summary>
     public enum YeelightModel
     {
@@ -28,7 +28,11 @@ namespace YeelightAPI
         /// <summary>
         /// 流光
         /// </summary>
-        stripe
+        stripe,
+        /// <summary>
+        /// 台灯
+        /// </summary>
+        desklamp
     }
     /// <summary>
     /// Yeelight电源状态
@@ -227,7 +231,7 @@ namespace YeelightAPI
         /// </summary>
         public string Port { get { return port; } }
         /// <summary>
-        /// 设备类型（目前只有：mono白光、color彩光、stripeLED条）
+        /// 设备类型
         /// </summary>
         public YeelightModel Model { get { return model; } }
         /// <summary>
@@ -451,6 +455,9 @@ namespace YeelightAPI
                     case "stripe":
                         this.model = YeelightModel.stripe;
                         break;
+                    case "desklamp":
+                        this.model = YeelightModel.desklamp;
+                        break;
                 }
 
                 // 解析支持函数
@@ -536,7 +543,6 @@ namespace YeelightAPI
 
             // 创建TCPClient
             this.tcpClient = new StreamSocket();
-            var a = new StreamSocketListener();
 
             // timeout
             var cts = new System.Threading.CancellationTokenSource();
@@ -573,6 +579,10 @@ namespace YeelightAPI
 
             // 连接设备
             await this.ConnectDeviceAsync();
+
+            // 米家台灯在连接上设备后如果马上发送数据有可能设备接不到 等待一小会
+            if (this.model == YeelightModel.desklamp)
+                await Task.Delay(200);
 
             // 创建写入对象
             using (DataWriter dw = new DataWriter(this.tcpClient.OutputStream))
@@ -781,6 +791,9 @@ namespace YeelightAPI
         /// <returns>是否成功</returns>
         private bool DeviceResponseIsSuccess(string resp)
         {
+            // 只取第一行
+            resp = Regex.Split(resp, "\r\n")[0];
+
             // JSON转换
             JObject json = JObject.Parse(resp);
 
