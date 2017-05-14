@@ -269,4 +269,16 @@ Do you want to delete the group "{0}" ?</value>
   <data name="Version" xml:space="preserve">
     <value>Version {0}</value>
   </data>
+  <data name="Yeelight_Model_Color" xml:space="preserve">
+    <value>Yeelight LED Bulb (Color)</value>
+  </data>
+  <data name="Yeelight_Model_Desklamp" xml:space="preserve">
+    <value>Mijia Smart LED Desk Lamp</value>
+  </data>
+  <data name="Yeelight_Model_Mono" xml:space="preserve">
+    <value>Yeelight LED Bulb (White)</value>
+  </data>
+  <data name="Yeelight_Model_Stripe" xml:space="preserve">
+    <value>Yeelight LED Lightstrip (Color)</value>
+  </data>
 </root>

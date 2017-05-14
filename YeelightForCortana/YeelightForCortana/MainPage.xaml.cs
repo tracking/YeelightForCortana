@@ -400,8 +400,14 @@ namespace YeelightForCortana
                 {
                     var snapshot = new Dictionary<string, object>();
 
-                    // 更新设备信息
-                    await item.RawDevice.UpdateDeviceInfo();
+                    try
+                    {
+                        // 更新设备信息
+                        await item.RawDevice.UpdateDeviceInfo();
+                    }
+                    catch (Exception)
+                    {
+                    }
 
                     snapshot.Add("s", item.RawDevice.SAT);
                     snapshot.Add("h", item.RawDevice.HUE);
@@ -419,8 +425,14 @@ namespace YeelightForCortana
             deviceSnapshots = new Dictionary<string, Dictionary<string, object>>();
             var snapshot = new Dictionary<string, object>();
 
-            // 更新设备信息
-            await device.RawDevice.UpdateDeviceInfo();
+            try
+            {
+                // 更新设备信息
+                await device.RawDevice.UpdateDeviceInfo();
+            }
+            catch (Exception)
+            {
+            }
 
             snapshot.Add("s", device.RawDevice.SAT);
             snapshot.Add("h", device.RawDevice.HUE);
@@ -865,8 +877,28 @@ namespace YeelightForCortana
                 // 不存在
                 if (!configStorage.HasDevice(item.Id))
                 {
-                    var device = new Device(item) { Name = item.Id, Online = true };
+                    var device = new Device(item) { Online = true };
                     device.Power = device.RawDevice.Power == YeelightPower.on;
+
+                    switch (device.RawDevice.Model)
+                    {
+                        case YeelightModel.mono:
+                            device.Name = rl.GetString("Yeelight_Model_Mono");
+                            break;
+                        case YeelightModel.color:
+                            device.Name = rl.GetString("Yeelight_Model_Color");
+                            break;
+                        case YeelightModel.stripe:
+                            device.Name = rl.GetString("Yeelight_Model_Stripe");
+                            break;
+                        case YeelightModel.desklamp:
+                            device.Name = rl.GetString("Yeelight_Model_Desklamp");
+                            break;
+                        default:
+                            device.Name = item.Id;
+                            break;
+                    }
+
                     viewModel.NewDeviceList.Add(device);
                 }
             }
@@ -1101,8 +1133,6 @@ namespace YeelightForCortana
             // 设置编辑标志
             PVT_VoiceCommandSetDetail.Tag = true;
 
-            // 还原设备快照
-            await RevertSnapshotDevices();
             // 设备快照
             if (cbbItem.DataContext.GetType() == typeof(Device))
                 await SnapshotDevices((Device)cbbItem.DataContext);

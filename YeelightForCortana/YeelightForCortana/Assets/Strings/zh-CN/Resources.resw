@@ -269,4 +269,16 @@
   <data name="Version" xml:space="preserve">
     <value>版本号 {0}</value>
   </data>
+  <data name="Yeelight_Model_Color" xml:space="preserve">
+    <value>Yeelight 彩光灯</value>
+  </data>
+  <data name="Yeelight_Model_Desklamp" xml:space="preserve">
+    <value>米家台灯</value>
+  </data>
+  <data name="Yeelight_Model_Mono" xml:space="preserve">
+    <value>Yeelight 白光灯</value>
+  </data>
+  <data name="Yeelight_Model_Stripe" xml:space="preserve">
+    <value>Yeelight 灯带</value>
+  </data>
 </root>
