@@ -1762,11 +1762,11 @@
                             <Grid>
                                 <TextBlock x:Name="ObjectNameTextBlock" Text="{Binding ObjectName}" d:LayoutOverrides="Width, Height" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,5,0,0" FontSize="18" Foreground="#FFCBCBCB" />
                                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="20,34,0,0">
-                                    <TextBlock x:Name="MeTextBlock" TextWrapping="Wrap" Text="我：" FontSize="13" Foreground="#CCCBCBCB"/>
+                                    <TextBlock x:Name="MeTextBlock" x:Uid="MeTextBlock" TextWrapping="Wrap" FontSize="13" Foreground="#CCCBCBCB"/>
                                     <TextBlock x:Name="FirstSayTextBlock" Text="{Binding FirstSay}" VerticalAlignment="Top" HorizontalAlignment="Left" d:LayoutOverrides="LeftPosition, RightPosition" MaxWidth="230" TextTrimming="CharacterEllipsis" FontSize="13.333" Foreground="#CCCBCBCB"/>
                                 </StackPanel>
                                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal" Margin="20,51,0,0">
-                                    <TextBlock x:Name="CortanaTextBlock" TextWrapping="Wrap" Text="小娜：" FontSize="13" Foreground="#CCCBCBCB"/>
+                                    <TextBlock x:Name="CortanaTextBlock" x:Uid="CortanaTextBlock" TextWrapping="Wrap" FontSize="13" Foreground="#CCCBCBCB"/>
                                     <TextBlock x:Name="FirstAnswerTextBlock" Text="{Binding FirstAnswer}" VerticalAlignment="Top" HorizontalAlignment="Left" d:LayoutOverrides="LeftPosition, RightPosition" MaxWidth="220" TextTrimming="CharacterEllipsis" FontSize="13" Foreground="#CCCBCBCB"/>
                                 </StackPanel>
                                 <TextBlock x:Name="CommandTypeTextBlock" HorizontalAlignment="Right" TextWrapping="Wrap" Text="{Binding CommandType.Name}" VerticalAlignment="Bottom" Margin="0,0,15,26" FontSize="13" Foreground="#FF989898"/>

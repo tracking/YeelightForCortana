@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="48379Tracking.Yeelight" Publisher="CN=CE03861C-2A5D-4C76-9703-20880EACBCFD" Version="1.2.126.0" />
+  <Identity Name="48379Tracking.Yeelight" Publisher="CN=CE03861C-2A5D-4C76-9703-20880EACBCFD" Version="1.2.127.0" />
   <mp:PhoneIdentity PhoneProductId="81a1d8b6-66d6-4d4e-8a0b-af28ea6f4672" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Yeelight小娜</DisplayName>

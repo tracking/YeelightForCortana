@@ -168,6 +168,9 @@
   <data name="CB_SelectAllDevice.Content" xml:space="preserve">
     <value>全选</value>
   </data>
+  <data name="CortanaTextBlock.Text" xml:space="preserve">
+    <value>小娜：</value>
+  </data>
   <data name="DefaultDeviceGroupName" xml:space="preserve">
     <value>未命名</value>
   </data>
@@ -175,7 +178,9 @@
     <value>是否删除设备“{0}”</value>
   </data>
   <data name="DeleteDeviceGroupConfirm" xml:space="preserve">
-    <value>如果您删除了这个分组\n对应的语音命令也会被一起删除\n是否删除分组“{0}”</value>
+    <value>如果您删除了这个分组
+对应的语音命令也会被一起删除
+是否删除分组“{0}”</value>
   </data>
   <data name="DeleteVoiceCommandSetConfirm" xml:space="preserve">
     <value>是否删除语音命令?</value>
@@ -200,6 +205,9 @@
   </data>
   <data name="LeaveVoiceCommandSetDetailConfirm" xml:space="preserve">
     <value>是否放弃当前的修改?</value>
+  </data>
+  <data name="MeTextBlock.Text" xml:space="preserve">
+    <value>我：</value>
   </data>
   <data name="MFI_DeviceDelete.Text" xml:space="preserve">
     <value>删除</value>

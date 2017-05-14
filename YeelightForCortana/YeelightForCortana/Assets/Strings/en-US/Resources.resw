@@ -168,6 +168,9 @@
   <data name="CB_SelectAllDevice.Content" xml:space="preserve">
     <value>Select all</value>
   </data>
+  <data name="CortanaTextBlock.Text" xml:space="preserve">
+    <value>Cortana:</value>
+  </data>
   <data name="DefaultDeviceGroupName" xml:space="preserve">
     <value>Unnamed</value>
   </data>
@@ -175,8 +178,8 @@
     <value>Delete device “{0}” ?</value>
   </data>
   <data name="DeleteDeviceGroupConfirm" xml:space="preserve">
-    <value>If you delete this group
-.\nThe corresponding voice commands are also deleted.\n
+    <value>If you delete this group.
+The corresponding voice commands will be deleted.
 Do you want to delete the group "{0}" ?</value>
   </data>
   <data name="DeleteVoiceCommandSetConfirm" xml:space="preserve">
@@ -195,13 +198,16 @@ Do you want to delete the group "{0}" ?</value>
     <value>Move the slider to adjust the brightness value</value>
   </data>
   <data name="Grid_Action_SwitchColor_TextBlock.Text" xml:space="preserve">
-    <value>Change the color</value>
+    <value>Select color</value>
   </data>
   <data name="Grid_VoiceCommandSetListIsNull_TextBlock.Text" xml:space="preserve">
     <value>You have not added a voice command</value>
   </data>
   <data name="LeaveVoiceCommandSetDetailConfirm" xml:space="preserve">
-    <value>Do you want to discard the current changes?</value>
+    <value>Do you want to discard changes?</value>
+  </data>
+  <data name="MeTextBlock.Text" xml:space="preserve">
+    <value>Me:</value>
   </data>
   <data name="MFI_DeviceDelete.Text" xml:space="preserve">
     <value>Delete</value>
@@ -237,7 +243,7 @@ Do you want to delete the group "{0}" ?</value>
     <value>Please select operation</value>
   </data>
   <data name="SaveVoiceCommandSetError_TargetIsNull" xml:space="preserve">
-    <value>Please select object</value>
+    <value>Please select target</value>
   </data>
   <data name="SaveVoiceCommandSetError_VoiceCommandAnwserIsNull" xml:space="preserve">
     <value>Please complete the voice command</value>
@@ -255,11 +261,10 @@ Do you want to delete the group "{0}" ?</value>
     <value>Unnamed</value>
   </data>
   <data name="TXT_Answer.PlaceholderText" xml:space="preserve">
-    <value>Please enter cortana response. For example:
- All right, I know</value>
+    <value>Please enter cortana response. For example: All right, I know.</value>
   </data>
   <data name="TXT_Say.PlaceholderText" xml:space="preserve">
-    <value>Please enter a voice command. For example: It was dark, help me open my bedside lamp</value>
+    <value>Please enter a voice command. For example: It was dark, turn on the bedlight for me.</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version {0}</value>
