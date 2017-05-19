@@ -345,7 +345,7 @@ namespace YeelightForCortana
                 // 无异常表示在线
                 device.Online = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // 异常表示离线
                 device.Online = false;
@@ -380,45 +380,6 @@ namespace YeelightForCortana
         /// <summary>
         /// 保存设备状态快照
         /// </summary>
-        /// <param name="deviceList">分组</param>
-        private async Task SnapshotDevices(DeviceGroup deviceGroup)
-        {
-            deviceSnapshots = new Dictionary<string, Dictionary<string, object>>();
-
-            var deviceList = new List<Device>();
-
-            // 全部
-            if (deviceGroup.Id == "0")
-                deviceList = viewModel.DeviceList.ToList();
-            else
-                deviceList = deviceGroup.DeviceList;
-
-            foreach (var item in deviceList)
-            {
-                // 不存在
-                if (!deviceSnapshots.ContainsKey(item.Id))
-                {
-                    var snapshot = new Dictionary<string, object>();
-
-                    try
-                    {
-                        // 更新设备信息
-                        await item.RawDevice.UpdateDeviceInfo();
-                    }
-                    catch (Exception)
-                    {
-                    }
-
-                    snapshot.Add("s", item.RawDevice.SAT);
-                    snapshot.Add("h", item.RawDevice.HUE);
-                    snapshot.Add("power", item.RawDevice.Power);
-                    deviceSnapshots.Add(item.Id, snapshot);
-                }
-            }
-        }
-        /// <summary>
-        /// 保存设备状态快照
-        /// </summary>
         /// <param name="device">设备</param>
         private async Task SnapshotDevices(Device device)
         {
@@ -440,12 +401,81 @@ namespace YeelightForCortana
             deviceSnapshots.Add(device.Id, snapshot);
         }
         /// <summary>
-        /// 还原快照
+        /// 保存设备状态快照
+        /// </summary>
+        /// <param name="deviceList">分组</param>
+        private async Task SnapshotDevices(DeviceGroup deviceGroup)
+        {
+            deviceSnapshots = new Dictionary<string, Dictionary<string, object>>();
+
+            var deviceList = new List<Device>();
+
+            // 全部
+            if (deviceGroup.Id == "0")
+                deviceList = viewModel.DeviceList.ToList();
+            else
+                deviceList = deviceGroup.DeviceList;
+
+            // task列表
+            List<Task> taskList = new List<Task>();
+
+            foreach (var item in deviceList)
+            {
+                // 不存在
+                if (!deviceSnapshots.ContainsKey(item.Id))
+                {
+                    // 启动task并加入列表
+                    taskList.Add(SnapshotDevices(item));
+                }
+            }
+
+            // 等待所有完成
+            await Task.WhenAll(taskList.ToArray());
+        }
+        /// <summary>
+        /// 还原设备快照
+        /// </summary>
+        /// <param name="device"></param>
+        /// <returns></returns>
+        private async Task RevertSnapshotDevice(Device device)
+        {
+            var h = deviceSnapshots[device.Id]["h"];
+            var s = deviceSnapshots[device.Id]["s"];
+            var power = deviceSnapshots[device.Id]["power"];
+
+            try
+            {
+                // 设置hsv
+                if (h != null && s != null)
+                    await device.RawDevice.SetHSV((int)h, (int)s);
+            }
+            catch (Exception) { }
+
+            try
+            {
+                // 设置power
+                if (power != null)
+                    await device.RawDevice.SetPower((YeelightPower)power);
+            }
+            catch (Exception) { }
+
+            try
+            {
+                // 更新设备信息
+                await device.RawDevice.UpdateDeviceInfo();
+            }
+            catch (Exception) { }
+        }
+        /// <summary>
+        /// 还原所有快照
         /// </summary>
         private async Task RevertSnapshotDevices()
         {
             if (deviceSnapshots == null)
                 return;
+
+            // task列表
+            List<Task> taskList = new List<Task>();
 
             // 遍历快照
             foreach (var key in deviceSnapshots.Keys)
@@ -457,25 +487,36 @@ namespace YeelightForCortana
                     continue;
 
                 var device = result[0];
-                var h = deviceSnapshots[key]["h"];
-                var s = deviceSnapshots[key]["s"];
-                var power = deviceSnapshots[key]["power"];
 
-                try
-                {
-                    // 设置hsv
-                    if (h != null && s != null)
-                        await device.RawDevice.SetHSV((int)h, (int)s);
-                    // 设置power
-                    if (power != null)
-                        await device.RawDevice.SetPower((YeelightPower)power);
-
-                    // 更新设备信息
-                    await device.RawDevice.UpdateDeviceInfo();
-                }
-                catch (Exception) { }
+                // 启动task并加入列表
+                taskList.Add(RevertSnapshotDevice(device));
             }
+
+            // 等待所有完成
+            await Task.WhenAll(taskList.ToArray());
         }
+
+        #region 预览
+        /// <summary>
+        /// 预览颜色
+        /// </summary>
+        /// <param name="device">设备</param>
+        /// <returns></returns>
+        private async Task PreviewColorChange(Device device)
+        {
+            try
+            {
+                await device.RawDevice.SetPower(YeelightPower.on);
+            }
+            catch (Exception) { }
+
+            try
+            {
+                await device.RawDevice.SetHSV(Convert.ToInt32(CS_ColorSelector.Hsv.H), Convert.ToInt32(CS_ColorSelector.Hsv.S * 100));
+            }
+            catch (Exception) { }
+        }
+        #endregion
 
         /// <summary>
         /// 获取APP版本号
@@ -494,8 +535,14 @@ namespace YeelightForCortana
         /// 设置加载中状态
         /// </summary>
         /// <param name="IsLoading">是否加载中</param>
-        private void SetLoading(bool IsLoading)
+        /// <param name="IsDisabledMainPage">是否禁用页面</param>
+        private void SetLoading(bool IsLoading, bool IsDisabledMainPage = false)
         {
+            if (viewModel != null)
+            {
+                viewModel.MainPageIsDisabled = IsDisabledMainPage;
+            }
+
             if (IsLoading)
             {
                 Grid_TopProgress.Visibility = Visibility.Visible;
@@ -571,33 +618,21 @@ namespace YeelightForCortana
                 }
             }
 
+            // 支持语言
+            var langs = new Dictionary<string, Dictionary<string, string>>();
+
+            langs.Add("zh-cn", new Dictionary<string, string> { { "AppName", "你好小娜" }, { "CommandExample", "你好小娜, 打开床头灯" }, { "Feedback", "已收到指令" } });
+            langs.Add("en-us", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
+            langs.Add("en-gb", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
+            langs.Add("en-au", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
+            langs.Add("en-in", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
+            langs.Add("en-ca", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
+
+
             // 构建XML
             XNamespace xnVoiceCommands = "http://schemas.microsoft.com/voicecommands/1.2";
             XDocument xdoc = new XDocument();
             XElement VoiceCommands = new XElement(xnVoiceCommands + "VoiceCommands");
-
-            XElement CommandSetCN = new XElement(xnVoiceCommands + "CommandSet");
-            XElement CommandSetEN = new XElement(xnVoiceCommands + "CommandSet");
-
-            XElement AppNameCN = new XElement(xnVoiceCommands + "AppName");
-            XElement AppNameEN = new XElement(xnVoiceCommands + "AppName");
-
-            XElement AppExampleCN = new XElement(xnVoiceCommands + "Example");
-            XElement AppExampleEN = new XElement(xnVoiceCommands + "Example");
-
-            XElement CommandCN = new XElement(xnVoiceCommands + "Command");
-            XElement CommandEN = new XElement(xnVoiceCommands + "Command");
-
-            XElement CommandExampleCN = new XElement(xnVoiceCommands + "Example");
-            XElement CommandExampleEN = new XElement(xnVoiceCommands + "Example");
-
-            XElement ListenFor = new XElement(xnVoiceCommands + "ListenFor");
-
-            XElement FeedbackCN = new XElement(xnVoiceCommands + "Feedback");
-            XElement FeedbackEN = new XElement(xnVoiceCommands + "Feedback");
-
-            XElement VoiceCommandService = new XElement(xnVoiceCommands + "VoiceCommandService");
-            XElement PhraseList = new XElement(xnVoiceCommands + "PhraseList");
 
             // xdoc
             xdoc.Declaration = new XDeclaration("1.0", "utf-8", "");
@@ -605,74 +640,69 @@ namespace YeelightForCortana
 
             // VoiceCommands
             VoiceCommands.SetAttributeValue("xmlns", xnVoiceCommands);
-            VoiceCommands.Add(CommandSetCN);
-            VoiceCommands.Add(CommandSetEN);
 
-            // CommandSet
-            CommandSetCN.SetAttributeValue(XNamespace.Xml + "lang", "zh-cn");
-            CommandSetCN.SetAttributeValue("Name", "YeelightVoiceCommandSet_zh-cn");
-            CommandSetCN.Add(AppNameCN);
-            CommandSetCN.Add(AppExampleCN);
-
-            CommandSetEN.SetAttributeValue(XNamespace.Xml + "lang", "en-us");
-            CommandSetEN.SetAttributeValue("Name", "YeelightVoiceCommandSet_en-us");
-            CommandSetEN.Add(AppNameEN);
-            CommandSetEN.Add(AppExampleEN);
-
-            // AppName
-            AppNameCN.SetValue("你好小娜");
-            AppNameEN.SetValue("Hey Cortana");
-
-            // AppExample
-            AppExampleCN.SetValue("你好小娜");
-            AppExampleEN.SetValue("Hey Cortana");
-
-            // Command
-            CommandCN.SetAttributeValue("Name", "Action");
-            CommandCN.Add(CommandExampleCN);
-
-            CommandEN.SetAttributeValue("Name", "Action");
-            CommandEN.Add(CommandExampleEN);
-
-            // Example
-            CommandExampleCN.SetValue("你好小娜，帮我开下灯");
-            CommandExampleEN.SetValue("Hey Cortana，Turn on the light");
-
-            // ListenFor
-            ListenFor.SetValue("{Say}");
-            CommandCN.Add(ListenFor);
-            CommandEN.Add(ListenFor);
-
-            // Feedback
-            FeedbackCN.SetValue("已收到指令");
-            FeedbackEN.SetValue("Copy");
-
-            CommandCN.Add(FeedbackCN);
-            CommandEN.Add(FeedbackEN);
-
-            // VoiceCommandService
-            VoiceCommandService.SetAttributeValue("Target", "YeelightVoiceCommandService");
-            CommandCN.Add(VoiceCommandService);
-            CommandEN.Add(VoiceCommandService);
-
-            // 加入
-            CommandSetCN.Add(CommandCN);
-            CommandSetEN.Add(CommandEN);
-
-            // PhraseList
-            PhraseList.SetAttributeValue("Label", "Say");
-
-            // PhraseListItem
-            foreach (var say in sayList)
+            foreach (var key in langs.Keys)
             {
-                XElement Item = new XElement(xnVoiceCommands + "Item");
-                Item.SetValue(say);
-                PhraseList.Add(Item);
-            }
+                XElement CommandSet = new XElement(xnVoiceCommands + "CommandSet");
+                XElement AppName = new XElement(xnVoiceCommands + "AppName");
+                XElement AppExample = new XElement(xnVoiceCommands + "Example");
+                XElement Command = new XElement(xnVoiceCommands + "Command");
+                XElement CommandExample = new XElement(xnVoiceCommands + "Example");
+                XElement ListenFor = new XElement(xnVoiceCommands + "ListenFor");
+                XElement Feedback = new XElement(xnVoiceCommands + "Feedback");
+                XElement VoiceCommandService = new XElement(xnVoiceCommands + "VoiceCommandService");
+                XElement PhraseList = new XElement(xnVoiceCommands + "PhraseList");
 
-            // 加入
-            CommandSetCN.Add(PhraseList);
-            CommandSetEN.Add(PhraseList);
+                // CommandSet
+                VoiceCommands.Add(CommandSet);
+                CommandSet.SetAttributeValue(XNamespace.Xml + "lang", key);
+                CommandSet.SetAttributeValue("Name", string.Format("YeelightVoiceCommandSet_{0}", key));
+                CommandSet.Add(AppName);
+                CommandSet.Add(AppExample);
+
+                // AppName
+                AppName.SetValue(langs[key]["AppName"]);
+
+                // AppExample
+                AppExample.SetValue(langs[key]["AppName"]);
+
+                // Command
+                Command.SetAttributeValue("Name", "Action");
+                Command.Add(CommandExample);
+
+                // Example
+                CommandExample.SetValue(langs[key]["CommandExample"]);
+
+                // ListenFor
+                ListenFor.SetValue("{Say}");
+                Command.Add(ListenFor);
+
+                // Feedback
+                Feedback.SetValue(langs[key]["Feedback"]);
+                Command.Add(Feedback);
+
+                // VoiceCommandService
+                VoiceCommandService.SetAttributeValue("Target", "YeelightVoiceCommandService");
+                Command.Add(VoiceCommandService);
+
+                // 加入
+                CommandSet.Add(Command);
+
+                // PhraseList
+                PhraseList.SetAttributeValue("Label", "Say");
+
+                // PhraseListItem
+                foreach (var say in sayList)
+                {
+                    XElement Item = new XElement(xnVoiceCommands + "Item");
+                    Item.SetValue(say);
+                    PhraseList.Add(Item);
+                }
+
+                // 加入
+                CommandSet.Add(PhraseList);
+
+            }
 
             // 写到文件
             var vcdFile = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(@"Voice.xml", CreationCollisionOption.ReplaceExisting);
@@ -1133,11 +1163,16 @@ namespace YeelightForCortana
             // 设置编辑标志
             PVT_VoiceCommandSetDetail.Tag = true;
 
+            // 滚动条滚动 禁用页面
+            SetLoading(true, true);
+
             // 设备快照
             if (cbbItem.DataContext.GetType() == typeof(Device))
                 await SnapshotDevices((Device)cbbItem.DataContext);
             else if (cbbItem.DataContext.GetType() == typeof(DeviceGroup))
                 await SnapshotDevices((DeviceGroup)cbbItem.DataContext);
+
+            SetLoading(false);
         }
         // 删除语音命令集按钮按下
         private async void DeleteVoiceCommandSetButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1191,6 +1226,9 @@ namespace YeelightForCortana
             // 设置语音命令详情为已编辑状态 显示遮罩
             viewModel.VoiceCommandSetDetailIsEdit = true;
 
+            // 滚动条滚动 禁用页面
+            SetLoading(true, true);
+
             // 还原设备快照
             await RevertSnapshotDevices();
             // 设备快照
@@ -1198,6 +1236,8 @@ namespace YeelightForCortana
                 await SnapshotDevices((Device)dataContext);
             else if (dataContext.GetType() == typeof(DeviceGroup))
                 await SnapshotDevices((DeviceGroup)dataContext);
+
+            SetLoading(false);
         }
         // 选择对象父菜单项按下
         private void CBB_SelectTarget_MenuSubItem_Tapped(object sender, TappedRoutedEventArgs e)
@@ -1269,15 +1309,18 @@ namespace YeelightForCortana
                         deviceList.AddRange(group.DeviceList);
                 }
 
+                // 滚动条滚动 禁用页面
+                SetLoading(true, true);
+                // task列表
+                List<Task> taskList = new List<Task>();
+
                 foreach (var device in deviceList)
-                {
-                    try
-                    {
-                        await device.RawDevice.SetPower(YeelightPower.on);
-                        await device.RawDevice.SetHSV(Convert.ToInt32(CS_ColorSelector.Hsv.H), Convert.ToInt32(CS_ColorSelector.Hsv.S * 100));
-                    }
-                    catch (Exception) { }
-                }
+                    taskList.Add(PreviewColorChange(device));
+
+                // 等待所有完成
+                await Task.WhenAll(taskList.ToArray());
+
+                SetLoading(false);
             }
         }
         // 语音命令集详情遮罩点击
@@ -1289,10 +1332,16 @@ namespace YeelightForCortana
                 viewModel.VoiceCommandSetDetail = null;
                 // 设置状态为未编辑
                 viewModel.VoiceCommandSetDetailIsEdit = false;
+
+                // 滚动条滚动 禁用页面
+                SetLoading(true, true);
+
                 // 还原设备快照
                 await RevertSnapshotDevices();
                 // 刷新列表
                 RefreshVoiceCommandSetList();
+
+                SetLoading(false);
             }
         }
         // Say输入框按键抬起
@@ -1386,6 +1435,10 @@ namespace YeelightForCortana
                 viewModel.VoiceCommandSetDetail = null;
                 // 设置状态为未编辑
                 viewModel.VoiceCommandSetDetailIsEdit = false;
+
+                // 滚动条滚动 禁用页面
+                SetLoading(true, true);
+
                 // 保存
                 await configStorage.SaveAsync();
                 // 还原设备快照
@@ -1394,6 +1447,8 @@ namespace YeelightForCortana
                 RefreshVoiceCommandSetList();
                 // 保存小娜设置
                 await SaveCortanaConfig();
+
+                SetLoading(false);
             }
         }
         // 保存语音命令集详情按钮按下
@@ -1476,6 +1531,10 @@ namespace YeelightForCortana
             viewModel.VoiceCommandSetDetail = null;
             // 设置状态为未编辑
             viewModel.VoiceCommandSetDetailIsEdit = false;
+
+            // 滚动条滚动 禁用页面
+            SetLoading(true, true);
+
             // 保存
             await configStorage.SaveAsync();
             // 还原设备快照
@@ -1484,6 +1543,8 @@ namespace YeelightForCortana
             RefreshVoiceCommandSetList();
             // 保存小娜设置
             await SaveCortanaConfig();
+
+            SetLoading(false);
         }
         #endregion
 

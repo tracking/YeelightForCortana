@@ -28,6 +28,8 @@ namespace YeelightForCortana.ViewModel
         private bool showVoiceCommandSetDetailSayGrid;
         // 是否显示语音详情中Answer面板
         private bool showVoiceCommandSetDetailAnswerGrid;
+        // 是否禁用全页面
+        private bool mainPageIsDisabled;
 
         // 设备列表
         public DeviceList DeviceList { get; set; }
@@ -214,6 +216,19 @@ namespace YeelightForCortana.ViewModel
 
                 this.showVoiceCommandSetDetailAnswerGrid = value;
                 this.EmitPropertyChanged("ShowVoiceCommandSetDetailAnswerGrid");
+            }
+        }
+        // 是否禁用全页面
+        public bool MainPageIsDisabled
+        {
+            get
+            {
+                return mainPageIsDisabled;
+            }
+            set
+            {
+                mainPageIsDisabled = value;
+                EmitPropertyChanged("MainPageIsDisabled");
             }
         }
 

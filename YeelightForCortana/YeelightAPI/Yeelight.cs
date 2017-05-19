@@ -580,9 +580,8 @@ namespace YeelightAPI
             // 连接设备
             await this.ConnectDeviceAsync();
 
-            // 米家台灯在连接上设备后如果马上发送数据有可能设备接不到 等待一小会
-            if (this.model == YeelightModel.desklamp)
-                await Task.Delay(200);
+            //  等待一小会
+            await Task.Delay(200);
 
             // 创建写入对象
             using (DataWriter dw = new DataWriter(this.tcpClient.OutputStream))

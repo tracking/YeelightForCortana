@@ -3058,7 +3058,8 @@
             </Grid>
             <!--语音命令详情遮罩层-->
             <Grid x:Name="VoiceCommandSetDetailMaskGrid" Grid.Row="1" Grid.ColumnSpan="3" Background="Transparent" Visibility="{Binding VoiceCommandSetDetailIsEdit, Converter={StaticResource BooleanConvertToVisibility}}" Tapped="VoiceCommandSetDetailMaskGrid_Tapped" />
-
+            <!--全屏遮罩层-->
+            <Grid x:Name="MainMaskGrid" Grid.ColumnSpan="4" Background="Transparent" Visibility="{Binding MainPageIsDisabled, Converter={StaticResource BooleanConvertToVisibility}}" Grid.RowSpan="2" />
         </Grid>
     </Grid>
 </Page>
