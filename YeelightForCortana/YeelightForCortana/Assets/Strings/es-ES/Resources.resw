@@ -118,156 +118,156 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ActionType_All" xml:space="preserve">
-    <value>All</value>
+    <value>Todas</value>
   </data>
   <data name="ActionType_BrightDown" xml:space="preserve">
-    <value>Bright down</value>
+    <value>Brillante abajo</value>
   </data>
   <data name="ActionType_BrightUp" xml:space="preserve">
-    <value>Bright up</value>
+    <value>Brilla para arriba</value>
   </data>
   <data name="ActionType_PowerOff" xml:space="preserve">
-    <value>Trun off</value>
+    <value>Apagar</value>
   </data>
   <data name="ActionType_PowerOn" xml:space="preserve">
-    <value>Trun on</value>
+    <value>Encender</value>
   </data>
   <data name="ActionType_SwitchColor" xml:space="preserve">
-    <value>Change color</value>
+    <value>Cambiar color</value>
   </data>
   <data name="AnwserTextBoxInputError" xml:space="preserve">
-    <value>Can not enter the word in addition to Chinese / letter / number / space</value>
+    <value>No se puede introducir la palabra además de chino / letra / número / espacio</value>
   </data>
   <data name="BTN_About.Content" xml:space="preserve">
-    <value>About</value>
+    <value>Acerca de</value>
   </data>
   <data name="BTN_AddVoiceCommand_TextBlock.Text" xml:space="preserve">
-    <value>Add voice commands</value>
+    <value>Añadir comandos de voz</value>
   </data>
   <data name="BTN_DeviceManage_TextBlock.Text" xml:space="preserve">
-    <value>Devices</value>
+    <value>Dispositivos</value>
   </data>
   <data name="BTN_Feedback.Content" xml:space="preserve">
-    <value>Feedback</value>
+    <value>Realimentación</value>
   </data>
   <data name="BTN_Help.Content" xml:space="preserve">
-    <value>Help</value>
+    <value>Ayuda</value>
   </data>
   <data name="BTN_MoreMenu.Content" xml:space="preserve">
-    <value>More</value>
+    <value>Más</value>
   </data>
   <data name="BTN_SearchDevice.Content" xml:space="preserve">
-    <value>Search devices</value>
+    <value>Buscar dispositivos</value>
   </data>
   <data name="CBB_SelectAction.Header" xml:space="preserve">
-    <value>Select Action</value>
+    <value>Seleccione la acción</value>
   </data>
   <data name="CBB_SelectTarget.Header" xml:space="preserve">
-    <value>Select Target</value>
+    <value>Seleccione un objetivo</value>
   </data>
   <data name="CB_SelectAllDevice.Content" xml:space="preserve">
-    <value>Select all</value>
+    <value>Seleccionar todo</value>
   </data>
   <data name="CortanaTextBlock.Text" xml:space="preserve">
     <value>Cortana: </value>
   </data>
   <data name="DefaultDeviceGroupName" xml:space="preserve">
-    <value>Unnamed</value>
+    <value>Sin nombre</value>
   </data>
   <data name="DeleteDeviceConfirm" xml:space="preserve">
-    <value>Delete device “{0}” ?</value>
+    <value>Eliminar dispositivo "{0}"?</value>
   </data>
   <data name="DeleteDeviceGroupConfirm" xml:space="preserve">
-    <value>If you delete this group.
-The corresponding voice commands will be deleted.
-Do you want to delete the group "{0}" ?</value>
+    <value>Si elimina este grupo.
+Los comandos de voz correspondientes se borrarán.
+¿Desea eliminar el grupo "{0}"?</value>
   </data>
   <data name="DeleteVoiceCommandSetConfirm" xml:space="preserve">
-    <value>Do you want to delete the voice command?</value>
+    <value>¿Desea eliminar el comando de voz?</value>
   </data>
   <data name="DeviceGridTitle_TextBlock.Text" xml:space="preserve">
-    <value>Devices</value>
+    <value>Dispositivos</value>
   </data>
   <data name="DeviceGroupList_All" xml:space="preserve">
-    <value>All</value>
+    <value>Todas</value>
   </data>
   <data name="DeviceListBoxItemOfflineTextBlock.Text" xml:space="preserve">
-    <value>Offline</value>
+    <value>Desconectado</value>
   </data>
   <data name="Grid_Action_Bright_TextBlock.Text" xml:space="preserve">
-    <value>Move the slider to adjust the brightness value</value>
+    <value>Mueva el control deslizante para ajustar el valor de brillo</value>
   </data>
   <data name="Grid_Action_SwitchColor_TextBlock.Text" xml:space="preserve">
-    <value>Select color</value>
+    <value>Seleccionar el color</value>
   </data>
   <data name="Grid_VoiceCommandSetListIsNull_TextBlock.Text" xml:space="preserve">
-    <value>You have not added a voice command</value>
+    <value>No ha añadido un comando de voz</value>
   </data>
   <data name="LeaveVoiceCommandSetDetailConfirm" xml:space="preserve">
-    <value>Do you want to discard changes?</value>
+    <value>¿Desea descartar los cambios?</value>
   </data>
   <data name="MeTextBlock.Text" xml:space="preserve">
-    <value>Me: </value>
+    <value>Yo: </value>
   </data>
   <data name="MFI_DeviceDelete.Text" xml:space="preserve">
-    <value>Delete</value>
+    <value>Borrar</value>
   </data>
   <data name="MFI_DeviceGroupDelete.Text" xml:space="preserve">
-    <value>Delete</value>
+    <value>Borrar</value>
   </data>
   <data name="MFI_DeviceGroupManage.Text" xml:space="preserve">
-    <value>Management</value>
+    <value>administración</value>
   </data>
   <data name="MFI_DeviceGroupRename.Text" xml:space="preserve">
-    <value>Rename</value>
+    <value>Rebautizar</value>
   </data>
   <data name="NewDeviceGridTitle_TextBlock.Text" xml:space="preserve">
-    <value>New device</value>
+    <value>Nuevo dispositivo</value>
   </data>
   <data name="PI_About.Header" xml:space="preserve">
-    <value>About</value>
+    <value>Acerca de</value>
   </data>
   <data name="PI_BasicConfig.Header" xml:space="preserve">
-    <value>Basic settings</value>
+    <value>Ajustes básicos</value>
   </data>
   <data name="PI_MoreFunction.Header" xml:space="preserve">
-    <value>More</value>
+    <value>Más</value>
   </data>
   <data name="PI_VoiceCommandConfig.Header" xml:space="preserve">
-    <value>Voice commands</value>
+    <value>Comandos de voz</value>
   </data>
   <data name="RememberDeviceTitle_TextBlock.Text" xml:space="preserve">
-    <value>Devices</value>
+    <value>Dispositivos</value>
   </data>
   <data name="SaveVoiceCommandSetError_ActionIsNull" xml:space="preserve">
-    <value>Please select operation</value>
+    <value>Seleccione la operación</value>
   </data>
   <data name="SaveVoiceCommandSetError_TargetIsNull" xml:space="preserve">
-    <value>Please select target</value>
+    <value>Por favor seleccione el destino</value>
   </data>
   <data name="SaveVoiceCommandSetError_VoiceCommandAnwserIsNull" xml:space="preserve">
-    <value>Please complete the voice command</value>
+    <value>Completa el comando de voz</value>
   </data>
   <data name="SaveVoiceCommandSetError_VoiceCommandIsNull" xml:space="preserve">
-    <value>Please add voice command</value>
+    <value>Agregue el comando de voz</value>
   </data>
   <data name="SayTextBoxInputError" xml:space="preserve">
-    <value>Can not enter the word in addition to Chinese / letter / number / space</value>
+    <value>No se puede introducir la palabra además de chino / letra / número / espacio</value>
   </data>
   <data name="TXT_AddDeviceGroupName.PlaceholderText" xml:space="preserve">
-    <value>Enter group name</value>
+    <value>Introduzca el nombre del grupo</value>
   </data>
   <data name="TXT_AddDeviceGroupName.Text" xml:space="preserve">
-    <value>Unnamed</value>
+    <value>Sin nombre</value>
   </data>
   <data name="TXT_Answer.PlaceholderText" xml:space="preserve">
-    <value>Please enter cortana response. For example: All right, I know.</value>
+    <value>Por favor ingrese la respuesta cortana. Por ejemplo: Muy bien, lo sé.</value>
   </data>
   <data name="TXT_Say.PlaceholderText" xml:space="preserve">
-    <value>Please enter a voice command. For example: It was dark, turn on the bedlight for me.</value>
+    <value>Introduzca un comando de voz. Por ejemplo: estaba oscuro, encender la luz de la cama para mí.</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Version {0}</value>
+    <value>Versión {0}</value>
   </data>
   <data name="Yeelight_Model_Color" xml:space="preserve">
     <value>Yeelight LED Bulb (Color)</value>

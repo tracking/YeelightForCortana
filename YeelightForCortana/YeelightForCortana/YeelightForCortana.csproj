@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>YeelightForCortana</RootNamespace>
     <AssemblyName>YeelightForCortana</AssemblyName>
-    <DefaultLanguage>zh-CN</DefaultLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
@@ -97,6 +97,7 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <PRIResource Include="Assets\Strings\zh-CN\Resources.resw" />
     <PRIResource Include="Assets\Strings\en-US\Resources.resw" />
+    <PRIResource Include="Assets\Strings\es-ES\Resources.resw" />
     <None Include="Connected Services\HockeyApp\ConnectedService.json" />
     <None Include="project.json" />
     <None Include="YeelightForCortana_StoreKey.pfx" />

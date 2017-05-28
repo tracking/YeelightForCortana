@@ -621,12 +621,17 @@ namespace YeelightForCortana
             // 支持语言
             var langs = new Dictionary<string, Dictionary<string, string>>();
 
+            // 中文
             langs.Add("zh-cn", new Dictionary<string, string> { { "AppName", "你好小娜" }, { "CommandExample", "你好小娜, 打开床头灯" }, { "Feedback", "已收到指令" } });
+            // 英语
             langs.Add("en-us", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
             langs.Add("en-gb", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
+            langs.Add("en-ca", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
             langs.Add("en-au", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
             langs.Add("en-in", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
-            langs.Add("en-ca", new Dictionary<string, string> { { "AppName", "Hey Cortana" }, { "CommandExample", "Hey Cortana，Turn on the light" }, { "Feedback", "Copy" } });
+            // 西班牙语
+            langs.Add("es-es", new Dictionary<string, string> { { "AppName", "Hola Cortana" }, { "CommandExample", "Hola Cortana，Enciende la luz" }, { "Feedback", "De acuerdo" } });
+            langs.Add("es-mx", new Dictionary<string, string> { { "AppName", "Hola Cortana" }, { "CommandExample", "Hola Cortana，Enciende la luz" }, { "Feedback", "De acuerdo" } });
 
 
             // 构建XML
@@ -716,8 +721,14 @@ namespace YeelightForCortana
                 await writeStream.FlushAsync();
             }
 
-            // 安装语音命令文件
-            await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdFile);
+            try
+            {
+                // 安装语音命令文件
+                await Windows.ApplicationModel.VoiceCommands.VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(vcdFile);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         #region 左区-设备组列表相关
@@ -1364,7 +1375,7 @@ namespace YeelightForCortana
             // 空的
             if (string.IsNullOrEmpty(TXT_Say.Text.Trim())) return;
             // 不允许输入除中文/字母/数字以外的字符
-            if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\s]*$").Match(TXT_Say.Text).Success)
+            if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\sñáéíóúü¿]*$").Match(TXT_Say.Text).Success)
             {
                 await ShowMessageDialog(rl.GetString("SayTextBoxInputError"));
                 return;
@@ -1392,7 +1403,7 @@ namespace YeelightForCortana
             // 空的
             if (string.IsNullOrEmpty(TXT_Answer.Text.Trim())) return;
             // 不允许输入除中文/字母/数字以外的字符
-            if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\s]*$").Match(TXT_Answer.Text).Success)
+            if (!new Regex(@"^[\u4e00-\u9fa5a-zA-Z0-9\sñáéíóúü¿]*$").Match(TXT_Answer.Text).Success)
             {
                 await ShowMessageDialog(rl.GetString("AnwserTextBoxInputError"));
                 return;
