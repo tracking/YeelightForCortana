@@ -98,6 +98,7 @@
     <PRIResource Include="Assets\Strings\zh-CN\Resources.resw" />
     <PRIResource Include="Assets\Strings\en-US\Resources.resw" />
     <PRIResource Include="Assets\Strings\es-ES\Resources.resw" />
+    <PRIResource Include="Assets\Strings\it\Resources.resw" />
     <None Include="Connected Services\HockeyApp\ConnectedService.json" />
     <None Include="project.json" />
     <None Include="YeelightForCortana_StoreKey.pfx" />

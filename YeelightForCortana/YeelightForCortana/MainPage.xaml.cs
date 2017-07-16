@@ -632,6 +632,8 @@ namespace YeelightForCortana
             // 西班牙语
             langs.Add("es-es", new Dictionary<string, string> { { "AppName", "Hola Cortana" }, { "CommandExample", "Hola Cortana，Enciende la luz" }, { "Feedback", "De acuerdo" } });
             langs.Add("es-mx", new Dictionary<string, string> { { "AppName", "Hola Cortana" }, { "CommandExample", "Hola Cortana，Enciende la luz" }, { "Feedback", "De acuerdo" } });
+            // 意大利语
+            langs.Add("it-it", new Dictionary<string, string> { { "AppName", "Ehi Cortana" }, { "CommandExample", "Ehi Cortana，Accendi la luce" }, { "Feedback", "Buono" } });
 
 
             // 构建XML

@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionType_All" xml:space="preserve">
+    <value>Tutti</value>
+  </data>
+  <data name="ActionType_BrightDown" xml:space="preserve">
+    <value>Abbagliato</value>
+  </data>
+  <data name="ActionType_BrightUp" xml:space="preserve">
+    <value>Bright up</value>
+  </data>
+  <data name="ActionType_PowerOff" xml:space="preserve">
+    <value>Schiarire</value>
+  </data>
+  <data name="ActionType_PowerOn" xml:space="preserve">
+    <value>Accendere</value>
+  </data>
+  <data name="ActionType_SwitchColor" xml:space="preserve">
+    <value>Cambia colore</value>
+  </data>
+  <data name="AnwserTextBoxInputError" xml:space="preserve">
+    <value>Impossibile inserire la parola oltre a cinese / lettera / numero / spazio</value>
+  </data>
+  <data name="BTN_About.Content" xml:space="preserve">
+    <value>Di</value>
+  </data>
+  <data name="BTN_AddVoiceCommand_TextBlock.Text" xml:space="preserve">
+    <value>Aggiungi comandi vocali</value>
+  </data>
+  <data name="BTN_DeviceManage_TextBlock.Text" xml:space="preserve">
+    <value>Dispositivi</value>
+  </data>
+  <data name="BTN_Feedback.Content" xml:space="preserve">
+    <value>Risposta</value>
+  </data>
+  <data name="BTN_Help.Content" xml:space="preserve">
+    <value>Aiuto</value>
+  </data>
+  <data name="BTN_MoreMenu.Content" xml:space="preserve">
+    <value>Di Più</value>
+  </data>
+  <data name="BTN_SearchDevice.Content" xml:space="preserve">
+    <value>Cerca dispositivi</value>
+  </data>
+  <data name="CBB_SelectAction.Header" xml:space="preserve">
+    <value>Seleziona Azione</value>
+  </data>
+  <data name="CBB_SelectTarget.Header" xml:space="preserve">
+    <value>Seleziona Target</value>
+  </data>
+  <data name="CB_SelectAllDevice.Content" xml:space="preserve">
+    <value>Seleziona tutto</value>
+  </data>
+  <data name="CortanaTextBlock.Text" xml:space="preserve">
+    <value>Cortana: </value>
+  </data>
+  <data name="DefaultDeviceGroupName" xml:space="preserve">
+    <value>Senza nome</value>
+  </data>
+  <data name="DeleteDeviceConfirm" xml:space="preserve">
+    <value>Elimina dispositivo “{0}” ?</value>
+  </data>
+  <data name="DeleteDeviceGroupConfirm" xml:space="preserve">
+    <value>Se si elimina questo gruppo.
+I comandi vocali corrispondenti verranno eliminati.
+Vuoi eliminare il gruppo "{0}"?</value>
+  </data>
+  <data name="DeleteVoiceCommandSetConfirm" xml:space="preserve">
+    <value>Vuoi eliminare il comando vocale?</value>
+  </data>
+  <data name="DeviceGridTitle_TextBlock.Text" xml:space="preserve">
+    <value>Dispositivi</value>
+  </data>
+  <data name="DeviceGroupList_All" xml:space="preserve">
+    <value>Tutti</value>
+  </data>
+  <data name="DeviceListBoxItemOfflineTextBlock.Text" xml:space="preserve">
+    <value>Disconnesso</value>
+  </data>
+  <data name="Grid_Action_Bright_TextBlock.Text" xml:space="preserve">
+    <value>Spostare il cursore per regolare il valore di luminosità</value>
+  </data>
+  <data name="Grid_Action_SwitchColor_TextBlock.Text" xml:space="preserve">
+    <value>Seleziona il colore</value>
+  </data>
+  <data name="Grid_VoiceCommandSetListIsNull_TextBlock.Text" xml:space="preserve">
+    <value>Non hai aggiunto un comando vocale</value>
+  </data>
+  <data name="LeaveVoiceCommandSetDetailConfirm" xml:space="preserve">
+    <value>Vuoi scartare i cambiamenti?</value>
+  </data>
+  <data name="MeTextBlock.Text" xml:space="preserve">
+    <value>Me: </value>
+  </data>
+  <data name="MFI_DeviceDelete.Text" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="MFI_DeviceGroupDelete.Text" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="MFI_DeviceGroupManage.Text" xml:space="preserve">
+    <value>Gestione</value>
+  </data>
+  <data name="MFI_DeviceGroupRename.Text" xml:space="preserve">
+    <value>Rinominare</value>
+  </data>
+  <data name="NewDeviceGridTitle_TextBlock.Text" xml:space="preserve">
+    <value>Nuovo dispositivo</value>
+  </data>
+  <data name="PI_About.Header" xml:space="preserve">
+    <value>Di</value>
+  </data>
+  <data name="PI_BasicConfig.Header" xml:space="preserve">
+    <value>Impostazioni di base</value>
+  </data>
+  <data name="PI_MoreFunction.Header" xml:space="preserve">
+    <value>Di Più</value>
+  </data>
+  <data name="PI_VoiceCommandConfig.Header" xml:space="preserve">
+    <value>Comandi vocali</value>
+  </data>
+  <data name="RememberDeviceTitle_TextBlock.Text" xml:space="preserve">
+    <value>Dispositivi</value>
+  </data>
+  <data name="SaveVoiceCommandSetError_ActionIsNull" xml:space="preserve">
+    <value>Seleziona l'operazione</value>
+  </data>
+  <data name="SaveVoiceCommandSetError_TargetIsNull" xml:space="preserve">
+    <value>Seleziona il bersaglio</value>
+  </data>
+  <data name="SaveVoiceCommandSetError_VoiceCommandAnwserIsNull" xml:space="preserve">
+    <value>Completa il comando vocale</value>
+  </data>
+  <data name="SaveVoiceCommandSetError_VoiceCommandIsNull" xml:space="preserve">
+    <value>Si prega di aggiungere il comando vocale</value>
+  </data>
+  <data name="SayTextBoxInputError" xml:space="preserve">
+    <value>Impossibile inserire la parola oltre a cinese / lettera / numero / spazio</value>
+  </data>
+  <data name="TXT_AddDeviceGroupName.PlaceholderText" xml:space="preserve">
+    <value>Immettere il nome del gruppo</value>
+  </data>
+  <data name="TXT_AddDeviceGroupName.Text" xml:space="preserve">
+    <value>Senza nome</value>
+  </data>
+  <data name="TXT_Answer.PlaceholderText" xml:space="preserve">
+    <value>Inserisci la risposta cortana. Ad esempio: va bene, lo so.</value>
+  </data>
+  <data name="TXT_Say.PlaceholderText" xml:space="preserve">
+    <value>Inserisci un comando vocale. Per esempio: era scuro, accendi la luce del letto per me.</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Versione {0}</value>
+  </data>
+  <data name="Yeelight_Model_Color" xml:space="preserve">
+    <value>Yeelight LED Bulb (Color)</value>
+  </data>
+  <data name="Yeelight_Model_Desklamp" xml:space="preserve">
+    <value>Mijia Smart LED Desk Lamp</value>
+  </data>
+  <data name="Yeelight_Model_Mono" xml:space="preserve">
+    <value>Yeelight LED Bulb (White)</value>
+  </data>
+  <data name="Yeelight_Model_Stripe" xml:space="preserve">
+    <value>Yeelight LED Lightstrip (Color)</value>
+  </data>
+</root>
